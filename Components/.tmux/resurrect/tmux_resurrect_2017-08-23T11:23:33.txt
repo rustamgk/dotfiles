@@ -1,0 +1,16 @@
+pane	0	1	:~	1	:*	0	:/home/rustam.gk	1	zsh	:
+pane	TMUX	1	:~	1	:*	0	:/home/rustam.gk/Repos/autokey	0	zsh	:
+pane	TMUX	1	:~	1	:*	1	:/home/rustam.gk/Repos/build	0	zsh	:
+pane	TMUX	1	:~	1	:*	2	:/home/rustam.gk	1	zsh	:
+pane	TMUX	2	:~	0	:-	0	:/home/rustam.gk	1	zsh	:
+pane	TMUX	3	:~	0	:	0	:/home/rustam.gk	1	zsh	:
+pane	TMUX	3	:~	0	:	1	:/home/rustam.gk	0	zsh	:
+pane	TMUX	3	:~	0	:	2	:/home/rustam.gk	0	zsh	:
+pane	TMUX	4	:~/Downloads	0	:	0	:/home/rustam.gk	0	zsh	:
+pane	TMUX	4	:~/Downloads	0	:	1	:/home/rustam.gk/Downloads	1	zsh	:
+window	0	1	1	:*	b3de,239x60,0,0,1
+window	TMUX	1	1	:*	6fab,239x60,0,0[239x9,0,0,2,239x50,0,10{119x50,0,10,3,119x50,120,10,4}]
+window	TMUX	2	0	:-	b3e2,239x60,0,0,5
+window	TMUX	3	0	:	3066,239x60,0,0{55x60,0,0,6,60x60,56,0,7,122x60,117,0,8}
+window	TMUX	4	0	:	dd51,239x60,0,0{150x60,0,0,9,88x60,151,0,10}
+state	TMUX	0

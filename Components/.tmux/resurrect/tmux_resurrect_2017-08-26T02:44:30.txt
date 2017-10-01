@@ -1,0 +1,15 @@
+pane	0	1	:~	1	:*	0	:/home/rustam.gk	1	zsh	:
+pane	TMUX	1	:~/Repos	1	:*	0	:/home/rustam.gk/Repos	1	zsh	:
+pane	TMUX	1	:~/Repos	1	:*	1	:/run/media/rustam.gk	0	mc	:mc -S nicedark
+pane	TMUX	2	:~	0	:-	0	:/home/rustam.gk	1	zsh	:
+pane	TMUX	3	:~	0	:	0	:/home/rustam.gk	1	zsh	:
+pane	TMUX	3	:~	0	:	1	:/home/rustam.gk	0	zsh	:
+pane	TMUX	3	:~	0	:	2	:/home/rustam.gk	0	zsh	:
+pane	TMUX	4	:~/Downloads	0	:	0	:/home/rustam.gk	0	zsh	:
+pane	TMUX	4	:~/Downloads	0	:	1	:/home/rustam.gk/Downloads	1	zsh	:
+window	0	1	1	:*	bb7e,319x81,0,0,1
+window	TMUX	1	1	:*	8d6b,319x81,0,0{159x81,0,0,2,159x81,160,0,9}
+window	TMUX	2	0	:-	bb80,319x81,0,0,3
+window	TMUX	3	0	:	9592,319x81,0,0{83x81,0,0,4,86x81,84,0,5,148x81,171,0,6}
+window	TMUX	4	0	:	1dc8,319x81,0,0{190x81,0,0,7,128x81,191,0,8}
+state	TMUX	0

@@ -1,0 +1,10 @@
+pane	0	1	:~	1	:*	0	:/home/rustam.gk	1	zsh	:
+pane	TMUX	1	:~/.oh-my-zsh	1	:*	0	:/home/rustam.gk/.oh-my-zsh	1	zsh	:
+pane	TMUX	1	:~/.oh-my-zsh	1	:*	1	:/home/rustam.gk/.oh-my-zsh/tools	0	zsh	:
+pane	TMUX	1	:~/.oh-my-zsh	1	:*	2	:/home/rustam.gk/.oh-my-zsh/themes	0	zsh	:
+pane	TMUX	4	:~/Downloads	0	:-	0	:/home/rustam.gk/jstock	0	zsh	:
+pane	TMUX	4	:~/Downloads	0	:-	1	:/home/rustam.gk/Downloads	1	zsh	:
+window	0	1	1	:*	b3de,239x60,0,0,1
+window	TMUX	1	1	:*	2dcf,239x62,0,0{119x62,0,0,13,119x62,120,0[119x31,120,0,11,119x30,120,32,14]}
+window	TMUX	4	0	:-	051b,239x62,0,0{157x62,0,0,9,81x62,158,0,10}
+state	TMUX	

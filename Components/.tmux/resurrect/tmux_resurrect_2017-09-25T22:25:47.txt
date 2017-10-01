@@ -1,0 +1,16 @@
+pane	TMUX	1	:..anslate-shell	0	:-	0	:/home/rustam.gk/Repos/translate-shell	1	zsh	:
+pane	TMUX	1	:..anslate-shell	0	:-	1	:/home/rustam.gk	0	zsh	:
+pane	TMUX	2	:~/Downloads	0	:	0	:/home/rustam.gk/Downloads	1	zsh	:
+pane	TMUX	3	:vim	0	:	0	:/home/rustam.gk	1	vim	:vim
+pane	TMUX	4	:~	0	:	0	:/home/rustam.gk	1	zsh	:
+pane	TMUX	5	:~	0	:	0	:/home/rustam.gk	0	zsh	:
+pane	TMUX	5	:~	0	:	1	:/home/rustam.gk	1	zsh	:
+pane	TMUX	6	:..pta-gtk-theme	1	:*	0	:/home/rustam.gk/Repos/adapta-gtk-theme	1	zsh	:
+pane	TMUX	6	:..pta-gtk-theme	1	:*	1	:/home/rustam.gk/Repos/adapta-gtk-theme	0	zsh	:
+window	TMUX	1	0	:-	8c96,319x80,0,0{160x80,0,0,1,158x80,161,0,2}
+window	TMUX	2	0	:	b780,319x80,0,0,3
+window	TMUX	3	0	:	b781,319x80,0,0,4
+window	TMUX	4	0	:	b782,319x80,0,0,5
+window	TMUX	5	0	:	0ddd,319x80,0,0[319x40,0,0,6,319x39,0,41,7]
+window	TMUX	6	1	:*	08f1,319x80,0,0{159x80,0,0,8,159x80,160,0,9}
+state	TMUX	

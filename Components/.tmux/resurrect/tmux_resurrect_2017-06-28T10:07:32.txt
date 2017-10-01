@@ -1,0 +1,11 @@
+pane	TMUX	1	:..6-64_rpm/RPMS	0	:	0	:/home/rustam.gk/Downloads/LibreOffice_5.3.4.2_Linux_x86-64_rpm/RPMS	1	zsh	:
+pane	TMUX	1	:..6-64_rpm/RPMS	0	:	1	:/home/rustam.gk	0	zsh	:
+pane	TMUX	2	:exit	0	:-	0	:/home/rustam.gk/Repos/hazelcast	1	vim	:vim hazelcast/src/test/java/com/hazelcast/test/starter/HazelcastProxyFactory.java
+pane	TMUX	3	:~	1	:*	0	:/home/rustam.gk	1	zsh	:
+pane	TMUX	4	:~/.tlp	0	:	0	:/home/rustam.gk/.tlp	1	zsh	:
+pane	TMUX	4	:~/.tlp	0	:	1	:/home/rustam.gk	0	mc	:mc -S nicedark
+window	TMUX	1	0	:	871f,119x59,0,0{55x59,0,0,1,63x59,56,0,6}
+window	TMUX	2	0	:-	d541,119x59,0,0,4
+window	TMUX	3	1	:*	6acf,119x59,0,0,10
+window	TMUX	4	0	:	63e8,119x59,0,0{59x59,0,0,7,59x59,60,0,8}
+state	TMUX	

@@ -1,0 +1,16 @@
+pane	TMUX	1	:/opt/temps	1	:*	0	:/opt/temps	1	zsh	:
+pane	TMUX	1	:/opt/temps	1	:*	1	:/home/rustam.gk	0	mc	:mc -S nicedark
+pane	TMUX	2	:~/Downloads	0	:	0	:/home/rustam.gk/Downloads	1	zsh	:
+pane	TMUX	3	:vim	0	:	0	:/home/rustam.gk	1	vim	:vim
+pane	TMUX	4	:~	0	:	0	:/home/rustam.gk	1	zsh	:
+pane	TMUX	5	:~	0	:	0	:/home/rustam.gk	0	zsh	:
+pane	TMUX	5	:~	0	:	1	:/home/rustam.gk	1	zsh	:
+pane	TMUX	6	:..pta-gtk-theme	0	:-	0	:/home/rustam.gk/Repos/adapta-gtk-theme	1	zsh	:
+pane	TMUX	6	:..pta-gtk-theme	0	:-	1	:/home/rustam.gk/Repos/adapta-gtk-theme	0	zsh	:
+window	TMUX	1	1	:*	1117,319x81,0,0{160x81,0,0,1,158x81,161,0,2}
+window	TMUX	2	0	:	bb80,319x81,0,0,3
+window	TMUX	3	0	:	bb81,319x81,0,0,4
+window	TMUX	4	0	:	bb82,319x81,0,0,5
+window	TMUX	5	0	:	35de,319x81,0,0[319x41,0,0,6,319x39,0,42,7]
+window	TMUX	6	0	:-	8d71,319x81,0,0{159x81,0,0,8,159x81,160,0,9}
+state	TMUX	

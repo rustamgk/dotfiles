@@ -1,0 +1,13 @@
+pane	0	1	:vim	1	:*	0	:/home/rustam.gk	1	vim	:vim /home/rustam.gk/.zshrc
+pane	TMUX	1	:~/.tmux/plugins	1	:*	0	:/home/rustam.gk/.tmux/plugins	1	zsh	:
+pane	TMUX	2	:~	0	:-	0	:/home/rustam.gk/Downloads	0	zsh	:
+pane	TMUX	2	:~	0	:-	1	:/home/rustam.gk	1	zsh	:
+pane	TMUX	3	:~/Downloads	0	:	0	:/home/rustam.gk/Downloads	1	zsh	:
+pane	TMUX	4	:/home	0	:	0	:/home/rustam.gk/.ssh	0	zsh	:
+pane	TMUX	4	:/home	0	:	1	:/home	1	zsh	:
+window	0	1	1	:*	5a20,239x60,0,0,11
+window	TMUX	1	1	:*	59d1,119x60,0,0,12
+window	TMUX	2	0	:-	2ee8,119x60,0,0{59x60,0,0,13,59x60,60,0,14}
+window	TMUX	3	0	:	59d4,119x60,0,0,15
+window	TMUX	4	0	:	ae9f,119x60,0,0{60x60,0,0,16,58x60,61,0,17}
+state	TMUX	0

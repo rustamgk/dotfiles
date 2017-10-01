@@ -1,0 +1,5 @@
+pane	TMUX	1	:~	1	:*	0	:/home/rustam.gk/Repos/solarc-theme	0	zsh	:
+pane	TMUX	1	:~	1	:*	1	:/home/rustam.gk	1	zsh	:
+pane	TMUX	1	:~	1	:*	2	:/home/rustam.gk/Repos/rofi/releasenotes/1.4.0	0	vim	:vim release-1.4.0.markdown
+window	TMUX	1	1	:*	63c1,239x60,0,0{119x60,0,0[119x30,0,0,1,119x29,0,31,5],119x60,120,0,4}
+state	TMUX	

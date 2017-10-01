@@ -1,0 +1,15 @@
+pane	TMUX	1	:tmuxc	1	:*	0	:/home/rustam.gk	1	vim	:vim /home/rustam.gk/.tmux.conf
+pane	TMUX	2	:..epos/dotfiles	0	:-	0	:/home/rustam.gk/Repos/dotfiles	1	zsh	:zsh
+pane	TMUX	3	:vim	0	:	0	:/home/rustam.gk	1	vim	:vim
+pane	TMUX	4	:~	0	:	0	:/home/rustam.gk	1	zsh	:
+pane	TMUX	5	:~	0	:	0	:/home/rustam.gk	0	zsh	:
+pane	TMUX	5	:~	0	:	1	:/home/rustam.gk	1	zsh	:
+pane	TMUX	6	:..pta-gtk-theme	0	:	0	:/home/rustam.gk/Repos/adapta-gtk-theme	1	zsh	:
+pane	TMUX	6	:..pta-gtk-theme	0	:	1	:/home/rustam.gk/Repos/adapta-gtk-theme	0	zsh	:
+window	TMUX	1	1	:*	b3de,239x60,0,0,1
+window	TMUX	2	0	:-	b3df,239x60,0,0,2
+window	TMUX	3	0	:	b3e0,239x60,0,0,3
+window	TMUX	4	0	:	b3e1,239x60,0,0,4
+window	TMUX	5	0	:	7c32,239x60,0,0[239x36,0,0,5,239x23,0,37,6]
+window	TMUX	6	0	:	13df,239x60,0,0{122x60,0,0,7,116x60,123,0,8}
+state	TMUX	

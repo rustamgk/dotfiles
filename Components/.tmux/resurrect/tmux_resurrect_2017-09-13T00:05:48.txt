@@ -1,0 +1,4 @@
+pane	TMUX	1	:~/Repos	1	:*	0	:/home/rustam.gk/Repos	1	zsh	:
+pane	TMUX	1	:~/Repos	1	:*	1	:/home/rustam.gk/Repos/rofi/releasenotes/1.4.0	0	zsh	:
+window	TMUX	1	1	:*	3ae3,159x18,0,0{79x18,0,0,1,79x18,80,0,4}
+state	TMUX	

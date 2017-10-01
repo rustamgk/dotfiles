@@ -1,0 +1,15 @@
+pane	TMUX	1	:..iles/ssh/.ssh	1	:*	0	:/home/rustam.gk/Repos/dotfiles_test_stow/dotfiles/ssh/.ssh	1	zsh	:
+pane	TMUX	2	:..epos/dotfiles	0	:-	0	:/home/rustam.gk/Repos/dotfiles (deleted)	1	zsh	:zsh
+pane	TMUX	3	:vim	0	:	0	:/home/rustam.gk	1	vim	:vim
+pane	TMUX	4	:~	0	:	0	:/home/rustam.gk	1	zsh	:
+pane	TMUX	5	:~	0	:	0	:/home/rustam.gk	0	zsh	:
+pane	TMUX	5	:~	0	:	1	:/home/rustam.gk	1	zsh	:
+pane	TMUX	6	:..pta-gtk-theme	0	:	0	:/home/rustam.gk/Repos/adapta-gtk-theme	1	zsh	:
+pane	TMUX	6	:..pta-gtk-theme	0	:	1	:/home/rustam.gk/Repos/adapta-gtk-theme	0	zsh	:
+window	TMUX	1	1	:*	d17e,163x49,0,0,1
+window	TMUX	2	0	:-	d17f,163x49,0,0,2
+window	TMUX	3	0	:	d180,163x49,0,0,3
+window	TMUX	4	0	:	d181,163x49,0,0,4
+window	TMUX	5	0	:	b661,163x49,0,0[163x35,0,0,5,163x13,0,36,6]
+window	TMUX	6	0	:	80a4,163x49,0,0{90x49,0,0,7,72x49,91,0,8}
+state	TMUX	

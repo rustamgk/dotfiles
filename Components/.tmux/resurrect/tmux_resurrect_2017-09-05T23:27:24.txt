@@ -1,0 +1,3 @@
+pane	TMUX	1	:mc	1	:*	0	:/home/rustam.gk	1	mc	:mc -S nicedark
+window	TMUX	1	1	:*	bb7e,319x81,0,0,1
+state	TMUX	

@@ -1,0 +1,9 @@
+pane	TMUX	1	:~/Downloads	1	:*	0	:/home/rustam.gk/Downloads	1	zsh	:
+pane	TMUX	2	:ranger	0	:	0	:/home/rustam.gk	1	python3	:/usr/bin/python3 -O /usr/bin/ranger
+pane	TMUX	3	:vim	0	:	0	:/home/rustam.gk	1	vim	:vim
+pane	TMUX	4	:~	0	:-	0	:/home/rustam.gk	1	zsh	:
+window	TMUX	1	1	:*	b3e5,239x60,0,0,8
+window	TMUX	2	0	:	b3e1,239x60,0,0,4
+window	TMUX	3	0	:	b3e2,239x60,0,0,5
+window	TMUX	4	0	:-	b3e3,239x60,0,0,6
+state	TMUX	

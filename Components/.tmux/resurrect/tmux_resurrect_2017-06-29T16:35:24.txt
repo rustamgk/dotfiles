@@ -1,0 +1,11 @@
+pane	TMUX	1	:~/Downloads	0	:	0	:/home/rustam.gk/Downloads	0	zsh	:
+pane	TMUX	1	:~/Downloads	0	:	1	:/home/rustam.gk/Downloads	1	zsh	:
+pane	TMUX	2	:..r/share/icons	1	:*	0	:/usr/share/icons	1	zsh	:
+pane	TMUX	3	:vim	0	:	0	:/home/rustam.gk/Downloads	1	vim	:vim /home/rustam.gk/.zshrc
+pane	TMUX	4	:/home	0	:-	0	:/home/rustam.gk/.ssh	1	zsh	:
+pane	TMUX	4	:/home	0	:-	1	:/home	0	zsh	:
+window	TMUX	1	0	:	9608,240x66,0,0{120x66,0,0,1,119x66,121,0,2}
+window	TMUX	2	1	:*	c7a0,240x66,0,0,3
+window	TMUX	3	0	:	c7a1,240x66,0,0,4
+window	TMUX	4	0	:-	91c6,240x66,0,0{119x66,0,0,5,120x66,120,0,6}
+state	TMUX	

@@ -1,0 +1,10 @@
+pane	TMUX	1	:mc	0	:-	0	:/home/rustam.gk/Repos/translate-shell	0	mc	:mc -S nicedark
+pane	TMUX	1	:mc	0	:-	1	:/home/rustam.gk	1	mc	:mc -S nicedark
+pane	TMUX	2	:~/Repos	1	:*	0	:/home/rustam.gk/Repos	1	zsh	:
+pane	TMUX	3	:vim	0	:	0	:/home/rustam.gk	1	vim	:vim
+pane	TMUX	4	:~	0	:	0	:/home/rustam.gk	1	zsh	:
+window	TMUX	1	0	:-	ff47,239x60,0,0{119x60,0,0,1,119x60,120,0,6}
+window	TMUX	2	1	:*	b3df,239x60,0,0,2
+window	TMUX	3	0	:	b3e0,239x60,0,0,3
+window	TMUX	4	0	:	b3e1,239x60,0,0,4
+state	TMUX	

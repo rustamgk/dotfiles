@@ -1,0 +1,4 @@
+pane	TMUX	1	:~/Downloads	1	:*	0	:/home/rustam.gk/Repos/translate-shell	0	zsh	:zsh
+pane	TMUX	1	:~/Downloads	1	:*	1	:/home/rustam.gk/Downloads	1	zsh	:
+window	TMUX	1	1	:*	b0d5,319x78,0,0[319x39,0,0,0,319x38,0,40,1]
+state	TMUX	

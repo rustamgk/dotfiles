@@ -1,0 +1,15 @@
+pane	0	1	:~	1	:*	0	:/home/rustam.gk	1	zsh	:
+pane	TMUX	1	:~/bin	1	:*	0	:/home/rustam.gk/bin	1	zsh	:
+pane	TMUX	1	:~/bin	1	:*	1	:/home/rustam.gk/Google Drive/GMail Attachments	0	mc	:mc -S nicedark
+pane	TMUX	2	:~	0	:-	0	:/home/rustam.gk/Repos/Hedera (deleted)	1	mc	:mc -S nicedark
+pane	TMUX	3	:~	0	:	0	:/home/rustam.gk	1	zsh	:
+pane	TMUX	3	:~	0	:	1	:/home/rustam.gk	0	zsh	:
+pane	TMUX	3	:~	0	:	2	:/home/rustam.gk	0	zsh	:
+pane	TMUX	4	:~/Downloads	0	:	0	:/home/rustam.gk/.local/share/Trash/expunged/2999156167 (deleted)	0	zsh	:
+pane	TMUX	4	:~/Downloads	0	:	1	:/home/rustam.gk/Downloads	1	zsh	:
+window	0	1	1	:*	c37e,319x83,0,0,1
+window	TMUX	1	1	:*	8141,319x83,0,0{169x83,0,0,14,149x83,170,0,4}
+window	TMUX	2	0	:-	c383,319x83,0,0,6
+window	TMUX	3	0	:	d047,319x83,0,0{97x83,0,0,7,85x83,98,0,8,135x83,184,0,9}
+window	TMUX	4	0	:	2085,319x83,0,0{196x83,0,0,10,122x83,197,0,11}
+state	TMUX	0

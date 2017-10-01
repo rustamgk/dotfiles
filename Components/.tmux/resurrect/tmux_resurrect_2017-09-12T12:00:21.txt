@@ -1,0 +1,4 @@
+pane	TMUX	1	:../solarc-theme	1	:*	0	:/home/rustam.gk/Repos/solarc-theme	1	zsh	:
+pane	TMUX	1	:../solarc-theme	1	:*	1	:/home/rustam.gk/Repos/rofi/releasenotes/1.4.0	0	zsh	:
+window	TMUX	1	1	:*	ff46,239x60,0,0{119x60,0,0,1,119x60,120,0,4}
+state	TMUX	

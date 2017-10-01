@@ -1,0 +1,9 @@
+pane	0	1	:~	1	:*	0	:/home/rustam.gk	1	zsh	:
+pane	TMUX	1	:~/Downloads	1	:*	0	:/home/rustam.gk/Downloads	1	zsh	:
+pane	TMUX	1	:~/Downloads	1	:*	1	:/home/rustam.gk	0	mc	:mc -S nicedark
+pane	TMUX	4	:~/Downloads	0	:-	0	:/home/rustam.gk/jstock	0	zsh	:
+pane	TMUX	4	:~/Downloads	0	:-	1	:/home/rustam.gk/Downloads	1	zsh	:
+window	0	1	1	:*	b3de,239x60,0,0,1
+window	TMUX	1	1	:*	7f47,239x60,0,0{119x60,0,0,2,119x60,120,0,3}
+window	TMUX	4	0	:-	f87e,239x60,0,0{157x60,0,0,4,81x60,158,0,5}
+state	TMUX	0

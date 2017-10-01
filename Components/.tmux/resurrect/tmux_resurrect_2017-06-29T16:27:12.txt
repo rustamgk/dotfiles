@@ -1,0 +1,11 @@
+pane	TMUX	1	:~/Downloads	0	:	0	:/home/rustam.gk/Downloads	0	zsh	:
+pane	TMUX	1	:~/Downloads	0	:	1	:/home/rustam.gk/Downloads	1	zsh	:
+pane	TMUX	2	:..r/share/icons	1	:*	0	:/usr/share/icons	1	zsh	:
+pane	TMUX	3	:zshconfig	0	:	0	:/home/rustam.gk/Downloads	1	vim	:vim /home/rustam.gk/.zshrc
+pane	TMUX	4	:~/.ssh	0	:-	0	:/home/rustam.gk/.ssh	1	zsh	:
+pane	TMUX	4	:~/.ssh	0	:-	1	:/home	0	mc	:mc -S nicedark
+window	TMUX	1	0	:	0b5e,240x66,0,0{120x66,0,0,6,119x66,121,0,12}
+window	TMUX	2	1	:*	6402,240x66,0,0,13
+window	TMUX	3	0	:	6400,240x66,0,0,11
+window	TMUX	4	0	:-	91c9,240x66,0,0{119x66,0,0,7,120x66,120,0,8}
+state	TMUX	
