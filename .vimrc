@@ -3,7 +3,7 @@
 " Author: Galimyanov Rustam
 " Year:2015
 " ============================================
-
+set term=screen-256color
 " --------------
 " Vundle init
 " --------------
@@ -13,6 +13,9 @@ call vundle#begin() " alternatively, pass a path where Vundle should install plu
 " Plugins
 " -------------
 Plugin 'VundleVim/Vundle.vim' " let Vundle manage Vundle, required
+Plugin 'sainnhe/sonokai'
+Plugin 'KeitaNakamura/neodark.vim'
+Plugin 'drewtempelmeyer/palenight.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'scrooloose/nerdTree'
@@ -26,6 +29,7 @@ Plugin 'altercation/vim-colors-solarized'
 "Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'Raimondi/delimitMate'
+Plugin 'ayu-theme/ayu-vim' 
 Plugin 'ryanoasis/vim-devicons'
 
 call vundle#end()
@@ -34,8 +38,11 @@ filetype plugin indent on
 " --------------
 " Theme settings
 " -------------
-set background=dark " dark background
-colorscheme solarized " Solarized color theme
+" set background=dark
+" set termguicolors 
+let ayucolor="mirage"
+colorscheme ayu
+
 syntax enable " syntax highlighting
 
 " ---------------
@@ -55,7 +62,7 @@ filetype indent on " load specific filetype indent files
 set wildmenu " visual autocomplete for command menu
 set lazyredraw " redraw only when we need to
 set showmatch "highlight matching {[()]}"
-set guifont=PragmataPro:h13
+set guifont=Fura\ Mono\ Medium\ Nerd\ Font\ Complete:h14
 " --------------
 " Searching
 " --------------
@@ -168,7 +175,7 @@ set runtimepath^=~/.vim/bundle/ag
 " Airline config
 " --------------
 set laststatus=2
-let g:airline_theme='solarized'
+let g:airline_theme='ayu_mirage'
 let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_detect_modifier=1

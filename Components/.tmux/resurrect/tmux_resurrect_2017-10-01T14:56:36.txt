@@ -1,6 +1,0 @@
-pane	TMUX	1	:mc	1	:*	0	:/home/rustam.gk/Repos	0	zsh	:
-pane	TMUX	1	:mc	1	:*	1	:/home/rustam.gk	1	mc	:mc -S nicedark
-pane	TMUX	2	:..epos/dotfiles	0	:-	0	:/home/rustam.gk/Repos/dotfiles	1	zsh	:
-window	TMUX	1	1	:*	8d67,319x81,0,0{159x81,0,0,1,159x81,160,0,3}
-window	TMUX	2	0	:-	bb7f,319x81,0,0,2
-state	TMUX	

@@ -1,5 +1,0 @@
-pane	TMUX	1	:..epos/dotfiles	0	:-	0	:/home/rustam.gk/Repos/dotfiles	1	zsh	:
-pane	TMUX	2	:..epos/dotfiles	1	:*	0	:/home/rustam.gk/Repos/dotfiles	1	zsh	:
-window	TMUX	1	0	:-	b3de,239x60,0,0,1
-window	TMUX	2	1	:*	b3df,239x60,0,0,2
-state	TMUX	

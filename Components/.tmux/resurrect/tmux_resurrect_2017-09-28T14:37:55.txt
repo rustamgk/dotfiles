@@ -1,3 +1,0 @@
-pane	TMUX	1	:main	1	:*	0	:/home/rustam.gk/Repos/dotfiles	1	zsh	:
-window	TMUX	1	1	:*	b33e,119x60,0,0,1
-state	TMUX	

@@ -1,9 +1,0 @@
-pane	TMUX	1	:..epos/lollypop	1	:*	0	:/home/rustam.gk/Repos/lollypop	1	zsh	:
-pane	TMUX	2	:~	0	:	0	:/home/rustam.gk	1	zsh	:
-pane	TMUX	3	:vim	0	:	0	:/home/rustam.gk	1	vim	:vim
-pane	TMUX	4	:~	0	:-	0	:/home/rustam.gk	1	zsh	:
-window	TMUX	1	1	:*	b9fe,164x43,0,0,1
-window	TMUX	2	0	:	b9ff,164x43,0,0,2
-window	TMUX	3	0	:	ba00,164x43,0,0,3
-window	TMUX	4	0	:-	ba01,164x43,0,0,4
-state	TMUX	

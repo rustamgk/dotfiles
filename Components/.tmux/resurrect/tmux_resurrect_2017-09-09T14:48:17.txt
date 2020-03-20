@@ -1,4 +1,0 @@
-pane	TMUX	1	:vim	1	:*	0	:/home/rustam.gk/Repos/solarc-theme	0	zsh	:
-pane	TMUX	1	:vim	1	:*	1	:/home/rustam.gk	1	vim	:vim .gitconfig
-window	TMUX	1	1	:*	658a,239x59,0,0{119x59,0,0,1,119x59,120,0,2}
-state	TMUX	

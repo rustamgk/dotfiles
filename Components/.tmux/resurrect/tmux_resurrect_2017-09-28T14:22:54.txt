@@ -1,3 +1,0 @@
-pane	TMUX	2	:..iles/ssh/.ssh	1	:*	0	:/home/rustam.gk/Repos/dotfiles_test_stow/dotfiles/ssh/.ssh	1	sudo	:sudo dnf install xmonad
-window	TMUX	2	1	:*	b3de,239x60,0,0,1
-state	TMUX	

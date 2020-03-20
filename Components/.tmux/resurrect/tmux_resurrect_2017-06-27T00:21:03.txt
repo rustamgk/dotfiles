@@ -1,7 +1,0 @@
-pane	TMUX	1	:~/Downloads	0	:-	0	:/home/rustam.gk/Repos/translate-shell	0	zsh	:
-pane	TMUX	1	:~/Downloads	0	:-	1	:/home/rustam.gk/Downloads	1	zsh	:
-pane	TMUX	1	:~/Downloads	0	:-	2	:/home/rustam.gk	0	zsh	:
-pane	TMUX	2	:~	1	:*	0	:/home/rustam.gk	1	zsh	:
-window	TMUX	1	0	:-	dfa8,319x81,0,0[319x41,0,0,1,319x39,0,42{159x39,0,42,2,159x39,160,42,3}]
-window	TMUX	2	1	:*	bb81,319x81,0,0,4
-state	TMUX	
