@@ -5,51 +5,24 @@
 # Current year of config: 2019
 # -----------------------------------------
 
-# Core PATH settings
+export PATH="/usr/local/sbin:$PATH"
+export PATH="/usr/local/opt/ruby/bin:$PATH" Core PATH settings
 export PATH="/usr/local/bin:/usr/bin:/usr/local/opt/ruby/bin:/usr/local/go/bin:$PATH"
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-export ZSH=/Users/rustomgalimyanov/.oh-my-zsh
+export ZSH=/Users/rustamgk/.oh-my-zsh
 export GOPATH=$HOME/go
 
 export CHEATCOLORS=true
-export HOMEBREW_GITHUB_API_TOKEN="0e58102448f07495e0350f09e32ae746e3e1d2ef"
-
-export GITLAB_TOKEN="Upy1-LX-F862eM7z1Pxh"
-
-ZSH_THEME="spaceship"
-
-SPACESHIP_PROMPT_ORDER=(
-  time
-  user
-  host
-  dir
-  git
-  package
-  node
-  ruby
-  xcode
-  swift
-  golang
-  docker
-  aws
-  conda
-  kubectl
-  kubectl_version
-  kubectl_context
-  terraform
-  battery
-  exec_time
-  line_sep
-  vi_mode
-  jobs
-  exit_code
-  char
-  )
+export HOMEBREW_GITHUB_API_TOKEN="69c0fe0465cfd6c21c3a696e7ca6b1ba205bbdcc"
+export GITLAB_TOKEN="ffad8810bc3dc1e0760360d85d17d3a6c4a1632c"
+export GITLAB_ACCESS_TOKEN="PtK2opxAymkzwZ6zv_Tt"
+export DOCKER_ACCESS_TOKEN="80cc0c72-22d1-4460-9144-27d0b628efdc"
 
 autoload -Uz compinit && compinit
 plugins=(zsh-navigation-tools)
 # ----------------------------------------
 source ~/.zplug/init.zsh
+PROMPT='$(kube_ps1)'$PROMPT
 
 if ! zplug check; then
         zplug install
@@ -81,10 +54,10 @@ zplug "MikeDacre/careful_rm"
 zplug "zsh-users/zsh-autosuggestions"
 zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-syntax-highlighting"
-zplug "denysdovhan/spaceship-prompt", as:theme
 zplug "agkozak/zsh-z"
 
 zplug load
+
 
 # --------------------------------------
 source $ZSH/oh-my-zsh.sh
@@ -92,7 +65,8 @@ source $ZSH/oh-my-zsh.sh
 # --------------------------------------
 # My aliases. Git aliases in gitconfig
 # --------------------------------------
-
+alias kuctx="kubectx"
+alias kuns="kubens"
 alias reload="source ~/.zshrc"
 alias venv="virtualenv"
 # alias do_oracle12c="docker run -d -p 8080:8080 -p 1521:1521 -v /my/oracle/data:/u01/app/oracle sath89/oracle-12c"
@@ -100,7 +74,7 @@ alias s="sudo"
 #alias sdi="sudo dnf install"
 #alias sdr="sudo dnf remove" 
 #alias sdu="sudo dnf update"
-alias kctl="kubectl"
+alias ku="kubectl"
 alias bri="brew install"
 alias bru="brew uninstall"
 alias brs="brew search"
@@ -115,7 +89,6 @@ alias zshconfig="vim ~/.zshrc"
 alias vlm5="setvolume 50"
 alias vlm1="setvolume 100"
 alias vlm0="setvolume 0"
-alias rm="trash"
 #alias ohmyzsh="vim ~/.oh-my-zsh"
 alias tmuxc="vim ~/.tmux.conf"
 alias tmuxcp="vim ~/.tmux-powerlinerc"
@@ -163,7 +136,8 @@ alias gA="git add -A"
 alias gri="git rebase -i"
 alias grc="git rebase --continue"
 alias gra="git rebase --abort"
-
+alias mvim="open -a MacVim"
+alias oktaws='saml2aws login --profile=default && eval $(saml2aws script --profile=default)'
 # ----------------------------------------
 # Some ssh aliase for better management
 # -----------------------------------------
@@ -257,7 +231,13 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-fortune | cowsay | lolcat
+# fortune | cowsay | lolcat
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/local/bin/terraform terraform
+eval "$(starship init zsh)"
+
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+export PATH="/usr/local/opt/openjdk/bin:$PATH"
