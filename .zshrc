@@ -5,66 +5,31 @@
 # Current year of config: 2019
 # -----------------------------------------
 
-export PATH="/usr/local/sbin:$PATH"
-export PATH="/usr/local/opt/ruby/bin:$PATH" Core PATH settings
-export PATH="/usr/local/bin:/usr/bin:/usr/local/opt/ruby/bin:/usr/local/go/bin:$PATH"
-export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-export ZSH=/Users/rustamgk/.oh-my-zsh
-export GOPATH=$HOME/go
-
+export PATH="/home/rustamgk/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/opt/ruby/bin:/usr/local/go/bin:${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+export ZSH=/home/rustamgk/.oh-my-zsh
 export CHEATCOLORS=true
 export HOMEBREW_GITHUB_API_TOKEN="69c0fe0465cfd6c21c3a696e7ca6b1ba205bbdcc"
 export GITLAB_TOKEN="ffad8810bc3dc1e0760360d85d17d3a6c4a1632c"
 export GITLAB_ACCESS_TOKEN="PtK2opxAymkzwZ6zv_Tt"
-export DOCKER_ACCESS_TOKEN="80cc0c72-22d1-4460-9144-27d0b628efdc"
+#export GOPATH = "/Users/rustamgk/go"
+#export GOROOT = "$(brew --prefix golang)/libexec"
+#export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
+
+#export FPATH = /opt/homebrew/share/zsh/site-functions:$FPATH
 
 autoload -Uz compinit && compinit
-plugins=(zsh-navigation-tools)
 # ----------------------------------------
-source ~/.zplug/init.zsh
-PROMPT='$(kube_ps1)'$PROMPT
 
-if ! zplug check; then
-        zplug install
-fi
-
-zplug "jonmosco/kube-ps1"
-zplug "plugins/zsh-navigation-tools", from:oh-my-zsh
-zplug "lib/theme-and-appearance", from:oh-my-zsh
-zplug "lib/clipboard", from:oh-my-zsh
-zplug "lib/completion", from:oh-my-zsh
-zplug "lib/key-bindings", from:oh-my-zsh
-zplug "lib/directories", from:oh-my-zsh
-zplug "lib/history", from:oh-my-zsh
-zplug "plugins/vi-mode", from:oh-my-zsh
-zplug "plugins/git", from:oh-my-zsh
-zplug "plugins/history", from:oh-my-zsh
-zplug "plugins/tmux", from:oh-my-zsh
-zplug "plugins/osx", from:oh-my-zsh
-zplug "plugins/ansible", from:oh-my-zsh
-zplug "plugins/aws", from:oh-my-zsh
-zplug "plugins/docker", from:oh-my-zsh
-zplug "plugins/man", from:oh-my-zsh
-zplug "plugins/python", from:oh-my-zsh
-zplug "plugins/brew", from:oh-my-zsh
-zplug "plugins/pip", from:oh-my-zsh
-zplug "plugins/kubectl", from:oh-my-zsh
-zplug "hlissner/zsh-autopair"
-zplug "MikeDacre/careful_rm"
-zplug "zsh-users/zsh-autosuggestions"
-zplug "zsh-users/zsh-completions"
-zplug "zsh-users/zsh-syntax-highlighting"
-zplug "agkozak/zsh-z"
-
-zplug load
-
+plugins=(zsh-syntax-highlighting zsh-autosuggestions autojump vscode zsh-interactive-cd tmux ubuntu thefuck terraform  git kubectl docker python pyenv helm history golang common-aliases colored-man-pages ansible aliases  zsh-navigation-tools)
 
 # --------------------------------------
-source $ZSH/oh-my-zsh.sh
+#source $ZSH/oh-my-zsh.sh
 
 # --------------------------------------
 # My aliases. Git aliases in gitconfig
 # --------------------------------------
+alias cdvc="cd ~/repos/_vc"
+alias 1pl="op signin grk_family"
 alias kuctx="kubectx"
 alias kuns="kubens"
 alias reload="source ~/.zshrc"
@@ -81,7 +46,7 @@ alias brs="brew search"
 alias brl="brew list"
 alias labbox01="ssh rustam.gk@10.0.10.5"
 #alias doams02="ssh root@95.85.39.87"
-alias wt="curl wttr.in/krakow"
+alias wt="curl wttr.in/berlin"
 alias juc="soccer --team=JUVE --upcoming --time=30"
 alias cas="soccer --standings --league=SA"
 alias car="soccer --league=SA"
@@ -120,6 +85,8 @@ alias restartaudio="sudo kill -9 `ps ax|grep 'coreaudio[a-z]' | awk '{print $1}'
 # Git aliases
 alias glo="git log --oneline"
 # git
+alias gcm="git checkout master"
+alias gcb="git checkout -b"
 alias gc="git commit"
 alias gs="git status"
 alias gd="git diff"
@@ -161,7 +128,7 @@ export MC_SKIN=~/.mc/solarized.ini
 export ARCHFLAGS="-arch x86_64"
 
 # ssh
-export SSH_KEY_PATH="~/.ssh/dsa_id"
+export SSH_KEY_PATH="~/.ssh/"
 export EDITOR='vim'
 # export PAGER='vim'
 
@@ -215,29 +182,20 @@ pack () {
   fi
 }
 
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/rustomgalimyanov/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/rustomgalimyanov/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/rustomgalimyanov/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/rustomgalimyanov/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
 # fortune | cowsay | lolcat
 
-autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /usr/local/bin/terraform terraform
+# autoload -U +X bashcompinit && bashcompinit
+fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
+fpath+=(~/.config/hcloud/completion/zsh)
+source $ZSH/oh-my-zsh.sh
+
 eval "$(starship init zsh)"
+autoload -Uz compinit && compinit
 
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+#autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /usr/bin/terraform terraform
 
-export PATH="/usr/local/opt/openjdk/bin:$PATH"
+# Generated for envman. Do not edit.
+[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+

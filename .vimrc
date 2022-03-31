@@ -13,9 +13,7 @@ call vundle#begin() " alternatively, pass a path where Vundle should install plu
 " Plugins
 " -------------
 Plugin 'VundleVim/Vundle.vim' " let Vundle manage Vundle, required
-Plugin 'sainnhe/sonokai'
-Plugin 'KeitaNakamura/neodark.vim'
-Plugin 'drewtempelmeyer/palenight.vim'
+Plugin 'arcticicestudio/nord-vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'scrooloose/nerdTree'
@@ -25,7 +23,6 @@ Plugin 'scrooloose/syntastic'
 Plugin 'rizzatti/dash.vim'
 Plugin 'bling/vim-bufferline'
 Plugin 'mbbill/undotree'
-Plugin 'altercation/vim-colors-solarized'
 "Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'Raimondi/delimitMate'
@@ -40,9 +37,7 @@ filetype plugin indent on
 " -------------
 " set background=dark
 " set termguicolors 
-let ayucolor="mirage"
-colorscheme ayu
-
+colorscheme nord
 syntax enable " syntax highlighting
 
 " ---------------
@@ -62,7 +57,7 @@ filetype indent on " load specific filetype indent files
 set wildmenu " visual autocomplete for command menu
 set lazyredraw " redraw only when we need to
 set showmatch "highlight matching {[()]}"
-set guifont=Fura\ Mono\ Medium\ Nerd\ Font\ Complete:h14
+set guifont=Iosevka\ Term\ Regular:h13
 " --------------
 " Searching
 " --------------
@@ -175,7 +170,7 @@ set runtimepath^=~/.vim/bundle/ag
 " Airline config
 " --------------
 set laststatus=2
-let g:airline_theme='ayu_mirage'
+let g:airline_theme='nord'
 let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_detect_modifier=1
