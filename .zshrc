@@ -5,9 +5,9 @@
 # Current year of config: 2019
 # -----------------------------------------
 
-export PATH="/home/rustamgk/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/opt/ruby/bin:/usr/local/go/bin:${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-export ZSH=/home/rustamgk/.oh-my-zsh
-export CHEATCOLORS=true
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/opt/ruby/bin:/usr/local/go/bin:${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+export ZSH=/Users/rustamgk/.oh-my-zsh
+#export CHEATCOLORS=true
 export HOMEBREW_GITHUB_API_TOKEN="69c0fe0465cfd6c21c3a696e7ca6b1ba205bbdcc"
 export GITLAB_TOKEN="ffad8810bc3dc1e0760360d85d17d3a6c4a1632c"
 export GITLAB_ACCESS_TOKEN="PtK2opxAymkzwZ6zv_Tt"
@@ -16,7 +16,9 @@ export GITLAB_ACCESS_TOKEN="PtK2opxAymkzwZ6zv_Tt"
 #export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
 
 #export FPATH = /opt/homebrew/share/zsh/site-functions:$FPATH
-
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"
 autoload -Uz compinit && compinit
 # ----------------------------------------
 
