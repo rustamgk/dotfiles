@@ -5,3 +5,5 @@ $ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/instal
 
 curl -sS https://starship.rs/install.sh | sh
 
+for tmux:
+- tpm CTRL + I
