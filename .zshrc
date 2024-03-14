@@ -2,13 +2,14 @@
 # ZSH config file
 # Author: Galimyanov Rustam
 # Initial date: 2007
-# Current year of config: 2019
+# Current year of config: 2023
+# Current platform: Windows10+WSL2
 # -----------------------------------------
 
-export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/opt/ruby/bin:/usr/local/go/bin:${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-export ZSH=/Users/rustamgk/.oh-my-zsh
+export PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/local/opt/ruby/bin:/usr/local/go/bin:${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+export ZSH=/home/rustamgk/.oh-my-zsh
 #export CHEATCOLORS=true
-export HOMEBREW_GITHUB_API_TOKEN="69c0fe0465cfd6c21c3a696e7ca6b1ba205bbdcc"
+export HOMEBREW_GITHUB_API_TOKEN="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"
 export GITLAB_TOKEN="ffad8810bc3dc1e0760360d85d17d3a6c4a1632c"
 export GITLAB_ACCESS_TOKEN="PtK2opxAymkzwZ6zv_Tt"
 #export GOPATH = "/Users/rustamgk/go"
@@ -22,10 +23,9 @@ eval "$(pyenv init --path)"
 autoload -Uz compinit && compinit
 # ----------------------------------------
 
-plugins=(zsh-syntax-highlighting zsh-autosuggestions autojump vscode zsh-interactive-cd tmux ubuntu thefuck terraform  git kubectl docker python pyenv helm history golang common-aliases colored-man-pages ansible aliases  zsh-navigation-tools)
+plugins=(zsh-syntax-highlighting zsh-autosuggestions autojump vscode tmux terraform  git kubectl docker python pyenv helm history golang common-aliases colored-man-pages ansible aliases zsh-navigation-tools)
 
 # --------------------------------------
-#source $ZSH/oh-my-zsh.sh
 
 # --------------------------------------
 # My aliases. Git aliases in gitconfig
@@ -107,6 +107,7 @@ alias grc="git rebase --continue"
 alias gra="git rebase --abort"
 alias mvim="open -a MacVim"
 alias oktaws='saml2aws login --profile=default && eval $(saml2aws script --profile=default)'
+#alias vim="nvim"
 # ----------------------------------------
 # Some ssh aliase for better management
 # -----------------------------------------
@@ -184,7 +185,7 @@ pack () {
   fi
 }
 
-# fortune | cowsay | lolcat
+fortune | cowsay -f vader | lolcat
 
 # autoload -U +X bashcompinit && bashcompinit
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
@@ -201,3 +202,15 @@ complete -o nospace -C /usr/bin/terraform terraform
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/Users/rustam/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+export JAVA_HOME='/usr/libexec/java_home'
+
+ZSH_TMUX_AUTOSTART=true
+
+if [ -z "$TMUX" ]
+then
+    tmux attach -t TMUX || tmux new -s TMUX
+fi
