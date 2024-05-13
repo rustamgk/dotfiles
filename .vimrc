@@ -1,19 +1,19 @@
 " ============================================
-" Config of VIm Editor
+" Config of VIM Editor
 " Author: Galimyanov Rustam
 " Year:2015
 " ============================================
-set term=screen-256color
+
 " --------------
 " Vundle init
 " --------------
 set rtp+=~/.vim/bundle/Vundle.vim " set the runtime path to include Vundle and initialize
 call vundle#begin() " alternatively, pass a path where Vundle should install plugins; call vundle#begin('~/some/path/here')
+
 " -------------
 " Plugins
 " -------------
 Plugin 'VundleVim/Vundle.vim' " let Vundle manage Vundle, required
-Plugin 'arcticicestudio/nord-vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'scrooloose/nerdTree'
@@ -23,28 +23,27 @@ Plugin 'scrooloose/syntastic'
 Plugin 'rizzatti/dash.vim'
 Plugin 'bling/vim-bufferline'
 Plugin 'mbbill/undotree'
-"Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'Raimondi/delimitMate'
-Plugin 'ayu-theme/ayu-vim' 
 Plugin 'ryanoasis/vim-devicons'
-
+Plugin 'joshdick/onedark.vim'
+Plugin 'rakr/vim-one'
 call vundle#end()
 filetype plugin indent on
 
 " --------------
 " Theme settings
 " -------------
-" set background=dark
-" set termguicolors 
-colorscheme nord
 syntax enable " syntax highlighting
+colorscheme one
+set background=dark
+
 
 " ---------------
 " Spaces and Tabs
 " ---------------
-set tabstop=4 " number of visual spaces per TAB
-set softtabstop=4 " number of visual spaces in tab then editing
+set tabstop=2 " number of visual spaces per TAB
+set softtabstop=2 " number of visual spaces in tab then editing
 set expandtab " tabs are spaces
 
 " ---------------
@@ -57,7 +56,7 @@ filetype indent on " load specific filetype indent files
 set wildmenu " visual autocomplete for command menu
 set lazyredraw " redraw only when we need to
 set showmatch "highlight matching {[()]}"
-set guifont=Iosevka\ Term\ Regular:h13
+set guifont=IosevkaTerm\ Nerd\ Font:h18
 " --------------
 " Searching
 " --------------
@@ -170,7 +169,7 @@ set runtimepath^=~/.vim/bundle/ag
 " Airline config
 " --------------
 set laststatus=2
-let g:airline_theme='nord'
+let g:airline_theme='one'
 let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_detect_modifier=1
@@ -231,3 +230,4 @@ let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 "let g:UltiSnipsExpandTrigger="<tab>"
 "let g:UltiSnipsJumpForwardTrigger="<c-b>"
 "let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+

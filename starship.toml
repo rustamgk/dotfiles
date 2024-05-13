@@ -1,9 +1,9 @@
 # ~/.config/starship.toml
 
 [battery]
-full_symbol = "🔋"
-charging_symbol = "🔌"
-discharging_symbol = "⚡"
+full_symbol = "🔋 "
+charging_symbol = "🔌 "
+discharging_symbol = "⚡ "
 
 [[battery.display]]
 threshold = 30
@@ -88,7 +88,7 @@ disabled = false
 
 [kubernetes]
 style = "blue bold"
-format = '[🚀 ⎈ (bold blue) ($user on )($cluster )\($namespace\) ]($style)'
+format = '[🚀 ⎈(bold blue) ($cluster )\($namespace\) ]($style)'
 disabled = false
 [kubernetes.context_aliases]
 "dev.local.cluster.k8s" = "dev"
