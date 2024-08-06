@@ -4,17 +4,16 @@
 # Initial date: 2007
 # Current year of config: 2022
 # -----------------------------------------
-export PATH="~/.local/bin/:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/golang/bin"
+export PATH="/.local/bin/:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/golang/bin"
 export ZSH=/home/rustamgk/.oh-my-zsh
 export GITLAB_USER_NAME="rustam.galimyanov"
 export GITLAB_ACCESS_TOKEN="accdQoNmxpNUhYDqyUSi"
-autoload -Uz compinit && compinit
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init --path)"
 
 # ----------------------------------------
-plugins=(aliases common-aliases fzf starship zsh-syntax-highlighting zsh-autosuggestions autojump vscode tmux terraform git kubectl docker python helm history golang colored-man-pages ansible zsh-navigation-tools)
+plugins=(pyenv aliases fzf starship zsh-syntax-highlighting autojump vscode tmux terraform git kubectl docker python helm history golang colored-man-pages ansible zsh-navigation-tools)
 
 # --------------------------------------
 #source $ZSH/oh-my-zsh.sh
@@ -22,6 +21,10 @@ plugins=(aliases common-aliases fzf starship zsh-syntax-highlighting zsh-autosug
 # --------------------------------------
 # My aliases. Git aliases in gitconfig
 # --------------------------------------
+alias sdi="sudo dnf install"
+alias sdu="sudo dnf uninstall"
+alias sds="sudo dnf search"
+alias lg="lazygit"
 alias tp="trashy"
 alias eza="eza --icons"
 alias es="eza -l --icons --git -a"
@@ -35,9 +38,9 @@ alias kuns="kubens"
 alias reload="source ~/.zshrc"
 alias venv="virtualenv"
 alias s="sudo"
-alias sdi="sudo dnf install"
-alias sdr="sudo dnf remove" 
-alias sdu="sudo dnf update"
+alias bri="brew install"
+alias bru="brew remove" 
+alias brs="brew search"
 alias ku="kubectl"
 alias wt="curl wttr.in/berlin"
 alias juc="soccer --team=JUVE --upcoming --time=30"
@@ -160,17 +163,15 @@ pack () {
 
 # autoload -U +X bashcompinit && bashcompinit
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
-fpath+=(~/.config/hcloud/completion/zsh)
 source $ZSH/oh-my-zsh.sh
 
 #eval "$(starship init zsh)"
-autoload -Uz compinit && compinit
+#autoload -Uz compinit && compinit
+autoload -U compinit; compinit
+source /home/rustamgk/github/fzf-tab/fzf-tab.plugin.zsh
 
 #autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /usr/bin/terraform terraform
-
-# Generated for envman. Do not edit.
-[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+#complete -o nospace -C /opt/homebrew/bin/terraform terraform
 
 ZSH_TMUX_AUTOSTART=true
 
@@ -179,6 +180,6 @@ then
     tmux attach -t main || tmux new -s main
 fi
 
-eval "$(zoxide init zsh)"
+eval "$(fzf --zsh)"
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+eval "$(zoxide init zsh)"
