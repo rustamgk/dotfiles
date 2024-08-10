@@ -4,6 +4,12 @@
 # Initial date: 2007
 # Current year of config: 2022
 # -----------------------------------------
+#autoload -U compinit
+#compinit
+#source /home/rustamgk/github/fzf-tab/fzf-tab.plugin.zsh
+
+#fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
+zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
 export PATH="/.local/bin/:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/golang/bin"
 export ZSH=/home/rustamgk/.oh-my-zsh
 export GITLAB_USER_NAME="rustam.galimyanov"
@@ -13,10 +19,11 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init --path)"
 
 # ----------------------------------------
-plugins=(pyenv aliases fzf starship zsh-syntax-highlighting autojump vscode tmux terraform git kubectl docker python helm history golang colored-man-pages ansible zsh-navigation-tools)
+plugins=(fzf-tab pyenv aliases fzf starship zsh-syntax-highlighting autojump tmux terraform git kubectl docker python helm history golang colored-man-pages ansible zsh-navigation-tools)
+
 
 # --------------------------------------
-#source $ZSH/oh-my-zsh.sh
+source $ZSH/oh-my-zsh.sh
 
 # --------------------------------------
 # My aliases. Git aliases in gitconfig
@@ -160,20 +167,6 @@ pack () {
 }
 
 # fortune | cowsay | lolcat
-
-# autoload -U +X bashcompinit && bashcompinit
-fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
-source $ZSH/oh-my-zsh.sh
-
-#eval "$(starship init zsh)"
-#autoload -Uz compinit && compinit
-autoload -U compinit; compinit
-source /home/rustamgk/github/fzf-tab/fzf-tab.plugin.zsh
-
-#autoload -U +X bashcompinit && bashcompinit
-#complete -o nospace -C /opt/homebrew/bin/terraform terraform
-
-ZSH_TMUX_AUTOSTART=true
 
 if [ -z "$TMUX" ]
 then
