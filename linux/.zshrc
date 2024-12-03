@@ -10,8 +10,10 @@
 
 #fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
-export PATH="/.local/bin/:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/golang/bin"
-export ZSH=/home/rustamgk/.oh-my-zsh
+export DOTNET_ROOT=$HOME/.dotnet
+
+export PATH=/opt/homebrew/bin/:/opt/homebrew/sbin:"$HOME/.local/bin/":/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/golang/bin:$DOTNET_ROOT:$DOTNET_ROOT/tools
+export ZSH=/Users/rustamgk/.oh-my-zsh
 export GITLAB_USER_NAME="rustam.galimyanov"
 export GITLAB_ACCESS_TOKEN="accdQoNmxpNUhYDqyUSi"
 export PYENV_ROOT="$HOME/.pyenv"
@@ -56,7 +58,7 @@ alias car="soccer --league=SA"
 alias zshconfig="e ~/.zshrc"
 alias tmuxc="vim ~/.tmux.conf"
 alias mc="mc -S nicedark"
-alias e="/usr/bin/nvim"
+alias e=nvim
 alias vim=nvim
 alias v=nvim
 alias myip="ifconfig | grep \"inet \" | grep -v 127.0.0.1 | cut -d\  -f2"
