@@ -6,3 +6,6 @@ tmux
 mc
 git
 nvim
+autojump
+zoxide
+fzf
