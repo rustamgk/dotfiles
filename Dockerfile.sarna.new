@@ -1,0 +1,25 @@
+# Sarna Work Environment Dockerfile
+# Based on the main Dockerfile with Sarna-specific customizations
+
+# Build from the main personal Dockerfile
+FROM rustamgk/dotfiles:latest
+
+# Set work environment
+ENV WORK_PROFILE=sarna
+
+# Sarna-specific environment variables
+ENV SARNA_WORKSPACE=/home/rustamgk/workspace
+ENV SARNA_HELM=/home/rustamgk/helm
+
+# Switch to user
+USER rustamgk
+WORKDIR /home/rustamgk
+
+# Add any Sarna-specific tools here when needed
+# Example: RUN /home/linuxbrew/.linuxbrew/bin/brew install sarna-specific-tool
+
+# Sarna-specific aliases and configurations can be added here
+# RUN echo 'alias sarna-cmd="some command"' >> ~/.zshrc
+
+# The rest is inherited from the base image
+# Entry point and CMD are inherited from base image

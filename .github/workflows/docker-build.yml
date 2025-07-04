@@ -97,6 +97,9 @@ jobs:
         tags: |
           type=raw,value=${{ matrix.profile.tag }}
           type=sha,prefix=${{ matrix.profile.tag }}-
+        labels: |
+          org.opencontainers.image.title=Rustam's Development Environment - ${{ matrix.profile.name }}
+          org.opencontainers.image.description=Multi-platform development environment for ${{ matrix.profile.name }} profile
 
     - name: Build and push Docker image
       if: steps.should_build.outputs.should_build == 'true'

@@ -56,7 +56,7 @@ function Get-ProfileConfig {
     switch ($Profile) {
         "personal" {
             $config.ContainerName = "rustam-devenv-personal"
-            $config.ImageName = "rustam-devenv:personal"
+            $config.ImageName = "rustamgk/dotfiles:latest"
             $config.DockerHubImage = "rustamgk/dotfiles:latest"
             $config.WorkspacePath = "C:\workspace"
             $config.HelmPath = "C:\helm"
@@ -65,7 +65,7 @@ function Get-ProfileConfig {
         }
         "work_sarna" {
             $config.ContainerName = "rustam-devenv-sarna"
-            $config.ImageName = "rustam-devenv:sarna"
+            $config.ImageName = "rustamgk/dotfiles:sarna"
             $config.DockerHubImage = "rustamgk/dotfiles:sarna"
             $config.WorkspacePath = "C:\workspace\sarna"
             $config.HelmPath = "C:\helm\sarna"
@@ -74,7 +74,7 @@ function Get-ProfileConfig {
         }
         "work_sdui" {
             $config.ContainerName = "rustam-devenv-sdui"
-            $config.ImageName = "rustam-devenv:sdui"
+            $config.ImageName = "rustamgk/dotfiles:sdui"
             $config.DockerHubImage = "rustamgk/dotfiles:sdui"
             $config.WorkspacePath = "C:\workspace\sdui"
             $config.HelmPath = "C:\helm\sdui"
@@ -293,11 +293,11 @@ function Show-Logs {
 # Show container status
 function Show-Status {
     Write-Host "=== Docker Images ===" -ForegroundColor $Blue
-    $images = docker images --filter "reference=rustam-devenv" --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}\t{{.CreatedAt}}"
+    $images = docker images --filter "reference=rustamgk/dotfiles" --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}\t{{.CreatedAt}}"
     if ($images.Count -gt 1) {
         $images
     } else {
-        Write-Host "No rustam-devenv images found"
+        Write-Host "No rustamgk/dotfiles images found"
     }
     
     Write-Host ""

@@ -27,7 +27,7 @@ get_profile_config() {
     case $PROFILE in
         "personal")
             CONTAINER_NAME="rustam-devenv-personal"
-            IMAGE_NAME="rustam-devenv:personal"
+            IMAGE_NAME="rustamgk/dotfiles:latest"
             DOCKERHUB_IMAGE="rustamgk/dotfiles:latest"
             WORKSPACE_PATH="$HOME/workspace"
             HELM_PATH="$HOME/helm"
@@ -36,7 +36,7 @@ get_profile_config() {
             ;;
         "work_sarna")
             CONTAINER_NAME="rustam-devenv-sarna"
-            IMAGE_NAME="rustam-devenv:sarna"
+            IMAGE_NAME="rustamgk/dotfiles:sarna"
             DOCKERHUB_IMAGE="rustamgk/dotfiles:sarna"
             WORKSPACE_PATH="$HOME/workspace/sarna"
             HELM_PATH="$HOME/helm/sarna"
@@ -45,7 +45,7 @@ get_profile_config() {
             ;;
         "work_sdui")
             CONTAINER_NAME="rustam-devenv-sdui"
-            IMAGE_NAME="rustam-devenv:sdui"
+            IMAGE_NAME="rustamgk/dotfiles:sdui"
             DOCKERHUB_IMAGE="rustamgk/dotfiles:sdui"
             WORKSPACE_PATH="$HOME/workspace/sdui"
             HELM_PATH="$HOME/helm/sdui"
@@ -253,7 +253,7 @@ show_logs() {
 # Show container status
 show_status() {
     echo "=== Docker Images ==="
-    docker images | grep rustam-devenv || echo "No rustam-devenv image found"
+    docker images | grep "rustamgk/dotfiles\|rustam-devenv" || echo "No dotfiles images found"
     echo ""
     echo "=== Running Containers ==="
     docker ps | grep rustam-devenv || echo "No rustam-devenv container running"
@@ -262,6 +262,7 @@ show_status() {
     docker ps -a | grep rustam-devenv || echo "No rustam-devenv containers found"
 }
 
+# Ensure personal image exists (for work profiles that can inherit from it)
 # Main script logic
 main() {
     # Validate profile and get config
