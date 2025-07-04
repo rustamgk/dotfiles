@@ -45,6 +45,57 @@ RUN apt-get update && apt-get install -y \
 # Add user to sudoers for Homebrew installation
 RUN echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
+# Switch to user before installing Homebrew
+USER ${USER}
+WORKDIR ${HOME}
+
+# Install Homebrew (Linux version) as user with sudo access
+RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Multi-platform development environment
+# Supports macOS, Linux, and Windows WSL2
+FROM ubuntu:22.04
+
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TERM=xterm-256color
+ENV SHELL=/bin/zsh
+ENV USER=rustamgk
+ENV HOME=/home/${USER}
+ENV WORKSPACE_DIR=${HOME}/workspace
+ENV HELM_DIR=${HOME}/helm
+ENV WORK_PROFILE=sdui
+
+# Create user and directories
+RUN useradd -m -s /bin/zsh ${USER} && \
+    mkdir -p ${WORKSPACE_DIR} ${HELM_DIR} && \
+    chown -R ${USER}:${USER} ${HOME}
+
+# Install base packages and sudo for Homebrew
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    wget \
+    git \
+    vim \
+    nano \
+    unzip \
+    tar \
+    gzip \
+    ca-certificates \
+    gnupg \
+    lsb-release \
+    software-properties-common \
+    apt-transport-https \
+    file \
+    procps \
+    openssh-client \
+    sudo \
+    && rm -rf /var/lib/apt/lists/*
+
+# Add user to sudoers for Homebrew installation
+RUN echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
 # Switch to root temporarily to install Homebrew properly
 USER root
 

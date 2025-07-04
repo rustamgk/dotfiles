@@ -41,6 +41,13 @@ RUN apt-get update && apt-get install -y \
 # Add user to sudoers for Homebrew installation
 RUN echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
+# Switch to user before installing Homebrew
+USER ${USER}
+WORKDIR ${HOME}
+
+# Install Homebrew (Linux version) as user with sudo access
+RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
 # Switch to root temporarily to install Homebrew properly
 USER root
 
