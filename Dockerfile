@@ -16,7 +16,7 @@ RUN useradd -m -s /bin/zsh ${USER} && \
     mkdir -p ${WORKSPACE_DIR} ${HELM_DIR} && \
     chown -R ${USER}:${USER} ${HOME}
 
-# Install base packages and sudo for Homebrew
+# Install base packages and build dependencies for Homebrew
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
@@ -36,9 +36,14 @@ RUN apt-get update && apt-get install -y \
     procps \
     openssh-client \
     sudo \
+    gcc \
+    g++ \
+    make \
+    libz-dev \
+    ruby-full \
     && rm -rf /var/lib/apt/lists/*
 
-# Add user to sudoers for Homebrew installation
+# Add user to sudoers (still needed for some operations)
 RUN echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Switch to user before installing Homebrew
@@ -50,8 +55,20 @@ RUN git config --global user.name "Docker Build" && \
     git config --global user.email "docker@example.com" && \
     git config --global init.defaultBranch main
 
-# Install Homebrew (Linux version) as user with sudo access
-RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# Create linuxbrew directory structure as root and set ownership
+USER root
+RUN mkdir -p /home/linuxbrew/.linuxbrew && \
+    chown -R ${USER}:${USER} /home/linuxbrew/.linuxbrew
+
+# Switch back to user
+USER ${USER}
+
+# Alternative Homebrew installation that bypasses sudo issues
+RUN CI=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || \
+    (git clone --depth=1 https://github.com/Homebrew/brew /home/linuxbrew/.linuxbrew/Homebrew && \
+     mkdir -p /home/linuxbrew/.linuxbrew/bin && \
+     ln -s /home/linuxbrew/.linuxbrew/Homebrew/bin/brew /home/linuxbrew/.linuxbrew/bin/brew && \
+     /home/linuxbrew/.linuxbrew/bin/brew update --force --quiet)
 
 # Add Homebrew to PATH
 ENV PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:${PATH}"
