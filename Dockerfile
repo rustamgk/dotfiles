@@ -45,19 +45,13 @@ RUN echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 USER ${USER}
 WORKDIR ${HOME}
 
+# Set git config to avoid issues during Homebrew installation
+RUN git config --global user.name "Docker Build" && \
+    git config --global user.email "docker@example.com" && \
+    git config --global init.defaultBranch main
+
 # Install Homebrew (Linux version) as user with sudo access
 RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# Switch to root temporarily to install Homebrew properly
-USER root
-
-# Install Homebrew as root but configure it for the user
-RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && \
-    chown -R ${USER}:${USER} /home/linuxbrew/.linuxbrew
-
-# Switch back to user for remaining operations
-USER ${USER}
-WORKDIR ${HOME}
 
 # Add Homebrew to PATH
 ENV PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:${PATH}"
