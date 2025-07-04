@@ -15,27 +15,90 @@ A Docker-based development environment that provides a consistent setup across m
 ## 🛠️ Included Tools
 
 ### Core Development Tools
-- **Shell**: ZSH with Oh My Zsh and extensive plugins
-- **Editor**: Neovim with custom configuration
-- **Terminal Multiplexer**: tmux (latest version) with plugins
-- **Version Control**: Git with aliases and configuration
-- **File Manager**: Midnight Commander (mc) with custom theme
+- **Shell**: ZSH with Oh My Zsh and extensive plugins (autosuggestions, syntax highlighting)
+- **Editor**: Neovim with LazyVim configuration featuring LSP, formatting, and DevOps tooling
+- **Terminal Multiplexer**: tmux (latest version) with plugins for session management
+- **Version Control**: Git with aliases and configuration for efficient workflows
+- **File Manager**: Midnight Commander (mc) with custom theme for visual file navigation
 
 ### Cloud & DevOps Tools
-- **Kubernetes**: kubectl, k9s, helm, kubectx, stern
-- **Infrastructure**: ansible, flux, terraform
-- **ArgoCD**: argocd CLI
-- **NATS**: nats CLI tools
-- **Languages**: Go, Python3 (with pyenv), Node.js
+- **Kubernetes Management**:
+  - `kubectl` - Official Kubernetes command-line tool
+  - `k9s` - Terminal-based UI for Kubernetes clusters
+  - `helm` - Package manager for Kubernetes applications
+  - `kubectx` - Fast context switching between Kubernetes clusters
+  - `stern` - Multi-pod and container log tailing
+  - `kustomize` - Template-free configuration customization
+  - `krew` - Plugin manager for kubectl
+
+- **Infrastructure as Code**:
+  - `terraform` - Infrastructure provisioning and management
+  - `terragrunt` - Terraform wrapper for DRY configurations
+  - `tflint` - Terraform linter for catching errors and best practices
+  - `ansible` - Configuration management and automation
+  - `flux` - GitOps continuous delivery for Kubernetes
+
+- **Cloud Platforms**:
+  - `azure-cli` - Microsoft Azure command-line interface with DevOps extensions
+  - `argocd` - Declarative GitOps continuous delivery tool
+
+- **Messaging & Streaming**:
+  - `nats` - Cloud-native messaging system CLI tools
+
+- **Programming Languages**:
+  - `go` - Go programming language and toolchain
+  - `python3` with `pyenv` - Python version management
+  - `node` - Node.js runtime and npm package manager
+
+### Security & Compliance Tools
+- **Container Security**:
+  - `trivy` - Comprehensive vulnerability scanner for containers and filesystems
+  - `grype` - Vulnerability scanner for container images and filesystems
+  - `dive` - Tool for exploring Docker image layers and optimizing image size
+
+- **Kubernetes Security**:
+  - `kubeaudit` - Kubernetes security auditing tool
+  - `kube-bench` - CIS Kubernetes Benchmark security scanner
+  - `kube-hunter` - Kubernetes penetration testing tool
+
+- **Code Quality & Security**:
+  - `hadolint` - Dockerfile linter for best practices and security
+  - `checkov` - Static code analysis for Terraform, CloudFormation, and more
 
 ### Productivity Tools
-- **Search & Navigation**: fzf (fuzzy finder), zoxide, autojump
-- **File Tools**: eza (better ls), bat (better cat), ripgrep, fd
-- **System Monitoring**: htop, btop
-- **Data Tools**: jq, yq, yamllint, tree
-- **Git Tools**: lazygit, gh (GitHub CLI)
-- **Documentation**: tldr
-- **Prompt**: Starship with Kubernetes context display
+- **Search & Navigation**:
+  - `fzf` - Command-line fuzzy finder for files, commands, and more
+  - `zoxide` - Smarter cd command that learns your habits
+  - `autojump` - Directory navigation based on frequency and recency
+
+- **File Operations**:
+  - `eza` - Modern replacement for ls with colors and icons
+  - `bat` - Syntax-highlighted cat clone with Git integration
+  - `ripgrep` - Ultra-fast text search tool (grep alternative)
+  - `fd` - Simple, fast alternative to find command
+  - `tree` - Display directory structures as trees
+
+- **System Monitoring**:
+  - `htop` - Interactive process viewer and system monitor
+  - `btop` - Modern resource monitor with beautiful interface
+
+- **Data Processing**:
+  - `jq` - Command-line JSON processor
+  - `yq` - YAML/XML/TOML processor (like jq for YAML)
+  - `yamllint` - YAML linter for syntax and style checking
+
+- **Git & Development**:
+  - `lazygit` - Terminal UI for Git commands with visual interface
+  - `gh` - GitHub CLI for repository management and workflows
+
+- **Documentation & Help**:
+  - `tldr` - Simplified man pages with practical examples
+
+- **Terminal Enhancement**:
+  - `starship` - Cross-shell prompt with Git, Kubernetes context, and more
+
+- **Network & API Tools**:
+  - `grpcurl` - Command-line tool for gRPC services (like curl for gRPC)
 
 ## 📁 Directory Structure
 
@@ -56,7 +119,16 @@ dotfiles/
 │   ├── .zshrc                   # ZSH configuration
 │   ├── .tmux.conf              # tmux configuration
 │   ├── starship.toml           # Starship prompt configuration
-│   └── .gitconfig              # Git configuration
+│   ├── .gitconfig              # Git configuration
+│   └── nvim/                   # LazyVim configuration
+│       ├── init.lua            # Neovim entry point
+│       └── lua/
+│           ├── config/         # LazyVim config overrides
+│           └── plugins/        # Custom plugin configurations
+├── themes/                     # Terminal color themes (Ayu Mirage)
+│   ├── windows-terminal/       # Windows Terminal theme
+│   ├── macos-terminal/         # macOS Terminal theme
+│   └── linux-terminals/        # Linux terminal themes (Kitty, Alacritty, etc.)
 └── scripts/                     # Helper scripts
     ├── entrypoint.sh           # Container startup script
     └── setup-mounts.sh         # Platform-specific mount setup
@@ -209,6 +281,112 @@ devenv.bat connect
 devenv.bat stop
 ```
 
+## 🎯 Tool Usage Examples
+
+### Kubernetes Workflows
+```bash
+# Switch between clusters quickly
+kubectx production
+kubectx staging
+
+# Monitor multiple pods
+stern app-name
+
+# Interactive cluster management
+k9s
+
+# Package management
+helm search repo nginx
+helm install my-nginx stable/nginx
+
+# Security scanning
+kube-bench run --targets=node,policies,managedservices
+kubeaudit all
+```
+
+### Container Security Scanning
+```bash
+# Scan container images for vulnerabilities
+trivy image nginx:latest
+grype nginx:latest
+
+# Analyze image layers for optimization
+dive nginx:latest
+
+# Lint Dockerfiles
+hadolint Dockerfile
+```
+
+### Infrastructure as Code
+```bash
+# Terraform workflows with validation
+terraform plan
+tflint
+terragrunt plan-all
+
+# Security scanning for infrastructure
+checkov -f main.tf
+checkov -d ./terraform/
+
+# YAML processing and validation
+yamllint docker-compose.yml
+yq eval '.services.*.image' docker-compose.yml
+```
+
+### Development Productivity
+```bash
+# Fast file finding and navigation
+fz # fuzzy find files
+z project-name # jump to frequently used directories
+
+# Enhanced file operations
+eza -la --git # beautiful ls with git status
+bat config.json # syntax highlighted file viewing
+rg "TODO" --type rust # fast text search
+
+# Git workflows
+lazygit # visual git interface
+gh pr create # create GitHub pull requests
+gh issue list # manage GitHub issues
+```
+
+### Data Processing
+```bash
+# JSON processing
+curl -s api/endpoint | jq '.data[] | select(.status == "active")'
+
+# YAML manipulation
+yq eval '.spec.containers[0].image = "nginx:1.21"' deployment.yaml
+
+# Log analysis
+stern app-name | grep ERROR
+```
+
+### Neovim/LazyVim Features
+```bash
+# LSP features for multiple languages
+:LspInfo # Check active language servers
+
+# DevOps specific shortcuts
+<leader>dk # Get Kubernetes pods
+<leader>dh # List Helm releases  
+<leader>dt # Terraform plan
+<leader>dg # Run Go tests
+
+# File operations
+<leader>ff # Find files (Telescope)
+<leader>fg # Live grep
+<leader>fb # Browse buffers
+
+# YAML/JSON formatting
+<leader>yf # Format YAML with yq
+<leader>jf # Format JSON with jq
+
+# Git integration
+<leader>gg # LazyGit interface
+<leader>gs # Git status
+```
+
 ## 🔧 Customization
 
 ### Adding New Packages
@@ -325,6 +503,48 @@ set -g @plugin 'your-new/plugin'
 
 ### Modifying the Prompt
 Edit `configs/starship.toml` to customize the Starship prompt.
+
+## 🎨 Terminal Themes
+
+The repository includes Ayu Mirage color theme files for various terminal emulators to ensure a consistent visual experience across platforms.
+
+### Available Theme Files
+
+#### Windows Terminal
+- **File**: `themes/windows-terminal/ayu-mirage.json`
+- **Installation**: Copy to Windows Terminal color schemes
+- **Documentation**: See `themes/windows-terminal/README.md`
+
+#### macOS Terminal
+- **File**: `themes/macos-terminal/Ayu-Mirage.terminal`
+- **Installation**: Double-click to import or use Terminal preferences
+- **Documentation**: See `themes/macos-terminal/README.md`
+
+#### Linux Terminals
+Located in `themes/linux-terminals/`:
+
+- **Kitty**: `kitty-ayu-mirage.conf`
+- **Alacritty**: `alacritty-ayu-mirage.yml`
+- **GNOME Terminal**: `gnome-terminal-ayu-mirage.sh` (installer script)
+- **Konsole**: `konsole-ayu-mirage.colorscheme`
+- **Terminator**: `terminator-ayu-mirage.conf`
+
+### Theme Color Palette
+
+The Ayu Mirage theme provides a dark, modern look with the following colors:
+
+- **Background**: `#1F2430` (Dark blue-grey)
+- **Foreground**: `#CBCCC6` (Light grey)
+- **Cursor**: `#FFCC66` (Golden yellow)
+- **Selection**: `#33415E` (Blue-grey)
+
+The theme includes 16 ANSI colors optimized for readability and syntax highlighting in development environments.
+
+### Usage
+
+1. **For host terminal**: Apply the theme to your host terminal for consistency
+2. **In container**: The container already uses compatible colors via tmux and Neovim
+3. **Documentation**: Each theme directory contains detailed installation instructions
 
 ## 🤝 Contributing
 

@@ -84,16 +84,46 @@ RUN /home/linuxbrew/.linuxbrew/bin/brew install \
     stern \
     yamllint \
     pyenv \
+    dive \
+    hadolint \
+    trivy \
+    grype \
     && /home/linuxbrew/.linuxbrew/bin/brew cleanup
 
-# Install additional tools via Homebrew tap
+# Install additional tools via Homebrew taps and packages
 RUN /home/linuxbrew/.linuxbrew/bin/brew tap argoproj/tap && \
-    /home/linuxbrew/.linuxbrew/bin/brew install argoproj/tap/argocd && \
-    /home/linuxbrew/.linuxbrew/bin/brew install nats-io/nats-tools/nats && \
-    /home/linuxbrew/.linuxbrew/bin/brew cleanup
+    /home/linuxbrew/.linuxbrew/bin/brew tap azure/functions && \
+    /home/linuxbrew/.linuxbrew/bin/brew install \
+    argoproj/tap/argocd \
+    nats-io/nats-tools/nats \
+    azure-cli \
+    kubeaudit \
+    kube-bench \
+    kustomize \
+    terragrunt \
+    tflint \
+    grpcurl \
+    krew \
+    checkov \
+    && /home/linuxbrew/.linuxbrew/bin/brew cleanup
+
+# Configure Azure CLI
+RUN az config set extension.use_dynamic_install=yes_without_prompt && \
+    az extension add --name azure-devops
+
+# Install Python security tools that aren't available via Homebrew
+RUN python3 -m pip install --break-system-packages kube-hunter
 
 # Install Oh My Zsh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+
+# Install Oh My Zsh plugins (using ZSH_CUSTOM directory)
+RUN git clone https://github.com/zsh-users/zsh-autosuggestions.git ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions && \
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+
+# Install LazyVim (modern Neovim configuration)
+RUN git clone https://github.com/LazyVim/starter ${HOME}/.config/nvim && \
+    rm -rf ${HOME}/.config/nvim/.git
 
 # Install tmux plugin manager
 RUN git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
@@ -101,8 +131,10 @@ RUN git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 # Copy configuration files
 COPY --chown=${USER}:${USER} configs/.zshrc ${HOME}/.zshrc
 COPY --chown=${USER}:${USER} configs/.tmux.conf ${HOME}/.tmux.conf
+COPY --chown=${USER}:${USER} configs/.tmux.base.conf ${HOME}/.tmux.base.conf
 COPY --chown=${USER}:${USER} configs/starship.toml ${HOME}/.config/starship.toml
 COPY --chown=${USER}:${USER} configs/.gitconfig ${HOME}/.gitconfig
+COPY --chown=${USER}:${USER} configs/nvim/ ${HOME}/.config/nvim/
 
 # Set up zsh as default shell
 RUN sudo chsh -s $(which zsh) ${USER}

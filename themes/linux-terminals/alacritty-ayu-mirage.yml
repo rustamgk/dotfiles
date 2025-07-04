@@ -1,0 +1,52 @@
+# Ayu Mirage for Alacritty Terminal
+# Add this to your alacritty.yml or alacritty.toml file
+
+# Colors (Ayu Mirage)
+colors:
+  # Default colors
+  primary:
+    background: '#1f2430'
+    foreground: '#cbccc6'
+
+  # Cursor colors
+  cursor:
+    text: '#1f2430'
+    cursor: '#ffcc66'
+
+  # Selection colors
+  selection:
+    text: '#cbccc6'
+    background: '#33415e'
+
+  # Normal colors
+  normal:
+    black:   '#191e2a'
+    red:     '#f28779'
+    green:   '#bae67e'
+    yellow:  '#ffcc66'
+    blue:    '#73d0ff'
+    magenta: '#d4bfff'
+    cyan:    '#95e6cb'
+    white:   '#cbccc6'
+
+  # Bright colors
+  bright:
+    black:   '#2d3640'
+    red:     '#f28779'
+    green:   '#bae67e'
+    yellow:  '#ffcc66'
+    blue:    '#73d0ff'
+    magenta: '#d4bfff'
+    cyan:    '#95e6cb'
+    white:   '#fcfcfc'
+
+  # Dim colors (Optional)
+  dim:
+    black:   '#0f1419'
+    red:     '#f07178'
+    green:   '#b8e673'
+    yellow:  '#e6b450'
+    blue:    '#59c2ff'
+    magenta: '#c991e1'
+    cyan:    '#73b8c2'
+    white:   '#828c9a'
