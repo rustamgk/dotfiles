@@ -1,25 +1,26 @@
-# Docker Compose for Linux/macOS
+# Docker Compose for Personal Development Environment (Linux/macOS)
 version: '3.8'
 
 services:
   devenv:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: rustam-devenv
-    hostname: devenv
+      dockerfile: ${DOCKERFILE:-Dockerfile}
+    container_name: ${CONTAINER_NAME:-rustam-devenv-personal}
+    image: ${IMAGE_NAME:-rustam-devenv:personal}
+    hostname: devenv-personal
     volumes:
-      # Linux/macOS mounts
-      - ${HOME}/workspace:/home/rustamgk/workspace
-      - ${HOME}/helm:/home/rustamgk/helm
-      # SSH keys (optional - mount your SSH directory)
+      # Personal environment mounts
+      - ${WORKSPACE_PATH:-./workspace}:/home/rustamgk/workspace
+      - ${HELM_PATH:-./helm}:/home/rustamgk/helm
+      # SSH keys (optional)
       - ${HOME}/.ssh:/home/rustamgk/.ssh:ro
       # Git config persistence
-      - devenv-git:/home/rustamgk/.git-local
+      - devenv-personal-git:/home/rustamgk/.git-local
       # Tmux sessions persistence
-      - devenv-tmux:/home/rustamgk/.tmux-sessions
+      - devenv-personal-tmux:/home/rustamgk/.tmux-sessions
       # ZSH history persistence
-      - devenv-zsh:/home/rustamgk/.zsh-history
+      - devenv-personal-zsh:/home/rustamgk/.zsh-history
     ports:
       - "3000:3000"
       - "8000:8000"
@@ -28,16 +29,17 @@ services:
     environment:
       - TERM=xterm-256color
       - COLORTERM=truecolor
+      - WORK_PROFILE=personal
     stdin_open: true
     tty: true
     networks:
-      - devnet
+      - devnet-personal
 
 networks:
-  devnet:
+  devnet-personal:
     driver: bridge
 
 volumes:
-  devenv-git:
-  devenv-tmux:
-  devenv-zsh:
+  devenv-personal-git:
+  devenv-personal-tmux:
+  devenv-personal-zsh:

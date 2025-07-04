@@ -1,13 +1,14 @@
 # Rustam's Universal Development Environment
 
-A Docker-based development environment that provides a consistent setup across macOS, Linux, and Windows WSL2. This environment includes all your favorite tools, configurations, and settings in a portable container.
+A Docker-based development environment that provides a consistent setup across macOS, Linux, and Windows. This environment includes all your favorite tools, configurations, and settings in portable containers with support for multiple work profiles.
 
 ## 🌟 Features
 
 - **Universal Package Management**: Uses Homebrew for consistent package installation across platforms
 - **Rich Terminal Experience**: ZSH with Oh My Zsh, Starship prompt, and tmux
 - **Development Tools**: kubectl, helm, k9s, nvim, git, fzf, and more
-- **Platform Detection**: Automatically detects and configures for macOS, Linux, or Windows WSL2
+- **Platform Detection**: Automatically detects and configures for macOS, Linux, or Windows
+- **Multiple Profiles**: Separate environments for personal and different work projects
 - **Persistent Data**: Maintains history, sessions, and configurations across container restarts
 - **SSH Integration**: Supports SSH key mounting for seamless git operations
 
@@ -40,10 +41,17 @@ A Docker-based development environment that provides a consistent setup across m
 
 ```
 dotfiles/
-├── Dockerfile                    # Main container definition
-├── docker-compose.yml           # Linux/macOS configuration
-├── docker-compose.windows.yml   # Windows WSL2 configuration
-├── devenv.sh                    # Universal management script
+├── Dockerfile                    # Main container definition (personal)
+├── Dockerfile.sarna              # Sarna work environment
+├── Dockerfile.sdui               # SDUI work environment
+├── docker-compose.yml           # Personal environment (Linux/macOS)
+├── docker-compose.sarna.yml     # Sarna work environment
+├── docker-compose.sdui.yml      # SDUI work environment
+├── docker-compose.windows.yml   # Windows native Docker configuration
+├── devenv.sh                    # Universal management script (Linux/macOS)
+├── devenv.ps1                   # PowerShell management script (Windows)
+├── devenv.bat                   # Batch wrapper for Windows CMD
+├── Makefile                     # Make shortcuts for Linux/macOS
 ├── configs/                     # Configuration files
 │   ├── .zshrc                   # ZSH configuration
 │   ├── .tmux.conf              # tmux configuration
@@ -57,8 +65,9 @@ dotfiles/
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Docker and Docker Compose installed
+- Docker Desktop (Windows users need native Docker Desktop)
 - Git (to clone this repository)
+- **Windows users**: Docker Desktop for Windows (no WSL2 required)
 
 ### Installation
 
@@ -69,13 +78,52 @@ dotfiles/
    ```
 
 2. **Build and run** (one command does it all):
+   
+   **Linux/macOS:**
    ```bash
+   # Personal environment (default)
    ./devenv.sh run
+   # or explicitly
+   ./devenv.sh personal run
+   
+   # Work environments
+   ./devenv.sh work_sarna run
+   ./devenv.sh work_sdui run
+   ```
+   
+   **Windows (PowerShell):**
+   ```powershell
+   # Personal environment (default)
+   .\devenv.ps1 run
+   # or explicitly
+   .\devenv.ps1 personal run
+   
+   # Work environments
+   .\devenv.ps1 work_sarna run
+   .\devenv.ps1 work_sdui run
+   ```
+   
+   **Windows (Command Prompt):**
+   ```cmd
+   devenv.bat personal run
+   devenv.bat work_sarna run
+   devenv.bat work_sdui run
    ```
 
 3. **Connect to your environment**:
+   
+   **Linux/macOS:**
    ```bash
-   ./devenv.sh connect
+   ./devenv.sh personal connect
+   ./devenv.sh work_sarna connect
+   ./devenv.sh work_sdui connect
+   ```
+   
+   **Windows:**
+   ```powershell
+   .\devenv.ps1 personal connect
+   .\devenv.ps1 work_sarna connect
+   .\devenv.ps1 work_sdui connect
    ```
 
 ## 🖥️ Platform-Specific Setup
@@ -88,12 +136,13 @@ dotfiles/
 - Workspace: `~/workspace` → `/home/rustamgk/workspace`
 - Helm: `~/helm` → `/home/rustamgk/helm`
 
-### Windows WSL2
-- Workspace: `C:\Source\workspace` → `/home/rustamgk/workspace`
-- Helm: `C:\Source\helm` → `/home/rustamgk/helm`
+### Windows
+- Workspace: `C:\workspace` → `/home/rustamgk/workspace`
+- Helm: `C:\helm` → `/home/rustamgk/helm`
 
 ## 📋 Management Commands
 
+### Linux/macOS
 The `devenv.sh` script provides easy management of your development environment:
 
 ```bash
@@ -120,6 +169,44 @@ The `devenv.sh` script provides easy management of your development environment:
 
 # Show help
 ./devenv.sh help
+```
+
+### Windows (PowerShell)
+The `devenv.ps1` script provides the same functionality for Windows:
+
+```powershell
+# Build the Docker image
+.\devenv.ps1 build
+
+# Start the environment (builds if needed)
+.\devenv.ps1 run
+
+# Connect to running environment
+.\devenv.ps1 connect
+
+# Stop the environment
+.\devenv.ps1 stop
+
+# Restart the environment
+.\devenv.ps1 restart
+
+# View container logs
+.\devenv.ps1 logs
+
+# Check status
+.\devenv.ps1 status
+
+# Show help
+.\devenv.ps1 help
+```
+
+### Windows (Command Prompt)
+Use the batch file for CMD:
+
+```cmd
+devenv.bat run
+devenv.bat connect
+devenv.bat stop
 ```
 
 ## 🔧 Customization
@@ -170,19 +257,48 @@ The following data persists across container restarts:
 
 ### Container Won't Start
 ```bash
-# Check Docker status
+# Linux/macOS
 docker info
-
-# View container logs
 ./devenv.sh logs
-
-# Rebuild from scratch
 docker system prune -a
 ./devenv.sh build
 ```
 
+```powershell
+# Windows PowerShell
+docker info
+.\devenv.ps1 logs
+docker system prune -a
+.\devenv.ps1 build
+```
+
+### Windows-Specific Issues
+
+**Docker Desktop Not Running:**
+- Ensure Docker Desktop is started
+- Check system tray for Docker icon
+- Restart Docker Desktop if needed
+
+**Source Directories Not Found:**
+The PowerShell script automatically creates `C:\workspace` and `C:\helm` directories if they don't exist.
+
+**PowerShell Execution Policy:**
+If you get execution policy errors:
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+**File Sharing Issues:**
+Ensure Docker Desktop has access to the C: drive:
+1. Docker Desktop → Settings → Resources → File Sharing
+2. Add C:\ to shared drives if not already present
+3. Apply & Restart
+
 ### Mount Issues on Windows
-Ensure Docker Desktop has access to the C: drive and WSL2 integration is enabled.
+Ensure Docker Desktop has access to the C: drive:
+1. Docker Desktop → Settings → Resources → File Sharing
+2. Add C:\ to shared drives
+3. Apply & Restart
 
 ### SSH Key Permissions
 If SSH keys have permission issues:

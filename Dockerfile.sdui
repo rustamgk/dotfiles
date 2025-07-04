@@ -1,0 +1,28 @@
+# SDUI Work Environment Dockerfile
+# Based on the main Dockerfile with SDUI-specific customizations
+
+# Use the main Dockerfile as base for now
+FROM rustam-devenv:personal
+
+# Set work environment
+ENV WORK_PROFILE=sdui
+
+# SDUI-specific tools and configurations will be added here later
+# For now, inherit everything from the personal environment
+
+# Additional SDUI-specific environment variables
+ENV SDUI_WORKSPACE=/home/rustamgk/workspace
+ENV SDUI_HELM=/home/rustamgk/helm
+
+# Future SDUI-specific customizations:
+# - Additional tools (Azure CLI, specific SDKs)
+# - Custom configurations
+# - Environment-specific secrets mounting
+# - Team-specific git configurations
+# - SDUI-specific aliases and shortcuts
+
+WORKDIR /home/rustamgk/workspace
+
+# Keep the same entrypoint for now
+ENTRYPOINT ["/home/rustamgk/entrypoint.sh"]
+CMD ["zsh"]

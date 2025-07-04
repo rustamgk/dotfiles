@@ -1,0 +1,43 @@
+# Docker Compose for SDUI Work Environment
+version: '3.8'
+
+services:
+  devenv:
+    build:
+      context: .
+      dockerfile: ${DOCKERFILE:-Dockerfile.sdui}
+    container_name: ${CONTAINER_NAME:-rustam-devenv-sdui}
+    image: ${IMAGE_NAME:-rustam-devenv:sdui}
+    hostname: devenv-sdui
+    volumes:
+      # SDUI-specific mounts
+      - ${WORKSPACE_PATH:-./workspace/sdui}:/home/rustamgk/workspace
+      - ${HELM_PATH:-./helm/sdui}:/home/rustamgk/helm
+      # SSH keys (optional)
+      - ${HOME}/.ssh:/home/rustamgk/.ssh:ro
+      # Persistence volumes
+      - devenv-sdui-git:/home/rustamgk/.git-local
+      - devenv-sdui-tmux:/home/rustamgk/.tmux-sessions
+      - devenv-sdui-zsh:/home/rustamgk/.zsh-history
+    ports:
+      - "3002:3000"
+      - "8002:8000"
+      - "8082:8080"
+      - "9002:9000"
+    environment:
+      - TERM=xterm-256color
+      - COLORTERM=truecolor
+      - WORK_PROFILE=sdui
+    stdin_open: true
+    tty: true
+    networks:
+      - devnet-sdui
+
+networks:
+  devnet-sdui:
+    driver: bridge
+
+volumes:
+  devenv-sdui-git:
+  devenv-sdui-tmux:
+  devenv-sdui-zsh:

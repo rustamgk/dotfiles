@@ -1,0 +1,30 @@
+# Sarna Work Environment Dockerfile
+# Based on the main Dockerfile with Sarna-specific customizations
+
+# Use the main Dockerfile as base for now
+FROM rustam-devenv:personal
+
+# Set work environment
+ENV WORK_PROFILE=sarna
+
+# Sarna-specific tools and configurations will be added here later
+# For now, inherit everything from the personal environment
+
+# Additional Sarna-specific environment variables
+ENV SARNA_WORKSPACE=/home/rustamgk/workspace
+ENV SARNA_HELM=/home/rustamgk/helm
+
+# Sarna-specific aliases and configurations
+COPY configs/sarna/ /home/rustamgk/.config/sarna/ 2>/dev/null || true
+
+# Future Sarna-specific customizations:
+# - Additional tools
+# - Custom configurations
+# - Environment-specific secrets mounting
+# - Team-specific git configurations
+
+WORKDIR /home/rustamgk/workspace
+
+# Keep the same entrypoint for now
+ENTRYPOINT ["/home/rustamgk/entrypoint.sh"]
+CMD ["zsh"]

@@ -1,0 +1,43 @@
+# Docker Compose for Sarna Work Environment
+version: '3.8'
+
+services:
+  devenv:
+    build:
+      context: .
+      dockerfile: ${DOCKERFILE:-Dockerfile.sarna}
+    container_name: ${CONTAINER_NAME:-rustam-devenv-sarna}
+    image: ${IMAGE_NAME:-rustam-devenv:sarna}
+    hostname: devenv-sarna
+    volumes:
+      # Sarna-specific mounts
+      - ${WORKSPACE_PATH:-./workspace/sarna}:/home/rustamgk/workspace
+      - ${HELM_PATH:-./helm/sarna}:/home/rustamgk/helm
+      # SSH keys (optional)
+      - ${HOME}/.ssh:/home/rustamgk/.ssh:ro
+      # Persistence volumes
+      - devenv-sarna-git:/home/rustamgk/.git-local
+      - devenv-sarna-tmux:/home/rustamgk/.tmux-sessions
+      - devenv-sarna-zsh:/home/rustamgk/.zsh-history
+    ports:
+      - "3001:3000"
+      - "8001:8000"
+      - "8081:8080"
+      - "9001:9000"
+    environment:
+      - TERM=xterm-256color
+      - COLORTERM=truecolor
+      - WORK_PROFILE=sarna
+    stdin_open: true
+    tty: true
+    networks:
+      - devnet-sarna
+
+networks:
+  devnet-sarna:
+    driver: bridge
+
+volumes:
+  devenv-sarna-git:
+  devenv-sarna-tmux:
+  devenv-sarna-zsh:

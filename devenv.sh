@@ -1,8 +1,62 @@
 #!/bin/bash
 
-# Universal build and run script for Rustam's Development Environment
+# Universal build and run script for Rustam's Development Environment with Profile Support
 
 set -e
+
+# Default profile
+PROFILE=${1:-personal}
+COMMAND=${2:-help}
+
+# Validate profile
+validate_profile() {
+    case $PROFILE in
+        "personal"|"work_sarna"|"work_sdui")
+            ;;
+        *)
+            print_error "Invalid profile: $PROFILE"
+            echo "Valid profiles: personal, work_sarna, work_sdui"
+            echo "Usage: $0 [PROFILE] [COMMAND]"
+            exit 1
+            ;;
+    esac
+}
+
+# Get profile-specific configuration
+get_profile_config() {
+    case $PROFILE in
+        "personal")
+            CONTAINER_NAME="rustam-devenv-personal"
+            IMAGE_NAME="rustam-devenv:personal"
+            WORKSPACE_PATH="$HOME/workspace"
+            HELM_PATH="$HOME/helm"
+            COMPOSE_FILE="docker-compose.yml"
+            DOCKERFILE="Dockerfile"
+            ;;
+        "work_sarna")
+            CONTAINER_NAME="rustam-devenv-sarna"
+            IMAGE_NAME="rustam-devenv:sarna"
+            WORKSPACE_PATH="$HOME/workspace/sarna"
+            HELM_PATH="$HOME/helm/sarna"
+            COMPOSE_FILE="docker-compose.sarna.yml"
+            DOCKERFILE="Dockerfile.sarna"
+            ;;
+        "work_sdui")
+            CONTAINER_NAME="rustam-devenv-sdui"
+            IMAGE_NAME="rustam-devenv:sdui"
+            WORKSPACE_PATH="$HOME/workspace/sdui"
+            HELM_PATH="$HOME/helm/sdui"
+            COMPOSE_FILE="docker-compose.sdui.yml"
+            DOCKERFILE="Dockerfile.sdui"
+            ;;
+    esac
+    
+    # Export for docker-compose
+    export CONTAINER_NAME
+    export IMAGE_NAME
+    export WORKSPACE_PATH
+    export HELM_PATH
+}
 
 # Colors for output
 RED='\033[0;31m'
@@ -45,45 +99,53 @@ detect_platform() {
 
 # Build the Docker image
 build_image() {
-    print_status "Building development environment Docker image..."
-    docker build -t rustam-devenv:latest .
-    print_success "Docker image built successfully!"
+    print_status "Building development environment Docker image for profile: $CONTAINER_NAME"
+    
+    # Check if custom Dockerfile exists, otherwise use default
+    if [[ ! -f "$DOCKERFILE" ]]; then
+        print_warning "Custom Dockerfile '$DOCKERFILE' not found, using default Dockerfile"
+        DOCKERFILE="Dockerfile"
+    fi
+    
+    docker build -f "$DOCKERFILE" -t "$IMAGE_NAME" .
+    print_success "Docker image '$IMAGE_NAME' built successfully!"
 }
 
 # Run the container
 run_container() {
     local platform=$1
-    local compose_file="docker-compose.yml"
     
-    if [[ "$platform" == "wsl2" ]]; then
-        compose_file="docker-compose.windows.yml"
-        print_status "Using Windows WSL2 configuration..."
-    else
-        print_status "Using Linux/macOS configuration..."
+    # Check if custom compose file exists, otherwise use default
+    if [[ ! -f "$COMPOSE_FILE" ]]; then
+        print_warning "Custom compose file '$COMPOSE_FILE' not found, using default docker-compose.yml"
+        COMPOSE_FILE="docker-compose.yml"
     fi
+    
+    print_status "Using configuration: $COMPOSE_FILE"
     
     # Check if container is already running
-    if docker ps | grep -q rustam-devenv; then
-        print_warning "Container is already running. Stopping it first..."
-        docker-compose -f "$compose_file" down
+    if docker ps | grep -q "$CONTAINER_NAME"; then
+        print_warning "Container $CONTAINER_NAME is already running. Stopping it first..."
+        docker-compose -f "$COMPOSE_FILE" down
     fi
     
-    print_status "Starting development environment..."
-    docker-compose -f "$compose_file" up -d
+    print_status "Starting development environment: $CONTAINER_NAME..."
+    docker-compose -f "$COMPOSE_FILE" up -d
     
-    print_success "Development environment is running!"
-    print_status "Connect with: docker exec -it rustam-devenv zsh"
+    print_success "Development environment '$CONTAINER_NAME' is running!"
+    print_status "Connect with: docker exec -it $CONTAINER_NAME zsh"
+    print_status "Or use: $0 $PROFILE connect"
 }
 
 # Connect to running container
 connect_container() {
-    if ! docker ps | grep -q rustam-devenv; then
-        print_error "Container is not running. Start it first with: $0 run"
+    if ! docker ps | grep -q "$CONTAINER_NAME"; then
+        print_error "Container '$CONTAINER_NAME' is not running. Start it first with: $0 $PROFILE run"
         exit 1
     fi
     
-    print_status "Connecting to development environment..."
-    docker exec -it rustam-devenv zsh
+    print_status "Connecting to development environment: $CONTAINER_NAME..."
+    docker exec -it "$CONTAINER_NAME" zsh
 }
 
 # Stop the container
@@ -104,10 +166,15 @@ stop_container() {
 show_help() {
     echo "Rustam's Development Environment Manager"
     echo ""
-    echo "Usage: $0 [COMMAND]"
+    echo "Usage: $0 [PROFILE] [COMMAND]"
+    echo ""
+    echo "Profiles:"
+    echo "  personal     Personal development environment (default)"
+    echo "  work_sarna   Work environment for Sarna project"
+    echo "  work_sdui    Work environment for SDUI project"
     echo ""
     echo "Commands:"
-    echo "  build      Build the Docker image"
+    echo "  build      Build the Docker image for the profile"
     echo "  run        Start the development environment"
     echo "  connect    Connect to running environment"
     echo "  stop       Stop the development environment"
@@ -116,10 +183,21 @@ show_help() {
     echo "  status     Show container status"
     echo "  help       Show this help message"
     echo ""
+    echo "Profile Configurations:"
+    echo "  personal     → ~/workspace & ~/helm"
+    echo "  work_sarna   → ~/workspace/sarna & ~/helm/sarna"
+    echo "  work_sdui    → ~/workspace/sdui & ~/helm/sdui"
+    echo ""
     echo "Platform Support:"
     echo "  - macOS: Uses ~/workspace and ~/helm"
     echo "  - Linux: Uses ~/workspace and ~/helm"
     echo "  - Windows WSL2: Uses /mnt/c/Source/workspace and /mnt/c/Source/helm"
+    echo ""
+    echo "Examples:"
+    echo "  $0 personal run       # Start personal environment"
+    echo "  $0 work_sarna connect # Connect to Sarna environment"
+    echo "  $0 work_sdui stop     # Stop SDUI environment"
+    echo "  $0 status             # Show all containers"
 }
 
 # Show container logs
@@ -148,12 +226,17 @@ show_status() {
 
 # Main script logic
 main() {
-    local command=${1:-help}
-    local platform=$(detect_platform)
+    # Validate profile and get config
+    validate_profile
+    get_profile_config
+    
+    local platform
+    platform=$(detect_platform)
     
     print_status "Detected platform: $platform"
+    print_status "Using profile: $PROFILE"
     
-    case $command in
+    case $COMMAND in
         "build")
             build_image
             ;;
@@ -182,7 +265,7 @@ main() {
             show_help
             ;;
         *)
-            print_error "Unknown command: $command"
+            print_error "Unknown command: $COMMAND"
             show_help
             exit 1
             ;;
@@ -202,4 +285,4 @@ if ! command -v docker-compose &> /dev/null; then
 fi
 
 # Run main function
-main "$@"
+main

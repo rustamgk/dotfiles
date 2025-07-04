@@ -1,4 +1,4 @@
-# Docker Compose for Windows WSL2
+# Docker Compose for Windows (Native Docker Desktop)
 version: '3.8'
 
 services:
@@ -9,11 +9,11 @@ services:
     container_name: rustam-devenv
     hostname: devenv
     volumes:
-      # Windows mounts (adjust drive letter as needed)
-      - /mnt/c/Source/workspace:/home/rustamgk/workspace
-      - /mnt/c/Source/helm:/home/rustamgk/helm
-      # SSH keys (optional)
-      - ${HOME}/.ssh:/home/rustamgk/.ssh:ro
+      # Windows native mounts
+      - C:\workspace:/home/rustamgk/workspace
+      - C:\helm:/home/rustamgk/helm
+      # SSH keys (optional - adjust path as needed)
+      - ${USERPROFILE}\.ssh:/home/rustamgk/.ssh:ro
       # Persistence volumes
       - devenv-git:/home/rustamgk/.git-local
       - devenv-tmux:/home/rustamgk/.tmux-sessions
@@ -26,7 +26,6 @@ services:
     environment:
       - TERM=xterm-256color
       - COLORTERM=truecolor
-      - WSL_DISTRO_NAME=Ubuntu
     stdin_open: true
     tty: true
     networks:
