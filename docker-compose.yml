@@ -1,0 +1,43 @@
+# Docker Compose for Linux/macOS
+version: '3.8'
+
+services:
+  devenv:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rustam-devenv
+    hostname: devenv
+    volumes:
+      # Linux/macOS mounts
+      - ${HOME}/workspace:/home/rustamgk/workspace
+      - ${HOME}/helm:/home/rustamgk/helm
+      # SSH keys (optional - mount your SSH directory)
+      - ${HOME}/.ssh:/home/rustamgk/.ssh:ro
+      # Git config persistence
+      - devenv-git:/home/rustamgk/.git-local
+      # Tmux sessions persistence
+      - devenv-tmux:/home/rustamgk/.tmux-sessions
+      # ZSH history persistence
+      - devenv-zsh:/home/rustamgk/.zsh-history
+    ports:
+      - "3000:3000"
+      - "8000:8000"
+      - "8080:8080"
+      - "9000:9000"
+    environment:
+      - TERM=xterm-256color
+      - COLORTERM=truecolor
+    stdin_open: true
+    tty: true
+    networks:
+      - devnet
+
+networks:
+  devnet:
+    driver: bridge
+
+volumes:
+  devenv-git:
+  devenv-tmux:
+  devenv-zsh:

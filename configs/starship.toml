@@ -1,0 +1,50 @@
+# Starship Configuration
+[kubernetes]
+style = "blue bold"
+format = '[🚀 ☸️ ($cluster )\\($namespace\\) ]($style)'
+disabled = false
+
+[kubernetes.context_aliases]
+"dev.local.cluster.k8s" = "dev"
+".*/openshift-cluster/.*" = "openshift"
+"gke_.*_(?P<var_cluster>[\\w-]+)" = "gke-$var_cluster"
+
+[directory]
+style = "cyan bold"
+format = "[$path]($style)[$read_only]($read_only_style) "
+truncation_length = 3
+truncation_symbol = "…/"
+
+[git_branch]
+style = "purple bold"
+format = "[$symbol$branch]($style) "
+
+[git_status]
+style = "red bold"
+format = "([\\[$all_status$ahead_behind\\]]($style) )"
+
+[time]
+disabled = false
+style = "yellow bold"
+format = "⌛ $time"
+time_format = "%Y-%m-%d ⇢ %H:%M"
+
+[character]
+success_symbol = "[🔮](bold green)"
+error_symbol = "[🔮](bold red)"
+
+[cmd_duration]
+format = "took [$duration]($style) "
+style = "yellow"
+
+[hostname]
+ssh_only = false
+format = "on [$hostname]($style) "
+style = "green bold"
+
+[username]
+style_user = "blue bold"
+style_root = "red bold"
+format = "[$user]($style) "
+disabled = false
+show_always = true
