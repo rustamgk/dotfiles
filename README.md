@@ -210,9 +210,9 @@ The development environment is automatically built and published to Docker Hub v
 - **Fast startup**: No need to build locally on first use
 
 ### Available Images
-- `rustamgk/devenv:latest` - Personal development environment
-- `rustamgk/devenv-sarna:latest` - Sarna work environment  
-- `rustamgk/devenv-sdui:latest` - SDUI work environment
+- `rustamgk/dotfiles:latest` - Personal development environment
+- `rustamgk/dotfiles:sarna` - Sarna work environment  
+- `rustamgk/dotfiles:sdui` - SDUI work environment
 
 ### Manual Image Management
 ```bash

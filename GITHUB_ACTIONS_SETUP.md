@@ -29,13 +29,18 @@ To enable automatic building and pushing to Docker Hub, you need to configure th
    - Name: `DOCKERHUB_USERNAME`, Value: `rustamgk`
    - Name: `DOCKERHUB_TOKEN`, Value: (your generated token)
 
-## Docker Hub Repositories
+## Docker Hub Repository
 
-Make sure the following repositories exist on Docker Hub (they will be created automatically on first push):
+The workflow uses a single Docker Hub repository with different tags for each environment:
 
-- `rustamgk/devenv` (for personal environment)
-- `rustamgk/devenv-sarna` (for Sarna work environment)
-- `rustamgk/devenv-sdui` (for SDUI work environment)
+**Repository**: `rustamgk/dotfiles`
+
+**Tags**:
+- `rustamgk/dotfiles:latest` (personal environment - default)
+- `rustamgk/dotfiles:sarna` (Sarna work environment)
+- `rustamgk/dotfiles:sdui` (SDUI work environment)
+
+This approach keeps all your development environments in one place while maintaining clear separation through tags.
 
 ## Triggering Builds
 
@@ -73,8 +78,10 @@ The workflow uses GitHub Actions cache to speed up builds by caching Docker laye
 To test the Docker Hub integration locally:
 
 ```bash
-# Pull the latest image
-docker pull rustamgk/devenv:latest
+# Pull different environment images
+docker pull rustamgk/dotfiles:latest  # personal
+docker pull rustamgk/dotfiles:sarna   # sarna
+docker pull rustamgk/dotfiles:sdui    # sdui
 
 # Run using the pulled image
 ./devenv.sh pull

@@ -28,7 +28,7 @@ get_profile_config() {
         "personal")
             CONTAINER_NAME="rustam-devenv-personal"
             IMAGE_NAME="rustam-devenv:personal"
-            DOCKERHUB_IMAGE="rustamgk/devenv:latest"
+            DOCKERHUB_IMAGE="rustamgk/dotfiles:latest"
             WORKSPACE_PATH="$HOME/workspace"
             HELM_PATH="$HOME/helm"
             COMPOSE_FILE="docker-compose.yml"
@@ -37,7 +37,7 @@ get_profile_config() {
         "work_sarna")
             CONTAINER_NAME="rustam-devenv-sarna"
             IMAGE_NAME="rustam-devenv:sarna"
-            DOCKERHUB_IMAGE="rustamgk/devenv-sarna:latest"
+            DOCKERHUB_IMAGE="rustamgk/dotfiles:sarna"
             WORKSPACE_PATH="$HOME/workspace/sarna"
             HELM_PATH="$HOME/helm/sarna"
             COMPOSE_FILE="docker-compose.sarna.yml"
@@ -46,7 +46,7 @@ get_profile_config() {
         "work_sdui")
             CONTAINER_NAME="rustam-devenv-sdui"
             IMAGE_NAME="rustam-devenv:sdui"
-            DOCKERHUB_IMAGE="rustamgk/devenv-sdui:latest"
+            DOCKERHUB_IMAGE="rustamgk/dotfiles:sdui"
             WORKSPACE_PATH="$HOME/workspace/sdui"
             HELM_PATH="$HOME/helm/sdui"
             COMPOSE_FILE="docker-compose.sdui.yml"

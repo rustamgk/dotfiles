@@ -57,7 +57,7 @@ function Get-ProfileConfig {
         "personal" {
             $config.ContainerName = "rustam-devenv-personal"
             $config.ImageName = "rustam-devenv:personal"
-            $config.DockerHubImage = "rustamgk/devenv:latest"
+            $config.DockerHubImage = "rustamgk/dotfiles:latest"
             $config.WorkspacePath = "C:\workspace"
             $config.HelmPath = "C:\helm"
             $config.ComposeFile = "docker-compose.yml"
@@ -66,7 +66,7 @@ function Get-ProfileConfig {
         "work_sarna" {
             $config.ContainerName = "rustam-devenv-sarna"
             $config.ImageName = "rustam-devenv:sarna"
-            $config.DockerHubImage = "rustamgk/devenv-sarna:latest"
+            $config.DockerHubImage = "rustamgk/dotfiles:sarna"
             $config.WorkspacePath = "C:\workspace\sarna"
             $config.HelmPath = "C:\helm\sarna"
             $config.ComposeFile = "docker-compose.sarna.yml"
@@ -75,7 +75,7 @@ function Get-ProfileConfig {
         "work_sdui" {
             $config.ContainerName = "rustam-devenv-sdui"
             $config.ImageName = "rustam-devenv:sdui"
-            $config.DockerHubImage = "rustamgk/devenv-sdui:latest"
+            $config.DockerHubImage = "rustamgk/dotfiles:sdui"
             $config.WorkspacePath = "C:\workspace\sdui"
             $config.HelmPath = "C:\helm\sdui"
             $config.ComposeFile = "docker-compose.sdui.yml"
