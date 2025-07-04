@@ -16,7 +16,7 @@ RUN useradd -m -s /bin/zsh ${USER} && \
     mkdir -p ${WORKSPACE_DIR} ${HELM_DIR} && \
     chown -R ${USER}:${USER} ${HOME}
 
-# Install base packages
+# Install base packages and sudo for Homebrew
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
@@ -35,13 +35,17 @@ RUN apt-get update && apt-get install -y \
     file \
     procps \
     openssh-client \
+    sudo \
     && rm -rf /var/lib/apt/lists/*
+
+# Add user to sudoers for Homebrew installation
+RUN echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Switch to user before installing Homebrew
 USER ${USER}
 WORKDIR ${HOME}
 
-# Install Homebrew (Linux version) as user
+# Install Homebrew (Linux version) as user with sudo access
 RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Add Homebrew to PATH
