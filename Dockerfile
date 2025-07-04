@@ -123,12 +123,12 @@ RUN python3 -m pip install --break-system-packages kube-hunter
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
 # Install Oh My Zsh plugins (using ZSH_CUSTOM directory)
-RUN git clone https://github.com/zsh-users/zsh-autosuggestions.git ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions && \
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+RUN git clone https://github.com/zsh-users/zsh-autosuggestions.git /home/rustamgk/.oh-my-zsh/custom/plugins/zsh-autosuggestions && \
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /home/rustamgk/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 
 # Install LazyVim (modern Neovim configuration)
-RUN git clone https://github.com/LazyVim/starter ${HOME}/.config/nvim && \
-    rm -rf ${HOME}/.config/nvim/.git
+RUN git clone https://github.com/LazyVim/starter /home/rustamgk/.config/nvim && \
+    rm -rf /home/rustamgk/.config/nvim/.git
 
 # Install tmux plugin manager
 RUN git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
@@ -141,28 +141,28 @@ COPY --chown=${USER}:${USER} configs/starship.toml ${HOME}/.config/starship.toml
 COPY --chown=${USER}:${USER} configs/.gitconfig ${HOME}/.gitconfig
 COPY --chown=${USER}:${USER} configs/nvim/ ${HOME}/.config/nvim/
 
+# Fix line endings for all configuration files
+RUN sed -i 's/\r$//' ${HOME}/.zshrc ${HOME}/.tmux.conf ${HOME}/.tmux.base.conf ${HOME}/.gitconfig
+
 # Set up zsh as default shell
 RUN sudo chsh -s $(which zsh) ${USER}
 
 # Initialize starship and other tools
-RUN mkdir -p ${HOME}/.config
+RUN mkdir -p /home/rustamgk/.config
 
 # Set up workspace mount points with platform detection
 RUN mkdir -p ${WORKSPACE_DIR} ${HELM_DIR}
 
 # Platform-specific setup script
 COPY --chown=${USER}:${USER} scripts/setup-mounts.sh ${HOME}/setup-mounts.sh
-RUN chmod +x ${HOME}/setup-mounts.sh
-
-# Install tmux plugins
-RUN ${HOME}/.tmux/plugins/tpm/scripts/install_plugins.sh
+RUN sed -i 's/\r$//' /home/rustamgk/setup-mounts.sh && chmod +x /home/rustamgk/setup-mounts.sh
 
 # Set up SSH directory
-RUN mkdir -p ${HOME}/.ssh && chmod 700 ${HOME}/.ssh
+RUN mkdir -p /home/rustamgk/.ssh && chmod 700 /home/rustamgk/.ssh
 
 # Create entrypoint script
-COPY --chown=${USER}:${USER} scripts/entrypoint.sh ${HOME}/entrypoint.sh
-RUN chmod +x ${HOME}/entrypoint.sh
+COPY --chown=${USER}:${USER} scripts/entrypoint.sh /home/rustamgk/entrypoint.sh
+RUN sed -i 's/\r$//' /home/rustamgk/entrypoint.sh && chmod +x /home/rustamgk/entrypoint.sh
 
 # Expose common ports for development
 EXPOSE 3000 8080 8000 9000
