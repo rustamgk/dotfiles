@@ -52,7 +52,17 @@ The workflow will automatically trigger when:
    - `configs/**`
    - `scripts/**`
    - `.github/workflows/docker-build.yml`
-3. **Manual trigger** via GitHub Actions tab → "Build and Push Docker Images" → "Run workflow"
+3. **Manual trigger** via GitHub Actions tab:
+   - Go to **Actions** tab → "Build and Push Docker Images" → "Run workflow"
+   - **Select profile**: Choose which environment to build:
+     - `all` - Build all three profiles (personal, sarna, sdui)
+     - `personal` - Build only personal environment
+     - `sarna` - Build only Sarna work environment
+     - `sdui` - Build only SDUI work environment
+   - **Select platforms**: Choose target architecture:
+     - `linux/amd64,linux/arm64` - Both Intel/AMD and ARM (recommended)
+     - `linux/amd64` - Intel/AMD only (faster)
+     - `linux/arm64` - ARM only (Apple Silicon)
 
 ## Supported Platforms
 

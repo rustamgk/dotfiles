@@ -228,11 +228,28 @@ The development environment is automatically built and published to Docker Hub v
 ./devenv.sh status
 ```
 
+### Manual GitHub Actions Trigger
+You can manually trigger image builds from GitHub:
+
+1. Go to your repository on GitHub
+2. Click **Actions** tab
+3. Select "Build and Push Docker Images" workflow
+4. Click **Run workflow** button
+5. Choose options:
+   - **Profile**: `all`, `personal`, `sarna`, or `sdui`
+   - **Platforms**: `linux/amd64,linux/arm64` (recommended) or single platform
+6. Click **Run workflow**
+
+This is useful for:
+- Building specific profiles only
+- Testing changes before merging
+- Rebuilding images after configuration updates
+
 ### GitHub Actions
 Images are automatically built and pushed to Docker Hub when:
 - Code is pushed to main/master branch
 - Dockerfile or configs are modified
-- Manual workflow dispatch is triggered
+- **Manual workflow dispatch** is triggered (you can choose specific profiles and platforms)
 
 ## �🖥️ Platform-Specific Setup
 
