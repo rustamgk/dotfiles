@@ -6,11 +6,15 @@
 README.md
 *.md
 
+# GitHub Actions
+.github/
+
 # IDE
 .vscode
 .idea
 *.swp
 *.swo
+*~
 
 # OS
 .DS_Store
@@ -23,3 +27,30 @@ Thumbs.db
 .tmp
 *.tmp
 temp/
+*.temp
+
+# Node modules (if any)
+node_modules/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Docker compose files (not needed in image)
+docker-compose*.yml
+
+# Local development directories
+workspace/
+helm/
+.env
+.env.local
+
+# Theme files (not needed in container)
+themes/
+
+# Management scripts (not needed in container)
+tools
+tools.sh
+devenv.*
+Makefile

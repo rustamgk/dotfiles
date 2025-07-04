@@ -3,11 +3,12 @@ version: '3.8'
 
 services:
   devenv:
+    # Try to use pre-built image first, build locally if not available
+    image: ${IMAGE_NAME:-rustamgk/devenv:latest}
     build:
       context: .
       dockerfile: ${DOCKERFILE:-Dockerfile}
     container_name: ${CONTAINER_NAME:-rustam-devenv-personal}
-    image: ${IMAGE_NAME:-rustam-devenv:personal}
     hostname: devenv-personal
     volumes:
       # Personal environment mounts

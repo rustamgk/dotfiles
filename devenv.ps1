@@ -57,6 +57,7 @@ function Get-ProfileConfig {
         "personal" {
             $config.ContainerName = "rustam-devenv-personal"
             $config.ImageName = "rustam-devenv:personal"
+            $config.DockerHubImage = "rustamgk/devenv:latest"
             $config.WorkspacePath = "C:\workspace"
             $config.HelmPath = "C:\helm"
             $config.ComposeFile = "docker-compose.yml"
@@ -65,6 +66,7 @@ function Get-ProfileConfig {
         "work_sarna" {
             $config.ContainerName = "rustam-devenv-sarna"
             $config.ImageName = "rustam-devenv:sarna"
+            $config.DockerHubImage = "rustamgk/devenv-sarna:latest"
             $config.WorkspacePath = "C:\workspace\sarna"
             $config.HelmPath = "C:\helm\sarna"
             $config.ComposeFile = "docker-compose.sarna.yml"
@@ -73,6 +75,7 @@ function Get-ProfileConfig {
         "work_sdui" {
             $config.ContainerName = "rustam-devenv-sdui"
             $config.ImageName = "rustam-devenv:sdui"
+            $config.DockerHubImage = "rustamgk/devenv-sdui:latest"
             $config.WorkspacePath = "C:\workspace\sdui"
             $config.HelmPath = "C:\helm\sdui"
             $config.ComposeFile = "docker-compose.sdui.yml"
@@ -91,7 +94,27 @@ function Get-Platform {
     return "unknown"
 }
 
-# Build the Docker image
+# Pull pre-built image from Docker Hub
+function Pull-Image {
+    param([hashtable]$Config)
+    
+    Write-Status "Pulling pre-built Docker image from Docker Hub: $($Config.DockerHubImage)"
+    
+    $pullResult = docker pull $Config.DockerHubImage
+    if ($LASTEXITCODE -eq 0) {
+        # Tag the pulled image with local name for compatibility
+        docker tag $Config.DockerHubImage $Config.ImageName
+        if ($LASTEXITCODE -eq 0) {
+            Write-Success "Docker image '$($Config.DockerHubImage)' pulled and tagged as '$($Config.ImageName)' successfully!"
+            return $true
+        }
+    }
+    
+    Write-Warning "Failed to pull image from Docker Hub. Will build locally instead."
+    return $false
+}
+
+# Build the Docker image locally
 function Build-Image {
     param([hashtable]$Config)
     
@@ -110,6 +133,26 @@ function Build-Image {
     } else {
         Write-Error "Failed to build Docker image"
         exit 1
+    }
+}
+
+# Get or build the Docker image (try pull first, fallback to build)
+function Get-Image {
+    param([hashtable]$Config)
+    
+    # Check if image already exists locally
+    $existingImage = docker images --format "table {{.Repository}}:{{.Tag}}" | Select-String $Config.ImageName
+    if ($existingImage) {
+        Write-Status "Local image '$($Config.ImageName)' already exists. Use 'rebuild' to force rebuild or 'pull' to update."
+        return
+    }
+    
+    # Try to pull from Docker Hub first
+    if (Pull-Image $Config) {
+        return
+    } else {
+        # Fallback to local build
+        Build-Image $Config
     }
 }
 
@@ -206,8 +249,10 @@ function Show-Help {
     Write-Host "  work_sdui    Work environment for SDUI project"
     Write-Host ""
     Write-Host "Commands:" -ForegroundColor $Yellow
-    Write-Host "  build      Build the Docker image for the profile"
-    Write-Host "  run        Start the development environment"
+    Write-Host "  run        Pull/build image (if needed) and start container"
+    Write-Host "  pull       Pull pre-built image from Docker Hub"
+    Write-Host "  build      Build Docker image locally"
+    Write-Host "  rebuild    Force rebuild Docker image locally"
     Write-Host "  connect    Connect to running environment"
     Write-Host "  stop       Stop the development environment"
     Write-Host "  restart    Restart the development environment"
@@ -342,8 +387,14 @@ function Main {
         "build" {
             Build-Image $config
         }
-        "run" {
+        "pull" {
+            Pull-Image $config
+        }
+        "rebuild" {
             Build-Image $config
+        }
+        "run" {
+            Get-Image $config
             Start-Container $platform $config
         }
         "connect" {
@@ -361,6 +412,7 @@ function Main {
         "restart" {
             Stop-Container $platform $config
             Start-Sleep 2
+            Get-Image $config
             Start-Container $platform $config
         }
         "logs" {

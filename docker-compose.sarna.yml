@@ -3,11 +3,12 @@ version: '3.8'
 
 services:
   devenv:
+    # Try to use pre-built image first, build locally if not available
+    image: ${IMAGE_NAME:-rustamgk/devenv-sarna:latest}
     build:
       context: .
       dockerfile: ${DOCKERFILE:-Dockerfile.sarna}
     container_name: ${CONTAINER_NAME:-rustam-devenv-sarna}
-    image: ${IMAGE_NAME:-rustam-devenv:sarna}
     hostname: devenv-sarna
     volumes:
       # Sarna-specific mounts

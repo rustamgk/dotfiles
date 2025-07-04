@@ -3,11 +3,12 @@ version: '3.8'
 
 services:
   devenv:
+    # Try to use pre-built image first, build locally if not available
+    image: ${IMAGE_NAME:-rustamgk/devenv-sdui:latest}
     build:
       context: .
       dockerfile: ${DOCKERFILE:-Dockerfile.sdui}
     container_name: ${CONTAINER_NAME:-rustam-devenv-sdui}
-    image: ${IMAGE_NAME:-rustam-devenv:sdui}
     hostname: devenv-sdui
     volumes:
       # SDUI-specific mounts

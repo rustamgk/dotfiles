@@ -28,6 +28,7 @@ get_profile_config() {
         "personal")
             CONTAINER_NAME="rustam-devenv-personal"
             IMAGE_NAME="rustam-devenv:personal"
+            DOCKERHUB_IMAGE="rustamgk/devenv:latest"
             WORKSPACE_PATH="$HOME/workspace"
             HELM_PATH="$HOME/helm"
             COMPOSE_FILE="docker-compose.yml"
@@ -36,6 +37,7 @@ get_profile_config() {
         "work_sarna")
             CONTAINER_NAME="rustam-devenv-sarna"
             IMAGE_NAME="rustam-devenv:sarna"
+            DOCKERHUB_IMAGE="rustamgk/devenv-sarna:latest"
             WORKSPACE_PATH="$HOME/workspace/sarna"
             HELM_PATH="$HOME/helm/sarna"
             COMPOSE_FILE="docker-compose.sarna.yml"
@@ -44,6 +46,7 @@ get_profile_config() {
         "work_sdui")
             CONTAINER_NAME="rustam-devenv-sdui"
             IMAGE_NAME="rustam-devenv:sdui"
+            DOCKERHUB_IMAGE="rustamgk/devenv-sdui:latest"
             WORKSPACE_PATH="$HOME/workspace/sdui"
             HELM_PATH="$HOME/helm/sdui"
             COMPOSE_FILE="docker-compose.sdui.yml"
@@ -97,7 +100,22 @@ detect_platform() {
     fi
 }
 
-# Build the Docker image
+# Pull pre-built image from Docker Hub
+pull_image() {
+    print_status "Pulling pre-built Docker image from Docker Hub: $DOCKERHUB_IMAGE"
+    
+    if docker pull "$DOCKERHUB_IMAGE"; then
+        # Tag the pulled image with local name for compatibility
+        docker tag "$DOCKERHUB_IMAGE" "$IMAGE_NAME"
+        print_success "Docker image '$DOCKERHUB_IMAGE' pulled and tagged as '$IMAGE_NAME' successfully!"
+        return 0
+    else
+        print_warning "Failed to pull image from Docker Hub. Will build locally instead."
+        return 1
+    fi
+}
+
+# Build the Docker image locally
 build_image() {
     print_status "Building development environment Docker image for profile: $CONTAINER_NAME"
     
@@ -109,6 +127,24 @@ build_image() {
     
     docker build -f "$DOCKERFILE" -t "$IMAGE_NAME" .
     print_success "Docker image '$IMAGE_NAME' built successfully!"
+}
+
+# Get or build the Docker image (try pull first, fallback to build)
+get_image() {
+    # Check if image already exists locally
+    if docker images | grep -q "$IMAGE_NAME"; then
+        print_status "Local image '$IMAGE_NAME' already exists. Use 'rebuild' to force rebuild or 'pull' to update."
+        return 0
+    fi
+    
+    # Try to pull from Docker Hub first
+    if pull_image; then
+        return 0
+    else
+        # Fallback to local build
+        build_image
+        return $?
+    fi
 }
 
 # Run the container
@@ -174,8 +210,10 @@ show_help() {
     echo "  work_sdui    Work environment for SDUI project"
     echo ""
     echo "Commands:"
-    echo "  build      Build the Docker image for the profile"
-    echo "  run        Start the development environment"
+    echo "  run        Pull/build image (if needed) and start container"
+    echo "  pull       Pull pre-built image from Docker Hub"
+    echo "  build      Build Docker image locally"
+    echo "  rebuild    Force rebuild Docker image locally"
     echo "  connect    Connect to running environment"
     echo "  stop       Stop the development environment"
     echo "  restart    Restart the development environment"
@@ -240,8 +278,14 @@ main() {
         "build")
             build_image
             ;;
-        "run")
+        "pull")
+            pull_image
+            ;;
+        "rebuild")
             build_image
+            ;;
+        "run")
+            get_image
             run_container "$platform"
             ;;
         "connect"|"exec"|"shell")
@@ -253,6 +297,7 @@ main() {
         "restart")
             stop_container "$platform"
             sleep 2
+            get_image
             run_container "$platform"
             ;;
         "logs")

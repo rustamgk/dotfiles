@@ -149,7 +149,9 @@ dotfiles/
    cd dotfiles
    ```
 
-2. **Build and run** (one command does it all):
+2. **Run the environment** (automatically pulls or builds image):
+   
+   The system will automatically try to pull a pre-built image from Docker Hub first, and only build locally if needed.
    
    **Linux/macOS:**
    ```bash
@@ -198,7 +200,41 @@ dotfiles/
    .\devenv.ps1 work_sdui connect
    ```
 
-## 🖥️ Platform-Specific Setup
+## � Docker Hub Integration
+
+The development environment is automatically built and published to Docker Hub via GitHub Actions. This means:
+
+### Automatic Image Pulling
+- **First run**: Automatically pulls the latest pre-built image from Docker Hub
+- **Fallback**: Builds locally if the pull fails or image doesn't exist
+- **Fast startup**: No need to build locally on first use
+
+### Available Images
+- `rustamgk/devenv:latest` - Personal development environment
+- `rustamgk/devenv-sarna:latest` - Sarna work environment  
+- `rustamgk/devenv-sdui:latest` - SDUI work environment
+
+### Manual Image Management
+```bash
+# Pull latest image from Docker Hub
+./devenv.sh personal pull
+./devenv.sh work_sarna pull
+
+# Force rebuild locally
+./devenv.sh personal rebuild
+./devenv.sh work_sarna rebuild
+
+# Check image status
+./devenv.sh status
+```
+
+### GitHub Actions
+Images are automatically built and pushed to Docker Hub when:
+- Code is pushed to main/master branch
+- Dockerfile or configs are modified
+- Manual workflow dispatch is triggered
+
+## �🖥️ Platform-Specific Setup
 
 ### macOS
 - Workspace: `~/workspace` → `/home/rustamgk/workspace`
@@ -218,11 +254,17 @@ dotfiles/
 The `devenv.sh` script provides easy management of your development environment:
 
 ```bash
-# Build the Docker image
+# Start environment (pulls from Docker Hub or builds locally)
+./devenv.sh run
+
+# Pull latest image from Docker Hub
+./devenv.sh pull
+
+# Build image locally
 ./devenv.sh build
 
-# Start the environment (builds if needed)
-./devenv.sh run
+# Force rebuild locally (ignores existing image)
+./devenv.sh rebuild
 
 # Connect to running environment
 ./devenv.sh connect
@@ -247,11 +289,17 @@ The `devenv.sh` script provides easy management of your development environment:
 The `devenv.ps1` script provides the same functionality for Windows:
 
 ```powershell
-# Build the Docker image
+# Start environment (pulls from Docker Hub or builds locally)
+.\devenv.ps1 run
+
+# Pull latest image from Docker Hub
+.\devenv.ps1 pull
+
+# Build image locally
 .\devenv.ps1 build
 
-# Start the environment (builds if needed)
-.\devenv.ps1 run
+# Force rebuild locally (ignores existing image)
+.\devenv.ps1 rebuild
 
 # Connect to running environment
 .\devenv.ps1 connect
