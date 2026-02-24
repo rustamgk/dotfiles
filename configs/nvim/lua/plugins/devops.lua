@@ -56,32 +56,19 @@ return {
     build = function() vim.fn["mkdp#util#install"]() end,
   },
 
-  -- REST client for API testing
+  -- REST client for API testing (rest-nvim v2 API)
   {
     "rest-nvim/rest.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
+    ft = { "http" },
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+    },
     config = function()
-      require("rest-nvim").setup({
-        result_split_horizontal = false,
-        result_split_in_place = false,
-        skip_ssl_verification = false,
-        encode_url = true,
-        highlight = {
-          enabled = true,
-          timeout = 150,
-        },
-        result = {
-          show_url = true,
-          show_http_info = true,
-          show_headers = true,
-          formatters = {
-            json = "jq",
-            html = function(body)
-              return vim.fn.system({"tidy", "-i", "-q", "-"}, body)
-            end
-          },
-        },
-      })
-    end
+      require("rest-nvim").setup()
+    end,
+    keys = {
+      { "<leader>rr", "<cmd>Rest run<cr>",      desc = "Run REST request" },
+      { "<leader>rl", "<cmd>Rest run last<cr>", desc = "Re-run last REST request" },
+    },
   },
 }

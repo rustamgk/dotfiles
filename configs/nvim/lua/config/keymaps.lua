@@ -11,8 +11,8 @@ map("n", "<leader>dt", "<cmd>!terraform plan<cr>", { desc = "Terraform plan" })
 map("n", "<leader>dg", "<cmd>!go test ./...<cr>", { desc = "Run Go tests" })
 
 -- Docker related
-map("n", "<leader>db", "<cmd>!docker build -t . .<cr>", { desc = "Docker build" })
-map("n", "<leader>dr", "<cmd>!docker run<cr>", { desc = "Docker run" })
+map("n", "<leader>db", "<cmd>!docker build -t $(basename $(pwd)):latest .<cr>", { desc = "Docker build" })
+map("n", "<leader>dr", "<cmd>!docker ps<cr>", { desc = "Docker ps" })
 
 -- Git shortcuts
 map("n", "<leader>gs", "<cmd>!git status<cr>", { desc = "Git status" })

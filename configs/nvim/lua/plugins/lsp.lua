@@ -130,7 +130,6 @@ return {
         yml = { "yamlfmt" },
         sh = { "shfmt" },
         bash = { "shfmt" },
-        dockerfile = { "dockerfile" },
         go = { "goimports", "gofmt" },
         python = { "black", "isort" },
         json = { "jq" },
