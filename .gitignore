@@ -44,3 +44,7 @@ volumes/
 
 # LH
 .lh/
+# Dotfiles - sensitive local configs (not tracked in git)
+configs/.zsh_history
+configs/.zshrc.local
+configs/.zshrc.local.*

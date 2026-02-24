@@ -1,6 +1,100 @@
 # Rustam's Universal Development Environment
 
-A Docker-based development environment that provides a consistent setup across macOS, Linux, and Windows. This environment includes all your favorite tools, configurations, and settings in portable containers with support for multiple work profiles.
+A full dotfiles repository and development environment setup for Ubuntu Desktop, WSL2, and Docker-based workflows. Provides a consistent ZSH setup, tools, and configurations across machines.
+
+## 🚀 Quick Start - New Ubuntu Machine
+
+### One-line bootstrap (Ubuntu 24.04+ / 25.10)
+
+```bash
+git clone https://github.com/rustamgk/dotfiles.git ~/github/dotfiles
+cd ~/github/dotfiles && ./scripts/bootstrap.sh
+```
+
+Or with curl (no git clone needed first):
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/rustamgk/dotfiles/master/scripts/bootstrap.sh)
+```
+
+### Just link configs (if already have a machine with tools)
+
+```bash
+git clone https://github.com/rustamgk/dotfiles.git ~/github/dotfiles
+cd ~/github/dotfiles && make install
+```
+
+### Sync your live configs back to the repo
+
+```bash
+cd ~/github/dotfiles && make sync
+git add configs/ && git commit -m "sync: update configs from $(hostname)"
+```
+
+---
+
+## 📦 What Gets Installed by bootstrap.sh
+
+| Category | Tools |
+|----------|-------|
+| **Shell** | ZSH, Oh My ZSH, fzf-tab, zsh-syntax-highlighting |
+| **Prompt** | Starship (with Ayu Mirage config) |
+| **Terminal MUX** | tmux + TPM + plugins |
+| **Editor** | Neovim (latest) + Lazy.nvim config |
+| **Search** | fzf, ripgrep (rg), fd, bat |
+| **Navigation** | zoxide (smart cd), autojump |
+| **File tools** | eza (ls++), mc (Midnight Commander), delta (git diff) |
+| **Kubernetes** | kubectl, helm, k9s, kubectx, kubens |
+| **DevOps** | terraform, ansible, argocd, flux |
+| **Cloud** | awscli, azure-cli, saml2aws |
+| **Languages** | pyenv + Python 3.12, nvm + Node 20 LTS, Go, Rust/Cargo |
+| **Misc** | lazygit, trashy, lolcat, cowsay, fortune |
+| **Fonts** | JetBrainsMono Nerd Font |
+
+## 📁 Repository Structure
+
+```
+dotfiles/
+├── configs/                  # All dotfiles (symlinked to $HOME)
+│   ├── .zshrc                # ZSH configuration (cross-platform)
+│   ├── .tmux.conf            # Tmux config
+│   ├── .tmux.base.conf       # Tmux base keybindings
+│   ├── .gitconfig            # Git configuration
+│   ├── starship.toml         # Starship prompt config
+│   └── nvim/                 # Neovim config (Lazy.nvim)
+├── scripts/
+│   ├── bootstrap.sh          # Full Ubuntu setup (run once on new machine)
+│   ├── install.sh            # Symlink configs to $HOME
+│   └── entrypoint.sh         # Docker container entrypoint
+├── themes/                   # Terminal color schemes (Ayu Mirage)
+│   ├── linux-terminals/      # Alacritty, Kitty, Gnome Terminal, etc.
+│   ├── macos-terminal/
+│   └── windows-terminal/
+└── Makefile                  # Shortcuts for common operations
+```
+
+## 🔧 Makefile Commands
+
+```bash
+make bootstrap    # Full install on a new machine
+make install      # Just link configs to $HOME
+make sync         # Copy live configs back into this repo
+make build        # Build Docker image
+make run          # Start Docker dev environment
+make connect      # Connect to running Docker container
+make stop         # Stop Docker container
+make clean        # Remove Docker resources
+```
+
+## 🔐 Sensitive Configuration
+
+Secrets are stored in `~/.zshrc.local` (not tracked in git). After running `install.sh`, a template is created automatically:
+
+```bash
+# ~/.zshrc.local
+export GITLAB_ACCESS_TOKEN="your-token"
+export GITLAB_USER_NAME="rustam.galimyanov"
+export AWS_ACCESS_KEY_ID="..."
+```
 
 ## 🌟 Features
 

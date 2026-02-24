@@ -1,22 +1,32 @@
 [core]
-	excludesfile = /Users/rustamgk/.gitignore_global
+	excludesfile = ~/.gitignore_global
 	autocrlf = false
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
+	editor = nvim
 [user]
-    	email = rustam.gk@gmail.com
+	email = rustam.gk@gmail.com
 	name = Rustam Galimyanov
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
-[commit]
-	template = /Users/rustamgk/.stCommitMsg
 [credential "https://github.com"]
 	helper = 
 	helper = !/usr/bin/gh auth git-credential
 [credential "https://gist.github.com"]
 	helper = 
 	helper = !/usr/bin/gh auth git-credential
+[alias]
+	graph = log --all --decorate --oneline --graph
+	unstage = reset HEAD --
+	last = log -1 HEAD
+[pull]
+	rebase = false
+[push]
+	autoSetupRemote = true
+[diff]
+	tool = vimdiff
+[merge]
+	tool = vimdiff
+[color]
+	ui = auto
