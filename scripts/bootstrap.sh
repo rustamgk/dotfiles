@@ -214,6 +214,7 @@ if [[ "$IS_LINUX" == "true" ]]; then
     golang-go nodejs npm
     libssl-dev fontconfig
     stow xclip xsel
+    libdbus-1-dev
   )
 
   log_info "Installing apt packages..."
@@ -263,6 +264,8 @@ if [[ "$IS_MACOS" == "true" ]]; then
     jq yq
     # Fun stuff
     cowsay fortune lolcat
+    # Trash CLI (macOS-native)
+    trash
     # DevOps / Kubernetes (macOS gets kubectl/helm/tf here, not separately)
     kubectl helm terraform
     # Go (brew manages on macOS; pyenv/nvm handle Python/Node versions)
@@ -476,15 +479,18 @@ fi
 
 export PATH="$HOME/.cargo/bin:$PATH"
 
-CARGO_TOOLS=(trashy)
-for tool in "${CARGO_TOOLS[@]}"; do
-  if has "$tool"; then
-    log_info "cargo: $tool already installed"
-  else
-    log_info "cargo: installing $tool..."
-    cargo install "$tool" 2>&1 | tail -2 || log_warn "Failed: $tool"
-  fi
-done
+# Linux-only cargo tools (macOS equivalents are installed via brew)
+if [[ "$IS_LINUX" == "true" ]]; then
+  CARGO_TOOLS=(trashy)
+  for tool in "${CARGO_TOOLS[@]}"; do
+    if has "$tool"; then
+      log_info "cargo: $tool already installed"
+    else
+      log_info "cargo: installing $tool..."
+      cargo install "$tool" 2>&1 | tail -2 || log_warn "Failed: $tool"
+    fi
+  done
+fi
 
 # ============================================================================
 # 14. kubech (both platforms)
