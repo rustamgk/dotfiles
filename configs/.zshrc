@@ -14,15 +14,21 @@ export PYENV_ROOT="$HOME/.pyenv"
 zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
 
 # ---- Consolidated PATH ----
-export PATH="$HOME/.local/bin:/usr/local/bin:/usr/local/sbin:$DOTNET_ROOT:$DOTNET_ROOT/tools:$PYENV_ROOT/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/golang/bin:$HOME/.cargo/bin:$HOME/.pulumi/bin:$PATH"
+export PATH="$HOME/.local/bin:/usr/local/bin:/usr/local/sbin:$DOTNET_ROOT:$DOTNET_ROOT/tools:$PYENV_ROOT/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:$HOME/.cargo/bin:$HOME/.pulumi/bin:$PATH"
 
 # ---- WSL2-specific additions ----
 if grep -qi microsoft /proc/version 2>/dev/null; then
   export PATH="$PATH:/mnt/c/Users/$(cmd.exe /c echo %USERNAME% 2>/dev/null | tr -d '\r')/AppData/Local/Programs/Microsoft VS Code/bin"
 fi
 
-# ---- Linuxbrew ----
-if [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+# ---- Homebrew (macOS: Apple Silicon or Intel) / Linuxbrew (Linux) ----
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  if [[ -f /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"   # Apple Silicon
+  elif [[ -f /usr/local/bin/brew ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"       # Intel
+  fi
+elif [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
@@ -80,11 +86,17 @@ alias kuns="kubens"
 alias ku="kubectl"
 
 # -- Package management --
-alias sdi="sudo apt install"
-alias sdu="sudo apt remove"
-alias sds="apt search"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  alias sdi="brew install"
+  alias sdu="brew uninstall"
+  alias sds="brew search"
+else
+  alias sdi="sudo apt install"
+  alias sdu="sudo apt remove"
+  alias sds="apt search"
+fi
 alias bri="brew install"
-alias bru="brew remove"
+alias bru="brew uninstall"
 alias brs="brew search"
 alias s="sudo"
 
@@ -112,7 +124,11 @@ alias 1pl="op signin grk_family"
 # -- Network --
 alias wt="curl wttr.in/berlin"
 alias myip="curl -s https://api.ipify.org && echo"
-alias ports="netstat -tulanp"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  alias ports="netstat -anp tcp | grep LISTEN"
+else
+  alias ports="netstat -tulanp"
+fi
 alias ping="ping -c 5"
 
 # -- Disk --
@@ -153,7 +169,11 @@ alias oktaws='saml2aws login --profile=default && eval $(saml2aws script --profi
 # User configuration
 # -------------------------------------------
 export EDITOR='nvim'
-export ARCHFLAGS="-arch x86_64"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export ARCHFLAGS="-arch $(uname -m)"
+else
+  export ARCHFLAGS="-arch x86_64"
+fi
 export SSH_KEY_PATH="~/.ssh/"
 
 # -------------------------------------------

@@ -7,7 +7,7 @@ help:
 	@echo "Rustam's Development Environment"
 	@echo ""
 	@echo "Dotfiles / Local setup:"
-	@echo "  make bootstrap  - Bootstrap full Ubuntu environment (run once on new machine)"
+	@echo "  make bootstrap  - Bootstrap full environment: macOS / Ubuntu / WSL2 (run once on new machine)"
 	@echo "  make install    - Link dotfiles configs to \$$HOME (idempotent)"
 	@echo "  make sync       - Sync current configs from \$$HOME into this repo"
 	@echo ""
@@ -24,9 +24,9 @@ help:
 
 # ---- Dotfiles / Local Setup ----
 
-# Bootstrap a fresh Ubuntu machine (installs everything)
+# Bootstrap a fresh macOS / Ubuntu / WSL2 machine (installs everything)
 bootstrap:
-	@echo "Bootstrapping Ubuntu environment..."
+	@echo "Bootstrapping environment (auto-detects macOS / Ubuntu / WSL2)..."
 	@./scripts/bootstrap.sh
 
 # Link dotfiles to $HOME (idempotent, safe to re-run)

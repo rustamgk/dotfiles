@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# bootstrap.sh - Bootstrap script for Ubuntu Desktop / WSL2 Ubuntu
+# bootstrap.sh - Bootstrap macOS / Ubuntu Desktop / WSL2
 # Author: Rustam Galimyanov
 # Repo: github.com/rustamgk/dotfiles
 #
@@ -10,17 +10,10 @@
 #   git clone https://github.com/rustamgk/dotfiles.git ~/github/dotfiles
 #   cd ~/github/dotfiles && ./scripts/bootstrap.sh
 #
-# What this installs:
-#   - ZSH + Oh My ZSH + plugins (fzf-tab, zsh-syntax-highlighting)
-#   - Starship prompt
-#   - Tmux + TPM (Tmux Plugin Manager)
-#   - Neovim (latest)
-#   - fzf, ripgrep, fd, bat, eza, zoxide, autojump, delta
-#   - lazygit, k9s, kubectx, kubens, kubectl, helm, terraform
-#   - pyenv + Python, nvm + Node.js, Go, Rust/Cargo
-#   - Linuxbrew + brew packages
-#   - Nerd Fonts (JetBrainsMono)
-#   - dotfiles symlinked to $HOME
+# Supports:
+#   - macOS 13+ (Apple Silicon M1/M2/M3 & Intel)
+#   - Ubuntu 22.04+ / 24.04+ / 25.10 (native desktop)
+#   - WSL2 Ubuntu
 # =============================================================================
 
 set -euo pipefail
@@ -31,7 +24,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
 # ---- Logging ----
 log_info()    { echo -e "${BLUE}[INFO]${NC} $*"; }
@@ -45,148 +38,37 @@ has() { command -v "$1" &>/dev/null; }
 
 # ---- Run with sudo if needed ----
 SUDO=""
-if [[ $EUID -ne 0 ]]; then
-  SUDO="sudo"
-fi
-
-# ---- Detect environment ----
-IS_WSL=false
-IS_DESKTOP=false
-if grep -qi microsoft /proc/version 2>/dev/null; then
-  IS_WSL=true
-  log_info "Detected WSL2 environment"
-else
-  IS_DESKTOP=true
-  log_info "Detected native Linux environment"
-fi
+[[ $EUID -ne 0 ]] && SUDO="sudo"
 
 # ---- Dotfiles directory ----
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/github/dotfiles}"
 
 # ============================================================================
-# 1. System packages
+# OS Detection
 # ============================================================================
-log_section "Installing system packages"
+IS_MACOS=false
+IS_LINUX=false
+IS_WSL=false
 
-$SUDO apt-get update -qq
-
-# Add required repos
-log_info "Adding apt repositories..."
-
-# GitHub CLI
-if ! has gh; then
-  curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | $SUDO dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | $SUDO tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-fi
-
-# Neovim PPA (stable)
-if ! has nvim; then
-  $SUDO add-apt-repository -y ppa:neovim-ppa/stable 2>/dev/null || true
-fi
-
-$SUDO apt-get update -qq
-
-# Core packages
-APT_PACKAGES=(
-  # Shell
-  zsh
-  zsh-autosuggestions
-  zsh-syntax-highlighting
-  # Terminal multiplexer
-  tmux
-  # Editors
-  neovim
-  # Version control
-  git
-  git-lfs
-  gh
-  # Build tools
-  build-essential
-  cmake
-  pkg-config
-  # Search & navigation
-  fzf
-  ripgrep
-  fd-find
-  bat
-  autojump
-  zoxide
-  tree
-  # File tools
-  mc
-  unzip
-  zip
-  p7zip-full
-  # Network tools
-  curl
-  wget
-  net-tools
-  dnsutils
-  # Process tools
-  htop
-  btop
-  # JSON/YAML
-  jq
-  yq
-  # Fun stuff
-  cowsay
-  fortune-mod
-  lolcat
-  # Python
-  python3
-  python3-pip
-  python3-venv
-  python3-dev
-  # Ansible
-  ansible
-  # Go (base, pyenv/nvm will manage versions)
-  golang-go
-  # Node.js
-  nodejs
-  npm
-  # Rust deps
-  libssl-dev
-  # Font support
-  fontconfig
-  # Misc
-  stow
-  tmux
-  xclip
-  xsel
-)
-
-# Desktop-only packages
-if [[ "$IS_DESKTOP" == "true" ]]; then
-  APT_PACKAGES+=(
-    alacritty
-    fonts-font-awesome
-  )
-fi
-
-log_info "Installing apt packages..."
-$SUDO apt-get install -y "${APT_PACKAGES[@]}" 2>&1 | grep -E "^(Setting up|E:|W:)" || true
-log_success "Apt packages installed"
-
-# ============================================================================
-# 2. Linuxbrew (Homebrew for Linux)
-# ============================================================================
-log_section "Installing Linuxbrew"
-
-if [[ ! -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
-  log_info "Installing Homebrew for Linux..."
-  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  log_success "Linuxbrew installed"
+if [[ "$(uname)" == "Darwin" ]]; then
+  IS_MACOS=true
+  log_info "Detected macOS $(sw_vers -productVersion) on $(uname -m)"
+  if [[ "$(uname -m)" == "arm64" ]]; then
+    BREW_PREFIX="/opt/homebrew"
+  else
+    BREW_PREFIX="/usr/local"
+  fi
+elif grep -qi microsoft /proc/version 2>/dev/null; then
+  IS_LINUX=true
+  IS_WSL=true
+  log_info "Detected WSL2 Ubuntu"
 else
-  log_info "Linuxbrew already installed, updating..."
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-  brew update --quiet
+  IS_LINUX=true
+  log_info "Detected native Linux $(lsb_release -ds 2>/dev/null || uname -r)"
 fi
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-# Brew packages
-log_info "Installing brew packages..."
-BREW_PACKAGES=(
+# ---- Brew packages shared between macOS Homebrew and Linuxbrew ----
+COMMON_BREW_PACKAGES=(
   k9s
   kubectx
   lazygit
@@ -202,62 +84,218 @@ BREW_PACKAGES=(
   openvpn
 )
 
-for pkg in "${BREW_PACKAGES[@]}"; do
-  if brew list "${pkg##*/}" &>/dev/null; then
-    log_info "brew: ${pkg##*/} already installed"
-  else
-    log_info "brew: installing ${pkg##*/}..."
-    brew install "$pkg" 2>&1 | tail -1 || log_warn "Failed to install brew package: $pkg"
+# ============================================================================
+# 1. macOS: Xcode CLT + Homebrew
+# ============================================================================
+if [[ "$IS_MACOS" == "true" ]]; then
+  log_section "macOS: Xcode Command Line Tools"
+  if ! xcode-select -p &>/dev/null; then
+    log_warn "Xcode CLT not found. Starting installation..."
+    xcode-select --install 2>/dev/null || true
+    log_warn "After the CLT installation dialog completes, re-run this script."
+    exit 1
   fi
-done
-log_success "Brew packages installed"
+  log_success "Xcode CLT: $(xcode-select -p)"
 
-# ============================================================================
-# 3. kubectl
-# ============================================================================
-log_section "Installing kubectl"
-
-if ! has kubectl; then
-  log_info "Downloading kubectl..."
-  KUBECTL_VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt)
-  curl -fsSLO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
-  $SUDO install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-  rm kubectl
-  log_success "kubectl ${KUBECTL_VERSION} installed"
-else
-  log_info "kubectl already installed: $(kubectl version --client --short 2>/dev/null || true)"
+  log_section "macOS: Homebrew"
+  if ! has brew; then
+    log_info "Installing Homebrew..."
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    eval "$("$BREW_PREFIX/bin/brew" shellenv)"
+    log_success "Homebrew installed"
+  else
+    log_info "Homebrew already installed, updating..."
+    brew update --quiet
+    eval "$(brew shellenv)"
+  fi
+  log_success "Homebrew: $(brew --version | head -1)"
 fi
 
 # ============================================================================
-# 4. Helm
+# 2. Linux: System packages (apt)
 # ============================================================================
-log_section "Installing Helm"
+if [[ "$IS_LINUX" == "true" ]]; then
+  log_section "Linux: System packages (apt)"
 
-if ! has helm; then
-  log_info "Installing helm..."
-  curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-  log_success "Helm installed"
-else
-  log_info "Helm already installed: $(helm version --short 2>/dev/null || true)"
+  $SUDO apt-get update -qq
+
+  log_info "Adding apt repositories..."
+
+  # GitHub CLI
+  if ! has gh; then
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+      | $SUDO dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+      | $SUDO tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+  fi
+
+  # Neovim PPA (stable)
+  if ! has nvim; then
+    $SUDO add-apt-repository -y ppa:neovim-ppa/stable 2>/dev/null || true
+  fi
+
+  $SUDO apt-get update -qq
+
+  APT_PACKAGES=(
+    zsh zsh-autosuggestions zsh-syntax-highlighting
+    tmux neovim
+    git git-lfs gh
+    build-essential cmake pkg-config
+    fzf ripgrep fd-find bat autojump zoxide tree
+    mc unzip zip p7zip-full
+    curl wget net-tools dnsutils
+    htop btop
+    jq yq
+    cowsay fortune-mod lolcat
+    python3 python3-pip python3-venv python3-dev
+    ansible
+    golang-go nodejs npm
+    libssl-dev fontconfig
+    stow xclip xsel
+  )
+
+  log_info "Installing apt packages..."
+  $SUDO apt-get install -y "${APT_PACKAGES[@]}" 2>&1 | grep -E "^(Setting up|E:|W:)" || true
+  log_success "Apt packages installed"
 fi
 
 # ============================================================================
-# 5. Terraform
+# 3. Linux: Linuxbrew
 # ============================================================================
-log_section "Installing Terraform"
+if [[ "$IS_LINUX" == "true" ]]; then
+  log_section "Linux: Linuxbrew"
 
-if ! has terraform; then
-  log_info "Installing terraform via brew..."
-  brew install terraform
-  log_success "Terraform installed"
-else
-  log_info "Terraform already installed"
+  if [[ ! -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+    log_info "Installing Homebrew for Linux..."
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    log_success "Linuxbrew installed"
+  else
+    log_info "Linuxbrew already installed, updating..."
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    brew update --quiet
+  fi
+
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
 # ============================================================================
-# 6. Starship prompt
+# 4. macOS: All Homebrew packages
 # ============================================================================
-log_section "Installing Starship prompt"
+if [[ "$IS_MACOS" == "true" ]]; then
+  log_section "macOS: Homebrew packages"
+
+  MACOS_BREW_PACKAGES=(
+    # Shell & terminal
+    zsh tmux neovim
+    # Version control
+    git git-lfs gh
+    # Build tools
+    cmake pkg-config
+    # Search & navigation
+    fzf ripgrep fd bat autojump zoxide tree
+    # File tools
+    mc p7zip ranger
+    # Network & process
+    wget htop btop
+    # Data tools
+    jq yq
+    # Fun stuff
+    cowsay fortune lolcat
+    # DevOps / Kubernetes (macOS gets kubectl/helm/tf here, not separately)
+    kubectl helm terraform
+    # Go (brew manages on macOS; pyenv/nvm handle Python/Node versions)
+    go
+    # Ansible
+    ansible
+    # Build deps for pyenv
+    openssl readline xz zlib
+    # Common devops tools
+    "${COMMON_BREW_PACKAGES[@]}"
+  )
+
+  log_info "Installing Homebrew packages (this may take a few minutes)..."
+  for pkg in "${MACOS_BREW_PACKAGES[@]}"; do
+    formula_name="${pkg##*/}"     # strip tap prefix e.g. fluxcd/tap/flux -> flux
+    formula_name="${formula_name%@*}"  # strip version e.g. node@20 -> node
+    if brew list "$formula_name" &>/dev/null 2>&1; then
+      log_info "brew: $formula_name already installed"
+    else
+      log_info "brew: installing $formula_name..."
+      brew install "$pkg" 2>&1 | tail -1 || log_warn "Failed to install: $pkg"
+    fi
+  done
+  log_success "macOS brew packages installed"
+fi
+
+# ============================================================================
+# 5. Linux: DevOps tools via Linuxbrew
+# ============================================================================
+if [[ "$IS_LINUX" == "true" ]]; then
+  log_section "Linux: DevOps tools (Linuxbrew)"
+
+  for pkg in "${COMMON_BREW_PACKAGES[@]}"; do
+    formula="${pkg##*/}"
+    if brew list "$formula" &>/dev/null 2>&1; then
+      log_info "brew: $formula already installed"
+    else
+      log_info "brew: installing $formula..."
+      brew install "$pkg" 2>&1 | tail -1 || log_warn "Failed: $pkg"
+    fi
+  done
+  log_success "Linuxbrew packages installed"
+fi
+
+# ============================================================================
+# 6. Linux: kubectl
+# ============================================================================
+if [[ "$IS_LINUX" == "true" ]]; then
+  log_section "kubectl"
+
+  if ! has kubectl; then
+    log_info "Downloading kubectl..."
+    KUBECTL_VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt)
+    curl -fsSLO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
+    $SUDO install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    rm kubectl
+    log_success "kubectl ${KUBECTL_VERSION} installed"
+  else
+    log_info "kubectl already installed: $(kubectl version --client --short 2>/dev/null || true)"
+  fi
+fi
+
+# ============================================================================
+# 7. Linux: Helm
+# ============================================================================
+if [[ "$IS_LINUX" == "true" ]]; then
+  log_section "Helm"
+
+  if ! has helm; then
+    log_info "Installing helm..."
+    curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+    log_success "Helm installed"
+  else
+    log_info "Helm already installed: $(helm version --short 2>/dev/null || true)"
+  fi
+fi
+
+# ============================================================================
+# 8. Linux: Terraform (via Linuxbrew)
+# ============================================================================
+if [[ "$IS_LINUX" == "true" ]]; then
+  log_section "Terraform"
+
+  if ! has terraform; then
+    brew install terraform
+    log_success "Terraform installed"
+  else
+    log_info "Terraform already installed"
+  fi
+fi
+
+# ============================================================================
+# 9. Starship prompt (both platforms)
+# ============================================================================
+log_section "Starship prompt"
 
 if ! has starship; then
   log_info "Installing starship..."
@@ -268,9 +306,9 @@ else
 fi
 
 # ============================================================================
-# 7. Oh My ZSH
+# 10. Oh My ZSH + plugins (both platforms)
 # ============================================================================
-log_section "Installing Oh My ZSH"
+log_section "Oh My ZSH"
 
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   log_info "Installing Oh My ZSH..."
@@ -281,10 +319,8 @@ else
   git -C "$HOME/.oh-my-zsh" pull --quiet origin master 2>/dev/null || true
 fi
 
-# Oh My ZSH custom plugins
 OMZ_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 
-# fzf-tab
 if [[ ! -d "$OMZ_CUSTOM/plugins/fzf-tab" ]]; then
   log_info "Installing fzf-tab plugin..."
   git clone --depth 1 https://github.com/Aloxaf/fzf-tab "$OMZ_CUSTOM/plugins/fzf-tab"
@@ -293,22 +329,26 @@ else
   log_info "fzf-tab already installed"
 fi
 
-# zsh-syntax-highlighting (via custom plugin if not via apt)
-if [[ ! -d "$OMZ_CUSTOM/plugins/zsh-syntax-highlighting" ]] && [[ ! -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
-  log_info "Installing zsh-syntax-highlighting plugin..."
-  git clone --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting "$OMZ_CUSTOM/plugins/zsh-syntax-highlighting"
-  log_success "zsh-syntax-highlighting installed"
-elif [[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && [[ ! -d "$OMZ_CUSTOM/plugins/zsh-syntax-highlighting" ]]; then
-  # Link system package version
-  mkdir -p "$OMZ_CUSTOM/plugins/zsh-syntax-highlighting"
-  ln -sf /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh "$OMZ_CUSTOM/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh"
-  log_success "zsh-syntax-highlighting linked from system package"
+if [[ ! -d "$OMZ_CUSTOM/plugins/zsh-syntax-highlighting" ]]; then
+  if [[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+    mkdir -p "$OMZ_CUSTOM/plugins/zsh-syntax-highlighting"
+    ln -sf /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+      "$OMZ_CUSTOM/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh"
+    log_success "zsh-syntax-highlighting linked from system package"
+  else
+    log_info "Installing zsh-syntax-highlighting plugin..."
+    git clone --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting \
+      "$OMZ_CUSTOM/plugins/zsh-syntax-highlighting"
+    log_success "zsh-syntax-highlighting installed"
+  fi
+else
+  log_info "zsh-syntax-highlighting already installed"
 fi
 
 # ============================================================================
-# 8. pyenv + Python
+# 11. pyenv + Python (both platforms)
 # ============================================================================
-log_section "Installing pyenv"
+log_section "pyenv + Python"
 
 if [[ ! -d "$HOME/.pyenv" ]]; then
   log_info "Installing pyenv..."
@@ -322,7 +362,6 @@ export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)" 2>/dev/null || true
 
-# Install Python 3.12 (stable)
 PYTHON_VERSION="3.12.9"
 if ! pyenv versions 2>/dev/null | grep -q "$PYTHON_VERSION"; then
   log_info "Installing Python $PYTHON_VERSION via pyenv..."
@@ -334,9 +373,9 @@ else
 fi
 
 # ============================================================================
-# 9. nvm + Node.js
+# 12. nvm + Node.js (both platforms)
 # ============================================================================
-log_section "Installing nvm + Node.js"
+log_section "nvm + Node.js"
 
 NVM_DIR="$HOME/.nvm"
 if [[ ! -d "$NVM_DIR" ]]; then
@@ -348,7 +387,7 @@ fi
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-if ! nvm ls 20 &>/dev/null; then
+if ! nvm ls 20 &>/dev/null 2>&1; then
   log_info "Installing Node.js 20 LTS via nvm..."
   nvm install 20
   nvm use 20
@@ -359,9 +398,9 @@ else
 fi
 
 # ============================================================================
-# 10. Rust / Cargo
+# 13. Rust / Cargo (both platforms)
 # ============================================================================
-log_section "Installing Rust"
+log_section "Rust"
 
 if ! has rustc; then
   log_info "Installing Rust via rustup..."
@@ -373,24 +412,20 @@ fi
 
 export PATH="$HOME/.cargo/bin:$PATH"
 
-# Cargo tools
-log_info "Installing cargo tools..."
-CARGO_TOOLS=(
-  trashy
-)
+CARGO_TOOLS=(trashy)
 for tool in "${CARGO_TOOLS[@]}"; do
   if has "$tool"; then
     log_info "cargo: $tool already installed"
   else
     log_info "cargo: installing $tool..."
-    cargo install "$tool" 2>&1 | tail -2 || log_warn "Failed to install cargo tool: $tool"
+    cargo install "$tool" 2>&1 | tail -2 || log_warn "Failed: $tool"
   fi
 done
 
 # ============================================================================
-# 11. kubechc (kubech)
+# 14. kubech (both platforms)
 # ============================================================================
-log_section "Installing kubech"
+log_section "kubech"
 
 if [[ ! -d "$HOME/.kubech" ]]; then
   log_info "Installing kubech..."
@@ -401,9 +436,9 @@ else
 fi
 
 # ============================================================================
-# 12. FZF (from source for latest version if not up to date)
+# 15. FZF (from source — ensures shell integrations/key bindings)
 # ============================================================================
-log_section "Setting up FZF"
+log_section "FZF (from source)"
 
 if [[ ! -d "$HOME/.fzf" ]]; then
   log_info "Installing fzf from source..."
@@ -415,9 +450,9 @@ else
 fi
 
 # ============================================================================
-# 13. Tmux Plugin Manager (TPM)
+# 16. Tmux Plugin Manager (both platforms)
 # ============================================================================
-log_section "Installing Tmux Plugin Manager"
+log_section "Tmux Plugin Manager"
 
 if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
   log_info "Installing TPM..."
@@ -428,50 +463,69 @@ else
 fi
 
 # ============================================================================
-# 14. Nerd Fonts
+# 17. Nerd Fonts — JetBrainsMono
 # ============================================================================
-log_section "Installing Nerd Fonts (JetBrainsMono)"
+log_section "Nerd Fonts (JetBrainsMono)"
 
-FONT_DIR="$HOME/.local/share/fonts"
-mkdir -p "$FONT_DIR"
+FONT_VERSION="v3.3.0"
+FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/${FONT_VERSION}/JetBrainsMono.zip"
 
-if ! fc-list | grep -qi "JetBrainsMono"; then
-  log_info "Downloading JetBrainsMono Nerd Font..."
-  FONT_VERSION="v3.3.0"
-  FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/${FONT_VERSION}/JetBrainsMono.zip"
-  TMP_FONT_DIR=$(mktemp -d)
-  curl -fsSL "$FONT_URL" -o "$TMP_FONT_DIR/JetBrainsMono.zip"
-  unzip -q "$TMP_FONT_DIR/JetBrainsMono.zip" -d "$TMP_FONT_DIR/JetBrainsMono"
-  cp "$TMP_FONT_DIR/JetBrainsMono"/*.ttf "$FONT_DIR/"
-  fc-cache -f "$FONT_DIR"
-  rm -rf "$TMP_FONT_DIR"
-  log_success "JetBrainsMono Nerd Font installed"
+if [[ "$IS_MACOS" == "true" ]]; then
+  FONT_DIR="$HOME/Library/Fonts"
+  mkdir -p "$FONT_DIR"
+  FONT_COUNT=$(ls "$FONT_DIR"/JetBrainsMono* 2>/dev/null | wc -l | tr -d ' ')
+  if [[ "$FONT_COUNT" -eq 0 ]]; then
+    log_info "Downloading JetBrainsMono Nerd Font..."
+    TMP_FONT=$(mktemp -d)
+    curl -fsSL "$FONT_URL" -o "$TMP_FONT/JetBrainsMono.zip"
+    unzip -q "$TMP_FONT/JetBrainsMono.zip" -d "$TMP_FONT/fonts"
+    cp "$TMP_FONT/fonts"/*.ttf "$FONT_DIR/"
+    rm -rf "$TMP_FONT"
+    log_success "JetBrainsMono installed to ~/Library/Fonts"
+  else
+    log_info "JetBrainsMono already installed"
+  fi
 else
-  log_info "JetBrainsMono Nerd Font already installed"
+  FONT_DIR="$HOME/.local/share/fonts"
+  mkdir -p "$FONT_DIR"
+  if ! fc-list | grep -qi "JetBrainsMono"; then
+    log_info "Downloading JetBrainsMono Nerd Font..."
+    TMP_FONT=$(mktemp -d)
+    curl -fsSL "$FONT_URL" -o "$TMP_FONT/JetBrainsMono.zip"
+    unzip -q "$TMP_FONT/JetBrainsMono.zip" -d "$TMP_FONT/fonts"
+    cp "$TMP_FONT/fonts"/*.ttf "$FONT_DIR/"
+    fc-cache -f "$FONT_DIR"
+    rm -rf "$TMP_FONT"
+    log_success "JetBrainsMono installed"
+  else
+    log_info "JetBrainsMono already installed"
+  fi
 fi
 
 # ============================================================================
-# 15. Go latest (optional upgrade)
+# 18. Go — Linux only (macOS gets it via brew above)
 # ============================================================================
-log_section "Setting up Go"
+if [[ "$IS_LINUX" == "true" ]]; then
+  log_section "Go"
 
-if ! has go; then
-  log_info "Installing Go..."
-  GO_VERSION="1.23.5"
-  curl -fsSL "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz" -o /tmp/go.tar.gz
-  $SUDO tar -C /usr/local -xzf /tmp/go.tar.gz
-  rm /tmp/go.tar.gz
-  log_success "Go ${GO_VERSION} installed to /usr/local/go"
-else
-  log_info "Go already installed: $(go version 2>/dev/null)"
+  if ! has go; then
+    log_info "Installing Go 1.23.5..."
+    GO_VERSION="1.23.5"
+    curl -fsSL "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz" -o /tmp/go.tar.gz
+    $SUDO tar -C /usr/local -xzf /tmp/go.tar.gz
+    rm /tmp/go.tar.gz
+    export PATH="/usr/local/go/bin:$PATH"
+    log_success "Go ${GO_VERSION} installed to /usr/local/go"
+  else
+    log_info "Go already installed: $(go version 2>/dev/null)"
+  fi
 fi
 
 # ============================================================================
-# 16. Install dotfiles configs
+# 19. Dotfiles
 # ============================================================================
-log_section "Installing dotfiles"
+log_section "Dotfiles"
 
-# Clone dotfiles if not present
 if [[ ! -d "$DOTFILES_DIR" ]]; then
   log_info "Cloning dotfiles repository..."
   mkdir -p "$(dirname "$DOTFILES_DIR")"
@@ -479,38 +533,42 @@ if [[ ! -d "$DOTFILES_DIR" ]]; then
   log_success "Dotfiles cloned to $DOTFILES_DIR"
 fi
 
-# Run install script to link configs
 log_info "Linking config files..."
 bash "$DOTFILES_DIR/scripts/install.sh"
 
 # ============================================================================
-# 17. Set ZSH as default shell
+# 20. Set ZSH as default shell
 # ============================================================================
-log_section "Setting ZSH as default shell"
+log_section "Default shell: ZSH"
 
-ZSH_BIN=$(which zsh)
-if [[ "$SHELL" != "$ZSH_BIN" ]]; then
-  log_info "Changing default shell to ZSH..."
-  if grep -q "$ZSH_BIN" /etc/shells; then
-    chsh -s "$ZSH_BIN"
-    log_success "Default shell changed to $ZSH_BIN"
-  else
-    echo "$ZSH_BIN" | $SUDO tee -a /etc/shells
-    chsh -s "$ZSH_BIN"
-    log_success "Added $ZSH_BIN to /etc/shells and set as default"
-  fi
+if [[ "$IS_MACOS" == "true" ]]; then
+  # Prefer Homebrew zsh (newer) over the ancient macOS system zsh
+  BREW_ZSH="$(brew --prefix)/bin/zsh"
+  ZSH_BIN="${BREW_ZSH:-/bin/zsh}"
 else
-  log_info "ZSH is already the default shell"
+  ZSH_BIN="$(which zsh)"
+fi
+
+if [[ "$SHELL" != "$ZSH_BIN" ]]; then
+  log_info "Changing default shell to $ZSH_BIN..."
+  if ! grep -q "$ZSH_BIN" /etc/shells 2>/dev/null; then
+    echo "$ZSH_BIN" | $SUDO tee -a /etc/shells
+  fi
+  chsh -s "$ZSH_BIN"
+  log_success "Default shell changed to $ZSH_BIN"
+else
+  log_info "ZSH already set as default ($SHELL)"
 fi
 
 # ============================================================================
-# 18. Install tmux plugins (headless)
+# 21. Tmux plugins (headless)
 # ============================================================================
-log_section "Installing tmux plugins"
+log_section "Tmux plugins"
 
 if [[ -d "$HOME/.tmux/plugins/tpm" ]]; then
   log_info "Installing tmux plugins via TPM..."
-  "$HOME/.tmux/plugins/tpm/scripts/install_plugins.sh" 2>&1 || log_warn "TPM install might need a tmux session to complete. Run: tmux new-session -d -s install && tmux source ~/.tmux.conf"
+  "$HOME/.tmux/plugins/tpm/scripts/install_plugins.sh" 2>&1 \
+    || log_warn "TPM install may need a live tmux session — run prefix+I inside tmux"
   log_success "Tmux plugins installed"
 fi
 
@@ -521,12 +579,14 @@ echo -e "\n${GREEN}============================================${NC}"
 echo -e "${GREEN}  Bootstrap complete!${NC}"
 echo -e "${GREEN}============================================${NC}"
 echo -e "\nNext steps:"
-echo -e "  1. ${YELLOW}Log out and back in${NC} (or run ${CYAN}exec zsh${NC}) for ZSH to be active"
-echo -e "  2. Open ${CYAN}tmux${NC} and press ${YELLOW}prefix + I${NC} to install tmux plugins"
-echo -e "  3. Open ${CYAN}nvim${NC} to trigger plugin installation"
-echo -e "  4. Configure ${YELLOW}~/.zshrc.local${NC} with your secrets (tokens, keys, etc.)"
+echo -e "  1. ${YELLOW}Start a new shell${NC} or run: ${CYAN}exec zsh${NC}"
+echo -e "  2. Open ${CYAN}tmux${NC} and press ${YELLOW}prefix + I${NC} to install plugins"
+echo -e "  3. Open ${CYAN}nvim${NC} — lazy.nvim auto-installs plugins on first launch"
+echo -e "  4. Fill in ${YELLOW}~/.zshrc.local${NC} with your secrets:"
+echo -e "     ${CYAN}export GITLAB_ACCESS_TOKEN='your-token'${NC}"
+echo -e "     ${CYAN}export AWS_ACCESS_KEY_ID='...'${NC}"
 echo -e "  5. Set up SSH keys: ${CYAN}ssh-keygen -t ed25519 -C 'rustam.gk@gmail.com'${NC}"
-echo -e "\nSensitive config template (~/.zshrc.local):"
-echo -e "  ${CYAN}export GITLAB_ACCESS_TOKEN='your-token'${NC}"
-echo -e "  ${CYAN}export GITLAB_USER_NAME='rustam.galimyanov'${NC}"
-echo -e "  ${CYAN}export AWS_ACCESS_KEY_ID='...'${NC}"
+if [[ "$IS_MACOS" == "true" ]]; then
+  echo -e "  6. ${YELLOW}macOS:${NC} Set terminal font to 'JetBrainsMono Nerd Font'"
+  echo -e "     in iTerm2/Terminal/Alacritty preferences"
+fi
