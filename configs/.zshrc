@@ -80,7 +80,7 @@ alias upp="cd ..."
 alias clr="clear"
 
 # -- Kubernetes --
-alias kux="kubechc"
+alias kux="kubectx"
 alias kctx="kubectx"
 alias kuns="kubens"
 alias ku="kubectl"
@@ -162,7 +162,7 @@ alias gA="git add -A"
 alias gri="git rebase -i"
 alias grc="git rebase --continue"
 alias gra="git rebase --abort"
-alias cdsd="z ~/workspace"
+alias cdsd="z ~/workspaces/_sdui"
 alias oktaws='saml2aws login --profile=default && eval $(saml2aws script --profile=default)'
 
 # -------------------------------------------
