@@ -261,6 +261,7 @@ fi
 
 # ---- Pulumi ----
 export PATH=$PATH:$HOME/.pulumi/bin
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 # -------------------------------------------
 # Sensitive / machine-specific config

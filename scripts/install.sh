@@ -216,6 +216,13 @@ echo -e "\n${BLUE}--- Neovim ---${NC}"
 link_dir "$CONFIGS_DIR/nvim" "$HOME/.config/nvim"
 
 # ============================================================================
+# Kitty terminal
+# ============================================================================
+echo -e "\n${BLUE}--- Kitty ---${NC}"
+mkdir -p "$HOME/.config/kitty"
+link_file "$CONFIGS_DIR/kitty.conf" "$HOME/.config/kitty/kitty.conf"
+
+# ============================================================================
 # Terminal themes (optional, only if relevant dirs exist)
 # ============================================================================
 echo -e "\n${BLUE}--- Terminal themes ---${NC}"
