@@ -221,6 +221,7 @@ link_dir "$CONFIGS_DIR/nvim" "$HOME/.config/nvim"
 echo -e "\n${BLUE}--- Kitty ---${NC}"
 mkdir -p "$HOME/.config/kitty"
 link_file "$CONFIGS_DIR/kitty.conf" "$HOME/.config/kitty/kitty.conf"
+link_file "$CONFIGS_DIR/quick-access-terminal.conf" "$HOME/.config/kitty/quick-access-terminal.conf"
 
 # ============================================================================
 # Terminal themes (optional, only if relevant dirs exist)
