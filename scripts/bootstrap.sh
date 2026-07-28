@@ -17,9 +17,8 @@
 #                                       Same effect as SKIP_PACKAGES=true env var.
 #   --no-sudo, --restricted            macOS only. For managed/locked-down Macs
 #                                       where sudo is blocked: installs Homebrew
-#                                       to ~/.homebrew (no root dir needed), skips
-#                                       GUI casks that require admin authorization,
-#                                       and never touches /etc/shells.
+#                                       to ~/.homebrew (no root dir needed) and
+#                                       never touches /etc/shells.
 #                                       Same effect as NO_SUDO=true env var.
 #
 # Supports:
@@ -98,8 +97,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
     # Mac; a user-owned prefix avoids sudo entirely (Homebrew's documented
     # "alternative install" method).
     BREW_PREFIX="$HOME/.homebrew"
-    log_warn "--no-sudo: Homebrew will be installed to $BREW_PREFIX, GUI casks" \
-      "requiring admin authorization will be skipped, and /etc/shells won't be modified"
+    log_warn "--no-sudo: Homebrew will be installed to $BREW_PREFIX and /etc/shells won't be modified"
   elif [[ "$(uname -m)" == "arm64" ]]; then
     BREW_PREFIX="/opt/homebrew"
   else
@@ -132,13 +130,6 @@ COMMON_BREW_PACKAGES=(
   stern
   awscli
   azure-cli
-)
-
-# ---- macOS-only GUI apps (Homebrew casks) ----
-MACOS_CASK_PACKAGES=(
-  kitty
-  docker-desktop
-  1password-cli
 )
 
 if [[ "$SKIP_PACKAGES" == "true" ]]; then
@@ -296,22 +287,6 @@ if [[ "$IS_MACOS" == "true" ]]; then
     fi
   done
   log_success "macOS brew packages installed"
-
-  if [[ "$NO_SUDO" == "true" ]]; then
-    log_warn "--no-sudo: skipping GUI casks (${MACOS_CASK_PACKAGES[*]}) — these need" \
-      "admin authorization to install; ask IT or install manually via self-service"
-  else
-    log_info "Installing GUI apps (Homebrew casks)..."
-    for pkg in "${MACOS_CASK_PACKAGES[@]}"; do
-      if brew list --cask "$pkg" &>/dev/null 2>&1; then
-        log_info "brew cask: $pkg already installed"
-      else
-        log_info "brew cask: installing $pkg..."
-        brew install --cask "$pkg" 2>&1 | tail -1 || log_warn "Failed to install: $pkg"
-      fi
-    done
-    log_success "macOS casks installed"
-  fi
 fi
 
 # ============================================================================
@@ -399,7 +374,9 @@ log_section "Oh My ZSH"
 
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   log_info "Installing Oh My ZSH..."
-  RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  # CHSH=no: don't let the installer touch the login shell itself — section 20
+  # below handles that safely (and respects --no-sudo).
+  RUNZSH=no KEEP_ZSHRC=yes CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
   log_success "Oh My ZSH installed"
 else
   log_info "Oh My ZSH already installed, updating..."
