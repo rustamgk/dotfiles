@@ -493,7 +493,7 @@ log_section "kubech"
 
 if [[ ! -d "$HOME/.kubech" ]]; then
   log_info "Installing kubech..."
-  git clone --depth 1 https://github.com/0xMALVEE/kubech.git "$HOME/.kubech"
+  git clone --depth 1 https://github.com/DevOpsHiveHQ/kubech.git "$HOME/.kubech"
   log_success "kubech installed"
 else
   log_info "kubech already installed"
