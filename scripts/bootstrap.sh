@@ -15,6 +15,12 @@
 #                                       only clone + symlink the dotfiles.
 #                                       (curl ... | bash -s -- --skip-packages)
 #                                       Same effect as SKIP_PACKAGES=true env var.
+#   --no-sudo, --restricted            macOS only. For managed/locked-down Macs
+#                                       where sudo is blocked: installs Homebrew
+#                                       to ~/.homebrew (no root dir needed), skips
+#                                       GUI casks that require admin authorization,
+#                                       and never touches /etc/shells.
+#                                       Same effect as NO_SUDO=true env var.
 #
 # Supports:
 #   - macOS 13+ (Apple Silicon M1/M2/M3 & Intel)
@@ -51,15 +57,20 @@ DOTFILES_DIR="${DOTFILES_DIR:-$HOME/github/dotfiles}"
 
 # ---- Flags ----
 SKIP_PACKAGES="${SKIP_PACKAGES:-false}"
+NO_SUDO="${NO_SUDO:-false}"
 
 for arg in "$@"; do
   case "$arg" in
     --skip-packages|--dotfiles-only)
       SKIP_PACKAGES=true
       ;;
+    --no-sudo|--restricted)
+      NO_SUDO=true
+      ;;
     -h|--help)
-      echo "Usage: bootstrap.sh [--skip-packages|--dotfiles-only]"
+      echo "Usage: bootstrap.sh [--skip-packages|--dotfiles-only] [--no-sudo|--restricted]"
       echo "  --skip-packages, --dotfiles-only   Skip tool installation, only clone + symlink dotfiles"
+      echo "  --no-sudo, --restricted            macOS: install without ever calling sudo"
       exit 0
       ;;
     *)
@@ -67,6 +78,10 @@ for arg in "$@"; do
       ;;
   esac
 done
+
+if [[ "$NO_SUDO" == "true" ]]; then
+  SUDO=""
+fi
 
 # ============================================================================
 # OS Detection
@@ -78,7 +93,14 @@ IS_WSL=false
 if [[ "$(uname)" == "Darwin" ]]; then
   IS_MACOS=true
   log_info "Detected macOS $(sw_vers -productVersion) on $(uname -m)"
-  if [[ "$(uname -m)" == "arm64" ]]; then
+  if [[ "$NO_SUDO" == "true" ]]; then
+    # /opt/homebrew and /usr/local require root to create/chown on a fresh
+    # Mac; a user-owned prefix avoids sudo entirely (Homebrew's documented
+    # "alternative install" method).
+    BREW_PREFIX="$HOME/.homebrew"
+    log_warn "--no-sudo: Homebrew will be installed to $BREW_PREFIX, GUI casks" \
+      "requiring admin authorization will be skipped, and /etc/shells won't be modified"
+  elif [[ "$(uname -m)" == "arm64" ]]; then
     BREW_PREFIX="/opt/homebrew"
   else
     BREW_PREFIX="/usr/local"
@@ -141,10 +163,17 @@ if [[ "$IS_MACOS" == "true" ]]; then
 
   log_section "macOS: Homebrew"
   if ! has brew; then
-    log_info "Installing Homebrew..."
-    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    eval "$("$BREW_PREFIX/bin/brew" shellenv)"
-    log_success "Homebrew installed"
+    if [[ "$NO_SUDO" == "true" ]]; then
+      log_info "Installing Homebrew without sudo to $BREW_PREFIX..."
+      git clone --depth 1 https://github.com/Homebrew/brew "$BREW_PREFIX"
+      eval "$("$BREW_PREFIX/bin/brew" shellenv)"
+      log_success "Homebrew installed to $BREW_PREFIX (no-sudo)"
+    else
+      log_info "Installing Homebrew..."
+      NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      eval "$("$BREW_PREFIX/bin/brew" shellenv)"
+      log_success "Homebrew installed"
+    fi
   else
     log_info "Homebrew already installed, updating..."
     brew update --quiet
@@ -268,16 +297,21 @@ if [[ "$IS_MACOS" == "true" ]]; then
   done
   log_success "macOS brew packages installed"
 
-  log_info "Installing GUI apps (Homebrew casks)..."
-  for pkg in "${MACOS_CASK_PACKAGES[@]}"; do
-    if brew list --cask "$pkg" &>/dev/null 2>&1; then
-      log_info "brew cask: $pkg already installed"
-    else
-      log_info "brew cask: installing $pkg..."
-      brew install --cask "$pkg" 2>&1 | tail -1 || log_warn "Failed to install: $pkg"
-    fi
-  done
-  log_success "macOS casks installed"
+  if [[ "$NO_SUDO" == "true" ]]; then
+    log_warn "--no-sudo: skipping GUI casks (${MACOS_CASK_PACKAGES[*]}) — these need" \
+      "admin authorization to install; ask IT or install manually via self-service"
+  else
+    log_info "Installing GUI apps (Homebrew casks)..."
+    for pkg in "${MACOS_CASK_PACKAGES[@]}"; do
+      if brew list --cask "$pkg" &>/dev/null 2>&1; then
+        log_info "brew cask: $pkg already installed"
+      else
+        log_info "brew cask: installing $pkg..."
+        brew install --cask "$pkg" 2>&1 | tail -1 || log_warn "Failed to install: $pkg"
+      fi
+    done
+    log_success "macOS casks installed"
+  fi
 fi
 
 # ============================================================================
@@ -597,9 +631,15 @@ bash "$DOTFILES_DIR/scripts/install.sh"
 log_section "Default shell: ZSH"
 
 if [[ "$IS_MACOS" == "true" ]]; then
-  # Prefer Homebrew zsh (newer) over the ancient macOS system zsh
-  BREW_ZSH="$(brew --prefix)/bin/zsh"
-  ZSH_BIN="${BREW_ZSH:-/bin/zsh}"
+  if [[ "$NO_SUDO" == "true" ]]; then
+    # Can't chown/write $BREW_PREFIX-owned zsh into /etc/shells without sudo,
+    # so stick to the system zsh, which macOS already lists in /etc/shells.
+    ZSH_BIN="/bin/zsh"
+  else
+    # Prefer Homebrew zsh (newer) over the ancient macOS system zsh
+    BREW_ZSH="$(brew --prefix)/bin/zsh"
+    ZSH_BIN="${BREW_ZSH:-/bin/zsh}"
+  fi
 else
   ZSH_BIN="$(which zsh)"
 fi
@@ -607,10 +647,28 @@ fi
 if [[ "$SHELL" != "$ZSH_BIN" ]]; then
   log_info "Changing default shell to $ZSH_BIN..."
   if ! grep -q "$ZSH_BIN" /etc/shells 2>/dev/null; then
-    echo "$ZSH_BIN" | $SUDO tee -a /etc/shells
+    if [[ "$NO_SUDO" == "true" ]]; then
+      log_warn "$ZSH_BIN isn't in /etc/shells and --no-sudo can't add it there."
+      log_warn "Falling back to launching zsh from your shell profile instead."
+      profile_file="$HOME/.zprofile"
+      [[ "$(basename "$SHELL")" == "bash" ]] && profile_file="$HOME/.bash_profile"
+      if ! grep -qF "exec $ZSH_BIN -l" "$profile_file" 2>/dev/null; then
+        printf '\n[ -x %s ] && [ -z "$ZSH_VERSION" ] && exec %s -l\n' "$ZSH_BIN" "$ZSH_BIN" >> "$profile_file"
+        log_success "Added zsh auto-exec to $profile_file"
+      fi
+      ZSH_BIN=""
+    else
+      echo "$ZSH_BIN" | $SUDO tee -a /etc/shells
+    fi
   fi
-  chsh -s "$ZSH_BIN"
-  log_success "Default shell changed to $ZSH_BIN"
+  if [[ -n "$ZSH_BIN" ]]; then
+    if chsh -s "$ZSH_BIN" 2>/dev/null; then
+      log_success "Default shell changed to $ZSH_BIN"
+    else
+      log_warn "chsh failed (no permission to change login shell) — leaving \$SHELL as-is."
+      log_warn "zsh will still launch via your profile once it's on the account, or run 'zsh' manually."
+    fi
+  fi
 else
   log_info "ZSH already set as default ($SHELL)"
 fi

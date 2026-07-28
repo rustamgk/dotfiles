@@ -21,12 +21,14 @@ if grep -qi microsoft /proc/version 2>/dev/null; then
   export PATH="$PATH:/mnt/c/Users/$(cmd.exe /c echo %USERNAME% 2>/dev/null | tr -d '\r')/AppData/Local/Programs/Microsoft VS Code/bin"
 fi
 
-# ---- Homebrew (macOS: Apple Silicon or Intel) / Linuxbrew (Linux) ----
+# ---- Homebrew (macOS: Apple Silicon or Intel, or no-sudo ~/.homebrew) / Linuxbrew (Linux) ----
 if [[ "$OSTYPE" == "darwin"* ]]; then
   if [[ -f /opt/homebrew/bin/brew ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"   # Apple Silicon
   elif [[ -f /usr/local/bin/brew ]]; then
     eval "$(/usr/local/bin/brew shellenv)"       # Intel
+  elif [[ -f "$HOME/.homebrew/bin/brew" ]]; then
+    eval "$("$HOME/.homebrew/bin/brew" shellenv)" # --no-sudo install
   fi
 elif [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
