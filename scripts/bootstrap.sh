@@ -82,6 +82,16 @@ COMMON_BREW_PACKAGES=(
   ranger
   kustomize
   openvpn
+  stern
+  awscli
+  azure-cli
+)
+
+# ---- macOS-only GUI apps (Homebrew casks) ----
+MACOS_CASK_PACKAGES=(
+  kitty
+  docker-desktop
+  1password-cli
 )
 
 # ============================================================================
@@ -92,8 +102,11 @@ if [[ "$IS_MACOS" == "true" ]]; then
   if ! xcode-select -p &>/dev/null; then
     log_warn "Xcode CLT not found. Starting installation..."
     xcode-select --install 2>/dev/null || true
-    log_warn "After the CLT installation dialog completes, re-run this script."
-    exit 1
+    log_warn "Waiting for the CLT installation dialog to complete..."
+    until xcode-select -p &>/dev/null; do
+      sleep 5
+    done
+    log_success "Xcode CLT installation finished"
   fi
   log_success "Xcode CLT: $(xcode-select -p)"
 
@@ -225,6 +238,17 @@ if [[ "$IS_MACOS" == "true" ]]; then
     fi
   done
   log_success "macOS brew packages installed"
+
+  log_info "Installing GUI apps (Homebrew casks)..."
+  for pkg in "${MACOS_CASK_PACKAGES[@]}"; do
+    if brew list --cask "$pkg" &>/dev/null 2>&1; then
+      log_info "brew cask: $pkg already installed"
+    else
+      log_info "brew cask: installing $pkg..."
+      brew install --cask "$pkg" 2>&1 | tail -1 || log_warn "Failed to install: $pkg"
+    fi
+  done
+  log_success "macOS casks installed"
 fi
 
 # ============================================================================

@@ -44,11 +44,12 @@ git add configs/ && git commit -m "sync: update configs from $(hostname)"
 | **Navigation** | zoxide (smart cd), autojump |
 | **File tools** | eza (ls++), mc (Midnight Commander), delta (git diff) |
 | **Kubernetes** | kubectl, helm, k9s, kubectx, kubens |
-| **DevOps** | terraform, ansible, argocd, flux |
+| **DevOps** | terraform, ansible, argocd, flux, stern |
 | **Cloud** | awscli, azure-cli, saml2aws |
 | **Languages** | pyenv + Python 3.12, nvm + Node 20 LTS, Go, Rust/Cargo |
 | **Misc** | lazygit, trashy, lolcat, cowsay, fortune |
 | **Fonts** | JetBrainsMono Nerd Font |
+| **macOS GUI apps** | Kitty terminal, Docker Desktop, 1Password CLI (Homebrew casks) |
 
 ## 📁 Repository Structure
 
