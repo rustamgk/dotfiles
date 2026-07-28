@@ -10,6 +10,12 @@
 #   git clone https://github.com/rustamgk/dotfiles.git ~/github/dotfiles
 #   cd ~/github/dotfiles && ./scripts/bootstrap.sh
 #
+# Flags:
+#   --skip-packages, --dotfiles-only   Skip Homebrew/apt/tool installation and
+#                                       only clone + symlink the dotfiles.
+#                                       (curl ... | bash -s -- --skip-packages)
+#                                       Same effect as SKIP_PACKAGES=true env var.
+#
 # Supports:
 #   - macOS 13+ (Apple Silicon M1/M2/M3 & Intel)
 #   - Ubuntu 22.04+ / 24.04+ / 25.10 (native desktop)
@@ -42,6 +48,25 @@ SUDO=""
 
 # ---- Dotfiles directory ----
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/github/dotfiles}"
+
+# ---- Flags ----
+SKIP_PACKAGES="${SKIP_PACKAGES:-false}"
+
+for arg in "$@"; do
+  case "$arg" in
+    --skip-packages|--dotfiles-only)
+      SKIP_PACKAGES=true
+      ;;
+    -h|--help)
+      echo "Usage: bootstrap.sh [--skip-packages|--dotfiles-only]"
+      echo "  --skip-packages, --dotfiles-only   Skip tool installation, only clone + symlink dotfiles"
+      exit 0
+      ;;
+    *)
+      log_warn "Unknown argument: $arg"
+      ;;
+  esac
+done
 
 # ============================================================================
 # OS Detection
@@ -93,6 +118,10 @@ MACOS_CASK_PACKAGES=(
   docker-desktop
   1password-cli
 )
+
+if [[ "$SKIP_PACKAGES" == "true" ]]; then
+  log_section "Skipping package/tool installation (--skip-packages)"
+else
 
 # ============================================================================
 # 1. macOS: Xcode CLT + Homebrew
@@ -544,6 +573,8 @@ if [[ "$IS_LINUX" == "true" ]]; then
     log_info "Go already installed: $(go version 2>/dev/null)"
   fi
 fi
+
+fi # SKIP_PACKAGES
 
 # ============================================================================
 # 19. Dotfiles
