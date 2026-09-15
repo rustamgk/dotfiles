@@ -46,7 +46,6 @@ plugins=(
   aliases
   fzf
   starship
-  zsh-syntax-highlighting
   autojump
   tmux
   terraform
@@ -60,6 +59,7 @@ plugins=(
   colored-man-pages
   ansible
   zsh-navigation-tools
+  zsh-syntax-highlighting
 )
 
 
@@ -119,7 +119,7 @@ alias eg="eza -l --git --git-repos --header"
 alias lg="lazygit"
 alias tp="trashy"
 alias mc="mc -S nicedark"
-alias reload="source ~/.zshrc"
+alias reload="exec zsh"
 alias venv="virtualenv"
 alias 1pl="op signin grk_family"
 
@@ -244,7 +244,14 @@ pack () {
 # -------------------------------------------
 if [ -z "$TMUX" ] && [[ "$TERM_PROGRAM" != "vscode" ]]; then
   command -v fortune >/dev/null && command -v cowsay >/dev/null && command -v lolcat >/dev/null && fortune | cowsay | lolcat
-  tmux attach -t main || tmux new -s main
+  # Attach to whatever session is already running (e.g. one created by the
+  # continuum boot script) instead of assuming it's named "main" - avoids
+  # spawning a competing/orphaned "main" session next to it.
+  if tmux ls >/dev/null 2>&1; then
+    tmux attach
+  else
+    tmux new -s main
+  fi
 fi
 
 # ---- Zoxide (smarter cd) ----
