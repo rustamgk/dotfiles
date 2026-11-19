@@ -81,14 +81,16 @@ link_file() {
       log_backup "Backed up existing $dst to $BACKUP_DIR/"
     else
       echo -e "${YELLOW}File exists:${NC} $dst"
-      echo -n "  Overwrite? [y/N/b(ackup)] "
+      echo -n "  Overwrite? [Y/n/b(ackup)] "
       # Read from the terminal, not stdin: under `curl ... | bash` stdin is the
       # script itself, and `read` would swallow the next line of bootstrap.sh.
-      # No tty at all (CI/docker) -> treat as "skip".
+      # Empty answer (Enter) -> overwrite. No tty at all (CI/docker) -> skip.
       response=""
-      read -r response < /dev/tty 2>/dev/null || true
+      if ! read -r response < /dev/tty 2>/dev/null; then
+        response="n"
+      fi
       case "$response" in
-        [yY])
+        ""|[yY])
           rm -rf "$dst"
           ;;
         [bB])
