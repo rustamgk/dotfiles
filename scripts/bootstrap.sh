@@ -179,6 +179,21 @@ fi
 if [[ "$IS_LINUX" == "true" ]]; then
   log_section "Linux: System packages (apt)"
 
+  . /etc/os-release
+  NEOVIM_PPA_SUPPORTED=false
+  case "${VERSION_CODENAME:-}" in
+    jammy|noble) NEOVIM_PPA_SUPPORTED=true ;;
+  esac
+
+  # Remove a stale PPA before apt-get update; unsupported Ubuntu suites use
+  # Neovim from their Ubuntu archive instead.
+  if [[ "$NEOVIM_PPA_SUPPORTED" != "true" ]] \
+    && grep -Rqs 'ppa.launchpadcontent.net/neovim-ppa/stable' \
+      /etc/apt/sources.list /etc/apt/sources.list.d 2>/dev/null; then
+    log_warn "Neovim PPA is not enabled for ${VERSION_CODENAME:-this suite}; removing its apt source"
+    $SUDO add-apt-repository --remove -y ppa:neovim-ppa/stable
+  fi
+
   $SUDO apt-get update -qq
 
   log_info "Adding apt repositories..."
@@ -192,8 +207,10 @@ if [[ "$IS_LINUX" == "true" ]]; then
   fi
 
   # Neovim PPA (stable)
-  if ! has nvim; then
+  if ! has nvim && [[ "$NEOVIM_PPA_SUPPORTED" == "true" ]]; then
     $SUDO add-apt-repository -y ppa:neovim-ppa/stable 2>/dev/null || true
+  elif ! has nvim; then
+    log_info "Using the Ubuntu archive package for Neovim on ${VERSION_CODENAME:-this suite}"
   fi
 
   $SUDO apt-get update -qq
