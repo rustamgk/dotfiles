@@ -290,7 +290,7 @@ if [[ "$IS_MACOS" == "true" ]]; then
     # Trash CLI (macOS-native)
     trash
     # DevOps / Kubernetes (macOS gets kubectl/helm/tf here, not separately)
-    kubectl helm terraform
+    kubectl helm hashicorp/tap/terraform
     # Go (brew manages on macOS; pyenv/nvm handle Python/Node versions)
     go
     # Ansible
@@ -373,8 +373,11 @@ if [[ "$IS_LINUX" == "true" ]]; then
   log_section "Terraform"
 
   if ! has terraform; then
-    brew install terraform
-    log_success "Terraform installed"
+    if brew install hashicorp/tap/terraform; then
+      log_success "Terraform installed"
+    else
+      log_warn "Failed to install terraform (hashicorp/tap/terraform)"
+    fi
   else
     log_info "Terraform already installed"
   fi
