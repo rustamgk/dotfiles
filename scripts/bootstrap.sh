@@ -671,7 +671,9 @@ if [[ "$SHELL" != "$ZSH_BIN" ]]; then
     fi
   fi
   if [[ -n "$ZSH_BIN" ]]; then
-    if chsh -s "$ZSH_BIN" 2>/dev/null; then
+    # Use sudo when available: plain `chsh` prompts for the user's password via
+    # PAM, and that prompt is easy to miss (it looks like a hang).
+    if $SUDO chsh -s "$ZSH_BIN" "$(id -un)"; then
       log_success "Default shell changed to $ZSH_BIN"
     else
       log_warn "chsh failed (no permission to change login shell) — leaving \$SHELL as-is."
