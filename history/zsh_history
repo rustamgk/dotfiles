@@ -1,0 +1,1583 @@
+: 1781780240:0;cd .config/kitty
+: 1781780386:0;cp kitty.conf kitty.newbackup
+: 1781780446:0;ln -sfb ~/github/dotfiles/configs/kitty.conf ~/.config/kitty/kitty.conf
+: 1781780482:0;mv ~/.config/kitty/kitty.conf ~/.config/kitty/kitty.conf.bak && ln -sf ~/github/dotfiles/configs/kitty.conf ~/.config/kitty/kitty.conf
+: 1781780640:0;git commit -m "[DEVOPS-XXX] :: Kitty updated"
+: 1781790255:0;kubectl get secret api-gateway-tls -n kong -o jsonpath='{.data.tls\.crt}' | base64 -d | openssl x509 -noout -text | grep DNS\
+
+: 1781790255:0;kubectl rollout restart deployment kong-gateway -n kong\
+
+: 1781790255:0;kubectl rollout restart deployment kong-kong -n kong\
+
+: 1781790255:0;ssh ovh-prod-core-web-11
+: 1781790255:0;tmuxc
+: 1781790255:0;d
+: 1781790255:0;flux reconcile kustomization apps
+: 1781790255:0;exut
+: 1781790255:0;export KUBECONFIG=~/Downloads/iam-staging.yml
+: 1781790255:0;git add apps/staging/kong/values.yaml
+: 1781790255:0;git commit -m "WIZ-958 :: Kong staging load balancer address"\
+
+: 1781790255:0;owd
+: 1781790255:0;cd sduigroup-ovh-terraform-infra
+: 1781790255:0;gi remote -v
+: 1781790255:0;git commit -m "WIZ-958 :: Kong staging updated DNS"\
+
+: 1781790255:0;ssh ad ovh-sduiapp-db
+: 1781790255:0;gh repo clone sdui-hq/infra-ansible
+: 1781790255:0;aws s3
+: 1781790255:0;aws s3 ls
+: 1781790255:0;aws s3 ls --endpoint-url=https://s3.de.io.cloud.ovh.net
+: 1781790255:0;aws s3 ls sduiapp-prod-infra-db-full-backups-de --endpoint-url=https://s3.de.io.cloud.ovh.net
+: 1781790255:0;cd infra-ansible
+: 1781790255:0;git commit -m "WIZ-1010 :: MariaDB backup script fix"\
+
+: 1781790255:0;aws s3 ls --profile sduigroup-infrastructure --endpoint-url=https://s3.de.io.cloud.ovh.net
+: 1781790255:0;rm -rf sduigroup-ovh-terraform-infra
+: 1781790255:0;gh repo clone sdui-hq/infra-terraform
+: 1781790255:0;cd infra-terraform
+: 1781790255:0;git commit -m "WIZ-1019 :: MariaDB new buckets for backup"\
+
+: 1781790255:0;terraform fmt -r -check
+: 1781790255:0;terraform fmt -check
+: 1781790255:0;terraform fmt -r
+: 1781790255:0;terraform fmt -recursive
+: 1781790255:0;git commit -m "WIZ-1019 :: MariaDB new buckets for backup fmted"\
+
+: 1781790255:0;git commit -m "WIZ-1019 :: Pipeline update"\
+
+: 1781790255:0;git commit -m "WIZ-1019 :: Buckets marker replication fixed"\
+
+: 1781790255:0;git commit -m "WIZ-1019 :: Buckets lower case fixed"\
+
+: 1781790255:0;cd playbooks_manual
+: 1781790255:0;vim deploy-backup-recovery-mariadb.yml
+: 1781790255:0;task ans-play -- playbooks_manual/deploy-backup-recovery-mariadb.yml -l prod-mariadb-slave
+: 1781790255:0;ansible-vault decrypt
+: 1781790255:0;ansible-vault view secrets.enc --vault-password-file ansible-vault-password
+: 1781790255:0;git git add -A
+: 1781790255:0;git commit -m "WIZ-1019 :: Buckets marker replication fixed pt2" \
+
+: 1781790255:0;cd .
+: 1781790255:0;rm -rf infra-terraform
+: 1781790255:0;git commit -m "WIZ-1019 :: Buckets testig new policies"\
+
+: 1781790255:0;export KUBECONFIG=~/.kube/iam-prod.yml
+: 1781790255:0;cd environments/sdui_group_infrastructure
+: 1781790255:0;export KUBECONFIG=~/.kube/config_dev_ls
+: 1781790255:0;ku get ns
+: 1781790255:0;brew install kubectl kubelogin
+: 1781790255:0;cd ~/.kube
+: 1781790255:0;touch config_sdux_oidc
+: 1781790255:0;vim config_sdux_oidc
+: 1781790255:0;export KUBECONFIG=~/.kube/config_sdux_oidc
+: 1781790255:0;kubectl krew install oidc-login
+: 1781790255:0;brew install int128/kubelogin/kubelogin
+: 1781790255:0;lku get nod
+: 1781790255:0;git commit -m "WIZ-1019 :: New mariadb buckets secrets"
+: 1781790255:0;git commit -m "WIZ-1019 :: Fixes for mariadb backup"
+: 1781790255:0;cd playbooks_manual/
+: 1781790255:0;ssh -J ch-bastion-02 root@91.246.47.223
+: 1781790255:0;ssh ansible-sdui@91.246.47.199
+: 1781790255:0;ansible ch-dbmaster-01 -i inventory -m ping
+: 1781790255:0;ansible-playbook -i inventory \\
+  -e @secrets.enc \\
+  --vault-password-file ansible-vault-password \\
+  --limit ch-dbmaster-01 \\
+  --tags ssh-users \\
+  playbooks/ch-legacy.yml
+: 1781790255:0;ansible_user=rgalimyanov -e bastion_user=rgalimyanov --vault-password-file ansible-vault-password ./playbooks/mariadb.yml
+: 1781790255:0;cd /Users/rustamgk/work/_sdui/infra-ansible\
+\
+ansible-playbook -i inventory \\
+  -u rgalimyanov \\
+  -e @secrets.enc \\
+  --vault-password-file ansible-vault-password \\
+  --limit ch-dbmaster-01 \\
+  playbooks/ch-legacy.yml
+: 1781790255:0;vimn ~/.ssh/config
+: 1781790255:0;cat ~/.ssh/config
+: 1781790255:0;git commit -m "WIZ-1020 :: Providers update"
+: 1781790255:0;ssh cgm-mgmt-01
+: 1781790255:0;ssh root@45.132.126.197
+: 1781790255:0;ssh ebian@45.132.126.197
+: 1781790255:0;ssh debian@45.132.126.197
+: 1781790255:0;ssh ansible-sdui@45.132.126.197
+: 1781790255:0;export KUBECONFIG=~/.kube/sduiappprod.yml
+: 1781790255:0;curl -fsSL https://pkgs.netbird.io/install.sh | sh\
+
+: 1781790255:0;export KUBECONFIG=~/.kube/ovh-infra-monitoring.yml
+: 1781790255:0;brew update 
+: 1781790255:0;у�у�у�е
+: 1781790255:0;wtmux
+: 1781790255:0;kubectl
+: 1781790255:0;lll
+: 1781790255:0;gh repo clone sdui-hq/sdui-monorepo-mvp
+: 1781790255:0;exig
+: 1781790255:0;cd repos
+: 1781790255:0;rm -rf dotfiles
+: 1781790255:0;gh repo clone rustamgk/dotfiles
+: 1781790255:0;./bootstrap.sh
+: 1781790255:0;git commit -m "WIZ-XXX :: Update pt1"
+: 1781790255:0;gh login
+: 1781790255:0;gh auth login
+: 1781790255:0;mkdir _sarna
+: 1781790255:0;gh repo clone Sarna-Technologies/helm
+: 1781790255:0;gh repo clone Sarna-Technologies/terraform
+: 1781790255:0;kubectx
+: 1781790255:0;vim config
+: 1781790255:0;az aks get-credentials --resource-group aks --name sarna-stage
+: 1781790255:0;az aks get-credentials --resource-group aks --name sarna-prod
+: 1781790255:0;kubectx sarna-prod
+: 1781790255:0;ssh rustamgk@185.244.167.226
+: 1781790255:0;ssh root@185.244.167.226
+: 1781790255:0;ssh ansible-sdui@185.244.167.226
+: 1781790255:0;brew install --cask ghostty\
+
+: 1781790255:0;sudo xattr -rd com.apple.quarantine /Applications/AlwaysOnTop.app
+: 1781790255:0;kubectl 
+: 1781790255:0;kux
+: 1781790255:0;brew install ripgrep
+: 1781790255:0;brew cleanup
+: 1781790255:0;ps faux | grep tmux
+: 1781790255:0;brew intall bytop
+: 1781790255:0;brew install bytop
+: 1781790255:0;bpytop
+: 1781790255:0;ux
+: 1781790255:0;kubechc
+: 1781790255:0;IU
+: 1781790255:0;:sdfI
+: 1781790255:0;clr
+: 1781790255:0;ll -lasrt
+: 1781790255:0;;s
+: 1781790255:0;cd workspaces/_sdui
+: 1781790255:0;gh repo login
+: 1781790255:0;fzf
+: 1781790255:0;tmux attach -d
+: 1781790255:0;tmux --version
+: 1781790255:0;tmux -v
+: 1781790255:0;tmux -V
+: 1781790255:0;which tmux
+: 1781790255:0;where tmux
+: 1781790255:0;where zsh
+: 1781790255:0;eza
+: 1781790255:0;ez
+: 1781790255:0;tmuxconf
+: 1781790255:0;vim ~/.tmux.base.conf
+: 1781790255:0;vim ~/.config/kitty/kitty.conf
+: 1781790255:0;kubectx sarna-stage
+: 1781790255:0;gh
+: 1781790255:0;gh auth
+: 1781790255:0;cd ~/workspaces/_sarna
+: 1781790255:0;vim ~/.gitconfig
+: 1781790255:0;cd ~/.config/k9s
+: 1781790255:0;vim skin.yml
+: 1781790255:0;rm aliases
+: 1781790255:0;kubectx iam-dev
+: 1781790255:0;vim config.yml
+: 1781790255:0;rm config
+: 1781790255:0;rm config.yml
+: 1781790255:0;lsof k9s
+: 1781790255:0;lsof k9s -a
+: 1781790255:0;lsof
+: 1781790255:0;brew install Azure/kubelogin/kubelogin
+: 1781790255:0;brew trust azure/kubelogin
+: 1781790255:0;brew trust derailed/k9s`
+: 1781790255:0;brew trust derailed/k9s
+: 1781790255:0;brew trust fluxcd/tap
+: 1781790255:0;brew trust hashicorp/tap
+: 1781790255:0;/kubechc
+: 1781790255:0;echo 'source ~/.kubech/kubech' >> ~/.zshrc\
+
+: 1781790255:0;ku get cm
+: 1781790255:0;sudo vim /etc/hosts
+: 1781790255:0;echo  'autoload -U compinit && compinit' >> ~/.zshrc
+: 1781790255:0;vim config.yaml
+: 1781790255:0;cd config.yaml
+: 1781790255:0;mv config.yaml ..
+: 1781790255:0;cp config.yaml ../
+: 1781790255:0;cat config.yaml
+: 1781790255:0;rm -rf config.yaml
+: 1781790255:0;rm skin.yml
+: 1781790255:0;touch config.yaml
+: 1781790255:0;cp config.yaml config.bak
+: 1781790255:0;rm config.yaml
+: 1781790255:0;brew install --cask easydict
+: 1781790255:0;kubens
+: 1781790255:0;ku ge nodes
+: 1781790255:0;ku ge tno
+: 1781790255:0;relaod
+: 1781790255:0;nslookup sduy.de
+: 1781790255:0;export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"\
+
+: 1781790255:0;git commit -m "WIZ-XXXX :: Bring back the traefik logs"
+: 1781790255:0;cd _sarna/gitops
+: 1781790255:0;git commit -m "[DEVOPS-XXX] :: STX-Stage ApiHub/PMBP/Monitoring resources changeed"
+: 1781790255:0;git commit -m "[DEVOPS-XXX] :: STX-Stage BusinessHub resources changeed"
+: 1781790255:0;git commit -m "[DEVOPS-XXX] :: STX-Stage BusinessHub resources changeed pt2"
+: 1781790255:0;git commit -m "[DEVOPS-XXX] :: STX-Stage BusinessHub resources changeed pt3"
+: 1781790255:0;ku uncordon aks-user-11629437-vmss000000    
+: 1781790255:0;ku uncordon aks-user-11629437-vmss000000
+: 1781790255:0;ku uncordon aks-user-11629437-vmss000007
+: 1781790255:0;ku uncordon aks-system-36316037-vmss000007    
+: 1781790255:0;diskutil list\
+
+: 1781790255:0;cd ~/Downloads/Takeout
+: 1781790255:0;cd Google\ Photos/To\ export
+: 1781790255:0;brew install exiftool\
+
+: 1781790255:0;touch export.sh
+: 1781790255:0;e export.sh
+: 1781790255:0;chmod +x export.sh
+: 1781790255:0;./export.sh
+: 1781790255:0;export Google /Photos
+: 1781790255:0;export Google Photos
+: 1781790255:0;export.sh Google\ Photos
+: 1781790255:0;./export.sh Google\ Photos
+: 1781790255:0;touch run.sh
+: 1781790255:0;chmod +x run.sh
+: 1781790255:0;cd Takeout
+: 1781790255:0;vim run.sh
+: 1781790255:0;cd /Volumes/bucket
+: 1781790255:0;./run.sh Google\ Photos
+: 1781790255:0;mv run.sh Takeout
+: 1781790255:0;brew install copilot-cli
+: 1781790255:0;copilot
+: 1781790255:0;lsof +L1
+: 1781790255:0;du -sh ~/.Trash
+: 1781790255:0;sudo du -sh ~/.Trash
+: 1781790255:0;git commit -m "[DEVOPS-XXX] :: Update for macos"
+: 1781790255:0;cd sdui-monorepo-mvp
+: 1781790255:0;rm -rf sdui-monorepo-mvp sdui-monorepo-mvp-7education
+: 1781790255:0;mkdir 7education
+: 1781790255:0;cd 7education
+: 1781790255:0;git commit -m "[DEVOPS-XXX] :: Update for macos pt2" 
+: 1781790255:0;git clone repo --mirror https://github.com/sdui-hq/infra-terraform.git
+: 1781790255:0;git clone --mirror https://github.com/sdui-hq/infra-terraform.git
+: 1781790255:0;cd infra-terraform.git
+: 1781790255:0;git remove -v
+: 1781790255:0;git push --mirror\
+
+: 1781790255:0;gh repo edit 7education/Infrastructure --default-branch master\
+
+: 1781790255:0;rmux
+: 1781790255:0;git commit -m "[DEVOPS-XXX] :: Added a performance warning alert" 
+: 1781790255:0;git idf
+: 1781790255:0;git commit -m "WIZ-XXXX :: Terraform repo migration"
+: 1781790255:0;cd /Volumes/bucket/Takeout/Google\ Photos/To\ export
+: 1781790255:0;# Pick one photo that failed to import and check what exiftool sees in its JSON\
+exiftool "20230329_172810(0).jpg.json"
+: 1781790255:0;# Pick one photo that failed to import and check what exiftool sees in its JSON\
+exiftool "20230224_181151.jpg"
+: 1781790255:0;# Find JPEGs that are actually broken\
+find /path/to/takeout -name "*.jpg" -o -name "*.jpeg" | while read f; do\
+  jpeginfo -c "$f" 2>/dev/null | grep -v "OK" && echo "BAD: $f"\
+done\
+# brew install jpeginfo if needed
+: 1781790255:0;bri jpeginfo
+: 1781790255:0;# Find JPEGs that are actually broken\
+find . -name "*.jpg" -o -name "*.jpeg" | while read f; do\
+  jpeginfo -c "$f" 2>/dev/null | grep -v "OK" && echo "BAD: $f"\
+done\
+# brew install jpeginfo if needed
+: 1781790255:0;find . \( -name "*.jpg" -o -name "*.jpeg" \) | while read f; do\
+  jpeginfo -c "$f" 2>/dev/null | grep -v "OK"\
+done | grep -c "ERROR"
+: 1781790255:0;exiftool -r -ImageUniqueID -csv . | sort -t',' -k2 | awk -F',' '$2!="" && $2==prev{print prev_file"\n"$1} {prev=$2; prev_file=$1}'\
+
+: 1781790255:0;log show --predicate 'process == "Photos"' --last 1h | grep -i "error\|fail\|import" | head -50\
+
+: 1781790255:0;log show --predicate 'process == "Photos"' --last 2h | grep -i "error\|fail\|import" | head -50\
+
+: 1781790255:0;log show --predicate 'process == "Photos" && subsystem == "com.apple.photos.backend"' --last 2h | grep -i "import\|fail\|error\|reject\|unsupported\|duplicate" | grep -v "Listening for import"
+: 1781790255:0;exiftool -r -if 'not $DateTimeOriginal' -filename /path/to/your/photos | wc -l
+: 1781790255:0;exiftool -r -if 'not $DateTimeOriginal' -filename . | wc -l
+: 1781790255:0;exiftool -r -if 'not $DateTimeOriginal' \\
+  "-DateTimeOriginal<FileModifyDate" \\
+  "-CreateDate<FileModifyDate" \\
+  -overwrite_original \\
+  -progress \\
+  .
+: 1781790255:0;# Find and rename them properly\
+exiftool -r -if '$FileType eq "JPEG"' '-FileName<${FileName;s/\.PNG$/.jpg/i}' -ext PNG .
+: 1781790255:0;v
+: 1781790255:0;# Export the failed filenames to a text file for analysis\
+log show --predicate 'process == "Photos" && subsystem == "com.apple.photos.backend"' --last 1h \\
+  | grep "IMPORT ERROR\|type: unknown" \\
+  | grep -o '"[^"]*\.\(jpg\|jpeg\|heic\|mp4\|mov\|png\|HEIC\|JPG\|MP4\|MOV\)"' \\
+  | sort -u > ~/failed_imports.txt\
+\
+wc -l ~/failed_imports.txt
+: 1781790255:0;# Check what files still have issues after our fixes\
+exiftool -r -filename -filetype -imagesize \\
+  -if 'not $DateTimeOriginal or $FileType eq "Unknown"' \\
+  . 2>&1 | grep -E "File Name|File Type|Error" | head -60
+: 1781790255:0;exiftool -r -if 'not $DateTimeOriginal' -filename -filetype . 2>/dev/null \\
+  | paste - - \\
+  | sort -k4 | uniq -c | sort -rn \\
+  > ~/failed_no_date.txt\
+\
+wc -l ~/failed_no_date.txt\
+cat ~/failed_no_date.txt
+: 1781790255:0;cd sd
+: 1781790255:0;cd ../_sar
+: 1781790255:0;git gitops
+: 1781790255:0;git commit -m "[DEVOPS-XXX] :: STX-Dev ApiHub/PMBP/Monitoring resources changeed"
+: 1781790255:0;# All file types present\
+find . -type f | sed 's/.*\.//' | tr '[:upper:]' '[:lower:]' | sort | uniq -c | sort -rn
+: 1781790255:0;# Actual count missing DateTimeOriginal\
+exiftool -r -if 'not $DateTimeOriginal' -filename . 2>/dev/null | grep "File Name" | wc -l
+: 1781790255:0;# Copy 5 of the failing files to a temp folder and try importing just those\
+mkdir ~/test_import\
+cp "./IMG_0479.HEIC" "./20250510_230042.jpg" "./PXL_20260210_060123573.jpg" "./IMG_0198.HEIC" "./20240626_144935.mp4" ~/test_import/\
+open -a Photos ~/test_import
+: 1781790255:0;touch batch-import-photos.sh
+: 1781790255:0;chmod +X batch-import-photos.sh
+: 1781790255:0;vim batch-import-photos.sh
+: 1781790255:0;./batch-import-photos.sh Google\ Photos/To\ export
+: 1781790255:0;chmod +x batch-import-photos.sh
+: 1781790255:0;exiftool -filename -motionphoto -microvideooffset -ext jpg . 2>/dev/null | grep -B1 "Motion\|Micro" | grep "File Name" | wc -l
+: 1781790255:0;# Check what exiftool thinks the actual file types are for these "jpg" files\
+exiftool -filename -filetype -ext jpg . 2>/dev/null | grep -A1 "File Name" | grep "File Type" | sort | uniq -c | sort -rn
+: 1781790255:0;# Files with UUID-style names\
+find . -type f | grep -E "[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}" | head -20
+: 1781790255:0;sudo netbird service reconfigure --service-env NB_DISABLE_SSH_CONFIG=true\
+
+: 1781790255:0;git commit -m "[DEVOPS-XXX] :: STX-Dev ApiHub mempry requests fix"
+: 1781790255:0;git commit -m "[SF-2449] :: Changed ExternalBankFilesRequiredToProcess cron param"
+: 1781790255:0;cd..
+: 1781790255:0;cd _sdui
+: 1781790255:0;cd ../7ed
+: 1781790255:0;cd infra-k8s-monitoring
+: 1781790255:0;git commit -m "[INFRA-1199] :: Increased the PVCs size for Mimir"
+: 1781790255:0;cd ../infra
+: 1781790255:0;git stuats
+: 1781790255:0;git aadd -A
+: 1781790255:0;git commit -m "[INFRA-1201] :: Terraform pipeline adjusted"
+: 1781790255:0;git restore 	modules/devops/modules/container_registry/signing.tf\
+
+: 1781790255:0;cd ../infra-terraform
+: 1781790255:0;git commit -m "[INFRA-1201] :: Terraform pipeline disabled"
+: 1781790255:0;nslookup cloud.sdui.de
+: 1781790255:0;ping 45.132.126.199
+: 1781790255:0;ssh root@45.132.126.199
+: 1781790255:0;bri kitty
+: 1781790388:0;detach
+: 1781796387:0;kitten
+: 1781796833:0;kitten fonts-list
+: 1781796836:0;kitten fonts-choose
+: 1781796861:0;ku 
+: 1781796929:0;sl
+: 1781796930:0;sls
+: 1781797547:0;ln -sf ~/github/dotfiles/configs/quick-access-terminal.conf ~/.config/kitty/quick-access-terminal.conf
+: 1781797826:0;kitten choose-fonts
+: 1781798153:0;kitten quick-access-terminal
+: 1781799271:0;tmux source ~/.tmux.conf && ~/.tmux/plugins/tmux-continuum/scripts/handle_tmux_automatic_start/osx_enable.sh
+: 1781799545:0;cd ../github/dotfiles
+: 1781799553:0;git commit -m "[DEVOPS-XXX] :: Kitty updated pt2"
+: 1781806468:0;kubectl -n stonex-dev logs fix-initiator-stx-trafix-uat-0 -c fix-initiator-stx-trafix-uat --tail=200 \\
+  | grep -Ei "logon|logout|reject|MsgSeqNum|disconnect|refused|timeout"
+: 1781807386:0;git commit -m "[DEVOPS-XXX] :: Fix Initiator image sync with tradier-dev"
+: 1781813547:0;git commit -m "[DEVOPS-XXX] :: Fix Initiator image sync with tradier-dev pt2"
+: 1781821523:0;ln -sf "$(ls -t ~/.tmux/resurrect/tmux_resurrect_*.txt | head -1)" ~/.tmux/resurrect/last\
+
+: 1781821529:0;launchctl load ~/Library/LaunchAgents/Tmux.Start.plist\
+
+: 1781821551:0;launchctl list | grep -i tmux
+: 1781821577:0;ls -la ~/.tmux/resurrect/last
+: 1782138914:0;kux sarna-stage s
+: 1782138974:0;kubectl run nettest --image=busybox --rm -it --restart=Never -- sh\
+
+: 1782140778:0;kubectl -n stonex-dev run trafix-telnet --rm -it --restart=Never \\
+  --overrides='{"metadata":{"annotations":{"sidecar.istio.io/inject":"false"}}}' \\
+  --image=nicolaka/netshoot -- nc -vz -w 5 206.168.104.230 22785
+: 1782140880:0;kubectl -n stonex-dev run trafix-telnet --rm -it --restart=Never \\
+  --image=nicolaka/netshoot \\
+  --labels="istio.io/dataplane-mode=none,run=trafix-telnet" \\
+  --overrides='{"spec":{"nodeSelector":{"sarna/nodePool":"user"},"tolerations":[{"key":"nodePool","operator":"Equal","value":"user","effect":"NoSchedule"}]}}' \\
+  -- nc -vz -w 5 206.168.104.230 22785
+: 1782140956:0;kubectl apply -f - <<'EOF'\
+apiVersion: v1\
+kind: Pod\
+metadata:\
+  name: trafix-telnet\
+  namespace: stonex-dev\
+  labels:\
+    istio.io/dataplane-mode: none      # opt out of ambient mesh (no ztunnel/CNI capture)\
+  annotations:\
+    sidecar.istio.io/inject: "false"   # also no sidecar\
+spec:\
+  nodeSelector:\
+    sarna/nodePool: user               # same node pool as the fix-initiator\
+  tolerations:\
+    - key: nodePool\
+      operator: Equal\
+      value: user\
+      effect: NoSchedule\
+  containers:\
+    - name: net\
+      image: nicolaka/netshoot\
+      command: ["sleep", "infinity"]\
+      resources:\
+        requests: { cpu: 10m, memory: 32Mi }\
+        limits:   { memory: 64Mi }\
+  restartPolicy: Never\
+EOF
+: 1782141473:0;kubectl apply -f - <<'EOF'\
+apiVersion: v1\
+kind: Pod\
+metadata:\
+  name: trafix-telnet-sidecar\
+  namespace: stonex-dev\
+  labels:\
+    run: trafix-telnet-sidecar\
+  annotations:\
+    sidecar.istio.io/inject: "true"\
+    ambient.istio.io/redirection: "disabled"\
+    traffic.sidecar.istio.io/excludeOutboundIPRanges: "206.168.104.230/32"\
+spec:\
+  nodeSelector:\
+    sarna/nodePool: user\
+  tolerations:\
+    - key: nodePool\
+      operator: Equal\
+      value: user\
+      effect: NoSchedule\
+  containers:\
+    - name: net\
+      image: nicolaka/netshoot\
+      command: ["sleep", "infinity"]\
+      resources:\
+        requests: { cpu: 10m, memory: 32Mi }\
+        limits:   { memory: 64Mi }\
+  restartPolicy: Never\
+EOFkubectl apply -f - <<'EOF'\
+apiVersion: v1\
+kind: Pod\
+metadata:\
+  name: trafix-telnet-sidecar\
+  namespace: stonex-dev\
+  labels:\
+    run: trafix-telnet-sidecar\
+  annotations:\
+    sidecar.istio.io/inject: "true"\
+    ambient.istio.io/redirection: "disabled"\
+    traffic.sidecar.istio.io/excludeOutboundIPRanges: "206.168.104.230/32"\
+spec:\
+  nodeSelector:\
+    sarna/nodePool: user\
+  tolerations:\
+    - key: nodePool\
+      operator: Equal\
+      value: user\
+      effect: NoSchedule\
+  containers:\
+    - name: net\
+      image: nicolaka/netshoot\
+      command: ["sleep", "infinity"]\
+      resources:\
+        requests: { cpu: 10m, memory: 32Mi }\
+        limits:   { memory: 64Mi }\
+  restartPolicy: Never\
+EOF
+: 1782141490:0;kubectl apply -f - <<'EOF'\
+apiVersion: v1\
+kind: Pod\
+metadata:\
+  name: trafix-telnet-sidecar\
+  namespace: stonex-dev\
+  labels:\
+    run: trafix-telnet-sidecar\
+  annotations:\
+    sidecar.istio.io/inject: "true"\
+    ambient.istio.io/redirection: "disabled"\
+    traffic.sidecar.istio.io/excludeOutboundIPRanges: "206.168.104.230/32"\
+spec:\
+  nodeSelector:\
+    sarna/nodePool: user\
+  tolerations:\
+    - key: nodePool\
+      operator: Equal\
+      value: user\
+      effect: NoSchedule\
+  containers:\
+    - name: net\
+      image: nicolaka/netshoot\
+      command: ["sleep", "infinity"]\
+      resources:\
+        requests: { cpu: 10m, memory: 32Mi }\
+        limits:   { memory: 64Mi }\
+  restartPolicy: Never\
+EOF
+: 1782143174:0;cd infra
+: 1782143289:0;rm -rf Infrastructure
+: 1782143304:0;gh repo clone 7education/Infrastructure
+: 1782143352:0;git commit -m "[INFRA-1201] :: Teams webhook added"
+: 1782143485:0;kux sarna-prod s
+: 1782145480:0;git diff charts/apps/templates/cron/templates/bod-processors-wf-template.yaml\
+
+: 1782145490:0;git restore charts/apps/templates/cron/templates/bod-processors-wf-template.yaml\
+
+: 1782145615:0;git commit -m "[SF-2459] :: Added FixReject metric and alert"
+: 1782157096:0;git commit -m "[SF-2459] :: Added mail notifications for FIX rejects"
+: 1782159296:0;cd ../helm'
+: 1782159373:0;git commit -m "[SF-2459] :: Fixed alert groups in Grafana"
+: 1782166917:0;cd v../helm
+: 1782166923:0;git stats
+: 1782167504:0;cd ../_sarna/terraform
+: 1782167510:0;cd subscriptions
+: 1782167842:0;git diff ../../modules/devops/modules/container_registry/signing.tf\
+
+: 1782167849:0;git add ../../modules/kubernetes/pod-identity-grafana.tf\
+
+: 1782167854:0;git commit -m "[SF-2459] :: Added SMTP SPC to Grafana"
+: 1782199107:0;git restore apps/core/readme.md\
+
+: 1782199114:0;git restore  apps/timetable/readme.md\
+
+: 1782221685:0;ansible-vault edit secrets.enc --vault-password-file ansible-vault-password
+: 1782222235:0;git commit -m "[INFRA-1249] :: Moved left secrets to ansible vault"
+: 1782222377:0;cd ../infra-ansible
+: 1782222401:0;git commit -m "[INFRA-1202] :: Moved Ansible to monorepo"
+: 1782226184:0;git commit -m "[DEVOPS-XXX] :: Disabled Azure SQL alerts temporary"
+: 1782227434:0;git commit -m "[DEVOPS-XXX] :: Platform chart sync -> PROD"
+: 1782228129:0;git commit -m "[DEVOPS-XXX] :: Platform chart sync -> PROD revert"
+: 1782228427:0;tf apply --target='module.platform.module.kubernetes.azurerm_role_assignment.grafana_smtp_password '
+: 1782232332:0;cd ../BEW
+: 1782238912:0;git commit -m "[DEVOPS-XXX] :: Platform chart sync -> PROD pt2"
+: 1782243748:0;rm ansible-vault-password
+: 1782243760:0;git commit -m "[INFRA-1202] :: Moved Ansible to monorepo pt2"
+: 1782245490:0;kux sarna-stsage
+: 1782258401:0;git commit -m "[DEVOPS-XXX] :: Prod overview dashboard udpated"
+: 1782259086:0;vim /etc/hosts
+: 1782328856:0;git commit -m "[DEVOPS-XXX] :: Scaling events & resource exhaustion alerts"
+: 1782330305:0;git commit -m "[DEVOPS-XXX] :: Fixed DragonflyDB alert"
+: 1782338602:0;git commit -m "[DEVOPS-XXX] :: STX-Stage BP memory 2X increased"
+: 1782401916:0;cd ../_7education/Infrastructure
+: 1782402367:0;git commit -m "[INFRA-1253] :: Fix for producation load balancer scraper"
+: 1782402893:0;echo | openssl s_client -connect 51.68.165.198:443 -servername api.sdui.de 2>/dev/null | openssl x509 -noout -text | grep -A2 "Subject Alternative\|Not After"\
+
+: 1782403530:0;brew install certbot\
+
+: 1782404872:0;pip3 install certbot-dns-ovh\
+
+: 1782405398:0;touch ~/ovh-secrets
+: 1782405408:0;vim ~/ovh-secrets
+: 1782405467:0;certbot certonly \\
+  --authenticator dns-ovh \\
+  --dns-ovh-credentials ~/ovh-secrets \\
+  --dns-ovh-propagation-seconds 60 \\
+  --email admin@sdui.de \\
+  --agree-tos \\
+  --no-eff-email \\
+  -d "sdui.app" \\
+  -d "*.sdui.app" \\
+  -d "*.api.sdui.app" \\
+  -d "*.planner.sdui.app" \\
+  -d "sdui.de" \\
+  -d "*.sdui.de"
+: 1782405568:0;chmod 600 ~/ovh-secrets
+: 1782405772:0;openssl pkcs12 -export   -out sdui.app.p12 \\
+  -inkey /etc/letsencrypt/live/sdui.app/privkey.pem \\
+  -in /etc/letsencrypt/live/sdui.app/fullchain.pem \\
+  -name "sdui.app"
+: 1782405835:0;sudo openssl pkcs12 -in sdui.app.p12 -nokeys -nodes | openssl x509 -text -noout
+: 1782405905:0;chown 755 sdui.app.p12
+: 1782405912:0;chown sdui.app.p12
+: 1782407772:0;rm sdui.app.p12_base\
+
+: 1782407779:0;rm sdui.app.p12\
+
+: 1782407797:0;sudo certbot certonly \\
+  --authenticator dns-ovh \\
+  --dns-ovh-credentials ~/ovh-secrets \\
+  --dns-ovh-propagation-seconds 60 \\
+  --email admin@sdui.de \\
+  --agree-tos \\
+  --no-eff-email \\
+  -d "sdui.app" \\
+  -d "*.sdui.app" \\
+  -d "*.api.sdui.app" \\
+  -d "*.planner.sdui.app" \\
+  -d "sdui.de" \\
+  -d "*.sdui.de"
+: 1782407862:0;sudo openssl pkcs12 -export   -out sdui.app.p12 \\
+  -inkey /etc/letsencrypt/live/sdui.app/privkey.pem \\
+  -in /etc/letsencrypt/live/sdui.app/fullchain.pem \\
+  -name "sdui.app"
+: 1782407877:0;openssl pkcs12 -in sdui.app.p12 -nokeys -nodes | openssl x509 -text -noout
+: 1782407892:0;sudo chown rustamgk sdui.app.p12
+: 1782407896:0;chmod 644 sdui.app.p12
+: 1782407904:0;openssl pkcs12 -info -in sdui.app.p12 -nodes -nokeys | openssl x509 -noout -text
+: 1782407913:0;base64 -i sdui.app.p12 -o sdui.app.p12_base
+: 1782407918:0;cat sdui.app.p12_base
+: 1782410543:0;rm 	sdui.app.p12\
+
+: 1782410548:0;rm 	sdui.app.p12_base
+: 1782410571:0;git commit -m "[INFRA-1253] :: Replaced prod-lb with ip address"
+: 1782410573:0;git puush
+: 1782410912:0;dig iam.sdux.de A\
+dig iam.sdux.de ANY\
+
+: 1782416131:0;kux sarna-prod sa
+: 1782416241:0;git commit -m "[DEVOPS-XXX] :: STX-Prod BP memory increased from 600 -> 900"
+: 1782475528:0;kubectl exec -n vault vault-0 -- vault status
+: 1782475533:0;kubectl exec -n vault-dev vault-0 -- vault status
+: 1782475660:0;kubectl exec -n vault-dev vault-dev-0 -- vault status
+: 1782479934:0;git commit -m "[INFRA-1257] :: Platform cluster updated"
+: 1782480298:0;git commit -m "[INFRA-1257] :: Platform cluster updated pt2"
+: 1782481563:0;git commit -m "[INFRA-XXXX] :: Compute instances pwoer state added + Timetable changed"
+: 1782482804:0;ping 57.129.124.244
+: 1782482853:0;ssh ovh-bastion-01
+: 1782489037:0;cd Infrastructure/terraform/orgs/sdui/environments/sdui_group_infrastructure
+: 1782489376:0;ansible-vault view tfvars.yml > terraform.tfvars\
+
+: 1782497030:0;az keyvault secret show --vault-name akssarnastage --name smtp-password --query "value" -o tsv | wc -c
+: 1782497157:0;az keyvault secret show --vault-name akssarnastage --name smtp-password --query "value" -o tsv | cut -c1-3
+: 1782498840:0;git commit -m "[DEVOPS-208] :: Added service entry for sendgrid"
+: 1782499791:0;git commit -m "[DEVOPS-208] :: Added virtual service for sendgrid"
+: 1782499998:0;kubectl exec -n monitoring deploy/grafana-deployment --context sarna-stage -- nc -zv smtp.sendgrid.net 587 -w 5
+: 1782500123:0;kubectl get ns monitoring --show-labels --context sarna-stage | grep istio\
+
+: 1782500453:0;git commit -m "[DEVOPS-208] :: Changed smptp for Grafana on stage"
+: 1782500518:0;git commit -m "[DEVOPS-208] :: Separated smptp on prod and stage for Grafana"
+: 1782500572:0;git stratus
+: 1782502451:0;git commit -m "[DEVOPS-208] :: Grafana smtp fixed"
+: 1782503652:0;git commit -m "[DEVOPS-XXX] :: Mimir perforomance optimizations"
+: 1782515199:0;git diff  charts/platform/values.yaml\
+
+: 1782515206:0;git restore  charts/platform/values.yaml\
+
+: 1782515232:0;git diff  config/stage/cluster-config.yaml\
+
+: 1782515236:0;git restore  config/stage/cluster-config.yaml\
+
+: 1782515258:0;git commit -m "[DEVOPS-XXX] :: Mimir perforomance optimizations pt2"
+: 1782515657:0;git commit -m "[DEVOPS-XXX] :: STX-Prod BP memory increased to 1500MI"
+: 1782515718:0;git commit -m "[DEVOPS-XXX] :: Mimir nginx fixed"
+: 1782515918:0;git commit -m "[DEVOPS-XXX] :: Mimir proxy timeout removed"
+: 1782515948:0;lazygut
+: 1782516871:0;git commit -m "[DEVOPS-XXX] :: Mimir compactor scale-up"
+: 1782517636:0;git commit -m "[DEVOPS-XXX] :: Grfana overview dashboards updated"
+: 1782518765:0;vf ../hrlm
+: 1782518818:0;git commit -m "[DEVOPS-XXX] :: platform chart promotion to PRF"
+: 1782519785:0;git commit -m "[DEVOPS-XXX] :: STX-Prod BP CPU increased to 2"
+: 1782725230:0;kux iam-prod i
+: 1782730365:0;cd sdio-monorepo
+: 1782730385:0;cd Infrastructure/ansible/inventory
+: 1782731172:0;ansible-playbook -i inventory \\
+  -e @secrets.enc \\
+  --vault-password-file ansible-vault-password \\
+  --limit ls-sentry-01 \\
+  playbooks/sentry-restart.yml
+: 1782731232:0;ansible-playbook -i inventory \\
+  -e @secrets.enc \\
+  --vault-password-file ansible-vault-password \\
+  --limit ls-sentry-01 \\
+  playbooks_manual/sentry-restart.yml
+: 1782733551:0;git commit -m "[INFRA-1283] :: Added a Sentry restart"
+: 1782738737:0;git commit -m "[INFRA-1257] :: Preprod cluster upgrade -> 1.35"
+: 1782744763:0;ku uncordon aks-system-30131082-vmss000000     
+: 1782771646:0;brew install --cask docker\
+
+: 1782772892:0;vim ~/.kube/config
+: 1782773114:0;cd ~/.local/share
+: 1782773155:0;cd ~/.config
+: 1782773163:0;cd k9s
+: 1782773172:0;vim aliases.yaml
+: 1782773208:0;k9s info
+: 1782773244:0;cd ~/Library/Application\ Support/k9s/clusters\
+
+: 1782773254:0;grep -rln "stonex-stage-cron" .\
+
+: 1782773293:0;cat ./sarna-stage/sarna-stage/config.yaml\
+
+: 1782773353:0;vim ./sarna-stage/sarna-stage/config.yaml\
+
+: 1782778352:0;git commit -m "[DEVOPS-XXX] :: STX-Stage and Tradier-Stage  BP CPU increased to 2"
+: 1782808779:0;cd orgs/sdui
+: 1782808812:0;cd environments/sdui_app_prod
+: 1782809166:0;vim ~/.aws/config
+: 1782809179:0;cat ~/.aws/config
+: 1782809202:0;cat ~/.aws/credentials
+: 1782810535:0;ls -larth
+: 1782811271:0;ls -alrth
+: 1782811285:0;cd sdui_app_
+: 1782811287:0;cd sdui_app_te
+: 1782811298:0;cd sdui_app_test
+: 1782811398:0;cd ../sdui_app_prod
+: 1782812051:0;terraform --version
+: 1782812064:0;bru terraform
+: 1782812131:0;bri terraform
+: 1782812446:0;git commit -m "[INFRA-1257] :: Preprod cluster upgrade -> 1.35 pt2"
+: 1782812583:0;kubectl exec -n vault-dev -it vault-dev-0 -- vault operator unseal\
+
+: 1782812660:0;kubectl exec -n vault-dev -it vault-dev-1 -- vault operator unseal\
+
+: 1782812693:0;kubectl exec -n vault-dev -it vault-dev-2 -- vault operator unseal\
+
+: 1782814015:0;git commit -m "[INFRA-1257] :: All clusters version is excluded from changes"
+: 1782818535:0;ansible-vault view tfvars.yml > terraform.tfvars
+: 1782818558:0;vim terraform.tfvars
+: 1782826400:0;cd ../sdui_group_infrastructure
+: 1782832609:0;git commit -m "[INFRA-1252] :: GH runners added"
+: 1782833770:0;git commit -m "[INFRA-1252] :: GH runners switched to default group"
+: 1782834773:0;ssh -i ~/.ssh/ansible-sdui-private-key ubuntu@51.89.116.118\
+
+: 1782835508:0;ansible-inventory --graph | grep github\
+
+: 1782835524:0;ansible-inventory --graph github-runner\
+
+: 1782836217:0;ssh ovh-infra-github-runner-02
+: 1782836405:0;ansible-playbook playbooks/github-runner.yml
+: 1782847885:0;cd orgs/sdui/environments
+: 1782847931:0;git commit -m "[INFRA-1252] :: GH runners minor changes"
+: 1782856283:0;cd infra-k8s-countly
+: 1782856319:0;ssh -J debian@51.89.4.92 debian@141.95.107.241\
+
+: 1782856420:0;ssh -i ~/.ssh/ansible-sdui debian@141.95.107.241\
+
+: 1782857145:0;k9w
+: 1782860097:0;git commit -m "[DEVOPS-XXX] :: Added STX escalation runbook"
+: 1782895356:0;cd sdui_group_iam
+: 1782897200:0;scd sdui_group_infrastructure
+: 1782897206:0;cd sdui_group_infrastructure
+: 1782897298:0;git commit -m "[INFRA-1252] :: Github PAT for runners added to vault"
+: 1782897331:0;git commit -m "[INFRA-1252] :: GH runners ansible provisioninig added"
+: 1782904871:0;git commit -m "[INFRA-XXXX] :: Separate terraform pipelines"
+: 1782905445:0;git commit -m "[INFRA-XXXX] :: Separate terraform pipelines pt2"
+: 1782905649:0;git commit -m "[INFRA-XXXX] :: Global terraform pipeline suspended"
+: 1782912932:0;kux infra-countly
+: 1782919666:0;git pukkl
+: 1782920705:0;kux sarna-sage
+: 1782920894:0;git reset HEAD
+: 1782920967:0;git commit -m "[DEVOPS-XXX] :: STX memory increase to BP and monitoring"
+: 1782921188:0;cd ../sdui_group_dns
+: 1782922537:0;git commit -m "[DEVOPS-XXX] :: STX temp PMBP memory increase 4Gi"
+: 1782938532:0;git checkout -b feature/DEVOPS-XXX-added-node-selector-for-bp-pmbp
+: 1782938556:0;git commit -m "[DEVOPS-XXX] :: Added a different node for BP and PMBP"
+: 1782938636:0;git checkout  feature/DEVOPS-XXX-added-node-selector-for-bp-pmbp 
+: 1782940489:0;cdsd
+: 1782940505:0;gt chekout main
+: 1782940602:0;git commit -m "[DEVOPS-XXX] :: Bring back Grafana version"
+: 1782941605:0;ssh ovh-prod-redis-worker-02
+: 1782944636:0;kus sarna-stage
+: 1782945994:0;git commit -m "[DEVOPS-XXX] :: Grafana version promote to v13"
+: 1782947360:0;git commit -m "[DEVOPS-XXX] :: Grafana debugging"
+: 1782947826:0;git commit -m "[DEVOPS-XXX] :: Grafana debugging pt2"
+: 1782981966:0;git commit -m "[DEVOPS-208] :: Grafana smtp removed from Grafana"
+: 1782982479:0;git statk9s
+: 1782985062:0;git commit -m "[DEVOPS-XXX] :: Grafana version downgrade to 12"
+: 1783031316:0;git commit -m "[DEVOPS-XXX] :: Traider-Stage exec acceptor + Initiator memory increase"
+: 1783031642:0;git commit -m "[DEVOPS-XXX] :: CPU limits incresed against throttling alerts"
+: 1783288728:0;ssh ch-s3-01
+: 1783290623:0;ku uncordon aks-system-36316037-vmss000009    
+: 1783332091:0;ansible-vault edit tfvars.yml
+: 1783339586:0;cd Be
+: 1783341119:0;git add Services/DTS.Services.ApiHub/dependency-suppression.xml\
+
+: 1783341143:0;git commit -m "[DEVOPS-XXX] :: OWASP supress CVE-2026-33186"
+: 1783344694:0;bri ansible-lint
+: 1783347777:0;git commit -m "[INFRA-1257] :: Playbook updated"
+: 1783379957:0;cd ../_sarna
+: 1783379960:0;git stauts
+: 1783381211:0;git diff  Services/DTS.Services.FixInitiator/DTS.Services.FixInitiator.Base/FixInitiatorApplication.cs\
+
+: 1783381219:0;git restore  Services/DTS.Services.FixInitiator/DTS.Services.FixInitiator.Base/FixInitiatorApplication.cs\
+
+: 1783381268:0;git commit -m "[SF-2483] :: Added azure pipeline for Advanced Orders"
+: 1783382897:0;git commit -m "[SF-2483] :: Added nuget config for advacned orders"
+: 1783384021:0;git diff client-environment/config/sarna-stage/image-config.yaml\
+
+: 1783384028:0;git add client-environment/config/sarna-stage/image-config.yaml\
+
+: 1783384038:0;git commit -m "[SF-2483] :: Added image tag for advacned orders"
+: 1783384481:0;git diff client-environment/apps/apps.yaml\
+
+: 1783384645:0;git diff config/stage/helm-config.yaml\
+
+: 1783384669:0;git 
+: 1783384681:0;git commit -m "[SF-2483] :: Added advanced orders helm chart"
+: 1783384694:0;ux sarna-prod
+: 1783385365:0;git commit -m "[SF-2483] :: Added advanced orders helm chart pt2"
+: 1783385808:0;git commit -m "[SF-2483] :: Added advanced orders helm chart pt2 fixed"
+: 1783386271:0;git commit -m "[SF-2483] :: Fixed advanced orders image on dev and stage"
+: 1783455197:0;traceroute 51.89.116.118
+: 1783456567:0;git checkout feature/DEVOPS-XXX-added-node-selector-for-bp-pmbp 
+: 1783456630:0;git checkout feature/DEVOPS-XXX-added-node-selector-for-bp-pmbp
+: 1783467869:0;git commit -m "[DEVOPS-209] :: Spread BP,PMBP,AH,BP across AKS nodes"
+: 1783468442:0;git diff charts/microservice/templates/deployment.yaml\
+
+: 1783468449:0;git diff charts/microservice/values.yaml\
+
+: 1783468457:0;git diff  charts/apps/templates/apps/pmbp.yaml\
+
+: 1783468465:0;git diff charts/apps/templates/apps/buying-power-vt.yaml\
+
+: 1783468477:0;git diff  charts/apps/templates/apps/buying-power.yaml\
+
+: 1783468552:0;qtmux
+: 1783468553:0;git diff charts/apps/templates/apps/business-hub.yaml\
+
+: 1783468563:0;git diff  charts/apps/templates/apps/api-hub.yaml\
+
+: 1783468940:0;git commit -m "[DEVOPS-209] :: Spread BP,PMBP,AH,BP across AKS nodes - removed the namespace selector"
+: 1783469736:0;git commit -m "[DEVOPS-209] :: Spread BP,PMBP,AH,BP across AKS nodes - microservice chart upgrade"
+: 1783469817:0;git commit -m "[DEVOPS-209] :: Spread BP,PMBP,AH,BP across AKS nodes - microservice chart upgrade reverted"
+: 1783470197:0;gitt pull
+: 1783470237:0;git commit -m "[DEVOPS-209] :: Schedule changed for dev workloads"
+: 1783470538:0;git commit -m "[DEVOPS-209] :: Schedule changed for dev workloads pt2"
+: 1783472109:0;git commit -m "[DEVOPS-209] :: Schedule changed for dev workloads pt3"
+: 1783472428:0;git commit -m "[DEVOPS-209] :: Schedule changed for dev workloads pt4"
+: 1783540361:0;git commit -m "[DEVOPS-XXX] :: Advanced Orders added scheduling tier"
+: 1783552722:0;git s tatus
+: 1783552739:0;git commit -m "[DEVOPS-XXX] :: Advanced Orders added to image config on dev"
+: 1783585765:0;git commit -m "[INFRA-1257] :: GH runners playbook updated "
+: 1783586792:0;nslookup sdui.de
+: 1783594616:0;cd ../sdui_group_iam
+: 1783630948:0;cluade
+: 1783631113:0;git commit -m "[INFRA-1225] :: Ansible template for MaxScale"
+: 1783642167:0;git add git diff
+: 1783642190:0;git commit -m "[DEVOPS-210] :: Added a Grafan image renderer"
+: 1783644430:0;git commit -m "[DEVOPS-210] :: Enabled WAL for internal Grafana sqlite db"
+: 1783646356:0;git commit -m "[DEVOPS-210] :: Enabled screenshots of container-cpu-usage-high alert"
+: 1783647209:0;git commit -m "[DEVOPS-210] :: Grafana dashboards updated"
+: 1783845717:0;kubectl exec -n vault-dev -it vault-dev-0 -- vault operator unseal
+: 1783845764:0;kubectl exec -1 vault-dev -it vault-dev-0 -- vault operator unseal
+: 1783845770:0;kubectl exec-1 vault-dev -it vault-dev-0 -- vault operator unseal
+: 1783895610:0;git commit -m "[INFRA-XXXX] :: Scale-up backend temporary"
+: 1783945033:0;git commit -m "[DEVOPS-XXX] :: Tradier-prod enabled advanced orders"
+: 1783948480:0;git commit -m "[DEVOPS-XXX] :: Loki read and write upscale"
+: 1783948544:0;kux sarna-rpdo
+: 1783949523:0;ku uncordon aks-system-30131082-vmss000006   
+: 1783949635:0;git commit -m "[DEVOPS-XXX] :: Sarna-dev/stage enabled advanced orders"
+: 1783955616:0;git add _A
+: 1783955626:0;git commit -m "[DEVOPS-XXX] :: Tradier-prod enabled advanced orders pt2"
+: 1783956846:0;git commit -m "[DEVOPS-XXX] :: State metrics OOM fixed"
+: 1783958206:0;gitp ushn
+: 1783958240:0;git commit -m "[DEVOPS-XXX] :: CPU throlling fixing pt1"
+: 1783960496:0;where claude
+: 1783982244:0;git diff charts/platform/templates/flux-web/admin-role.yaml\
+
+: 1783982258:0;git add charts/platform/templates/flux-web/admin-role.yaml\
+
+: 1783982267:0;git diff charts/platform/Chart.yaml\
+
+: 1783982271:0;git add charts/platform/Chart.yaml\
+
+: 1783982284:0;git psh
+: 1783982331:0;git commit -m "[DEVOPS-XXX] :: Flux web ui RBAC fix"
+: 1783983120:0;git commit -m "[DEVOPS-XXX] :: Flux web ui RBAC fix on prod"
+: 1783984406:0;which claude
+: 1783984488:0;brew install --cask claude-code
+: 1783987886:0;erload
+: 1783988566:0;claude mcp add-from-claude-desktop
+: 1783988647:0;claude mcp add
+: 1783988655:0;claude mcp add grafana
+: 1784036541:0;ghitp ull
+: 1784036558:0;git commit -m "[DEVOPS-XXX] :: Tradier-stage monitoring memory increased"
+: 1784052534:0;claude mcp add azure-devops -- npx -y @azure-devops/mcp sarnafinance\
+
+: 1784053420:0;git commit -m "[DEVOPS-XXX] :: Gitops connector CPU throttling fix"
+: 1784069983:0;bru claude-code
+: 1784070867:0;/plugin install azure@claude-plugins-official
+: 1784070879:0;ckaude plugin install azure@claude-plugins-official
+: 1784070915:0;claude plugin install azure@claude-plugins-official
+: 1784070918:0;ckaude
+: 1784070933:0;bri claude-code
+: 1784156566:0;git commit -m "[DEVOPS-XXX] :: DragonflyDB alert fixed"
+: 1784157353:0;git commit -m "[DEVOPS-XXX] :: DragonflyDB alert fixed pt2"
+: 1784157770:0;git commit -m "[DEVOPS-XXX] :: DragonflyDB alert fixed pt2 to prod"
+: 1784160219:0;git commit -m "[DEVOPS-XXX] :: Grafana v13 upgrade"
+: 1784160403:0;git commit -m "[DEVOPS-XXX] :: Grafana v13 upgrade revert"
+: 1784160490:0;git commit -m "[DEVOPS-XXX] :: Added SQL monitor dashboard"
+: 1784190297:0;cd hem
+: 1784190411:0;git commit -m "[DEVOPS-XXX] :: STX-Stage risk dashboard fixed"
+: 1784234560:0;git diff subscriptions/stage/main.tf\
+
+: 1784234564:0;	git diff
+: 1784234651:0;git stash list
+: 1784245153:0;cd ../devops
+: 1784488615:0;ku uncordon aks-system-30131082-vmss00000h  
+: 1784488759:0;ku get nodes
+: 1784488823:0;ku uncordon  aks-system-36316037-vmss00000a    
+: 1784578176:0;git commit -m "[DEVOPS-XXX] :: Alloy v4 migration pt1"
+: 1784578178:0;git puhs
+: 1784580116:0;git commit -m "[DEVOPS-XXX] :: Alloy v4 migration pt2"
+: 1784580619:0;git commit -m "[DEVOPS-XXX] :: Alloy v4 migration pt3"
+: 1784581467:0;git commit -m "[DEVOPS-XXX] :: Alloy v4 migration pt4"
+: 1784584033:0;git commit -m "[DEVOPS-XXX] :: Alloy v4 migration pt5 fixed toolbox"
+: 1784594161:0;git commit -m "[DEVOPS-213] :: Alloy removed the CRD finalizer"
+: 1784596018:0;git commit -m "[DEVOPS-XXX] :: Loki moved kiwigrid sidecar"
+: 1784625717:0;git commit -m "[DEVOPS-XXX] :: Platform/loki/alloy promotion to prod"
+: 1784637625:0;git commit -m "[DEVOPS-213] :: Alloy removed filters"
+: 1784638915:0;git difdf
+: 1784638921:0;git commit -m "[DEVOPS-XXX] :: Removed Kube metrics server version pin"
+: 1784651690:0;git commit -m "[DEVOPS-214] :: Dashboards updated"
+: 1784652267:0;git commit -m "[DEVOPS-214] :: Dashboards updated to PROD"
+: 1784653415:0;cd ../elm
+: 1784653426:0;git diff  charts/platform/templates/alloy/alloy.yaml\
+
+: 1784653473:0;git commit -m "[DEVOPS-214] :: Api and CoreDNS metrics fixed"
+: 1784654951:0;git commit -m "[DEVOPS-214] :: Dashboards chores"
+: 1784659429:0;git commit -m "[DEVOPS-214] :: Dashboards chores pt2"
+: 1784660997:0;git commit -m "[DEVOPS-214] :: Dashboards switched to 24h"
+: 1784708695:0;git commit -m "[DEVOPS-214] :: DTS dashboards updated"
+: 1784727631:0;git commit -m "[DEVOPS-214] :: Prod dashboards updated"
+: 1784727828:0;git commit -m "[DEVOPS-214] :: Prod dashboards updated pt2"
+: 1784734715:0;git statis
+: 1784760400:0;git commit -m "[DEVOPS-214] :: Dashboards further improvements"
+: 1784760857:0;kus sarna-prod
+: 1784761676:0;git commit -m "[DEVOPS-XXX] :: Mimir query frontend memory increase to 650Mi"
+: 1784762074:0;git commit -m "[DEVOPS-XXX] :: STX Prod update of risk monitoring dashboard"
+: 1784764037:0;git commit -m "[DEVOPS-XXX] :: Added DragonflyDB items on a overview dashboard"
+: 1784767122:0;git commit -m "[DEVOPS-XXX] :: Overview dashboards updated"
+: 1784831375:0;git pll
+: 1784831394:0;git commit -m "[DEVOPS-215] :: Fixed critical alerts path"
+: 1784832867:0;git add 0A
+: 1784832934:0;git commit -m "[DEVOPS-XXX] :: Prod dashboard improved"
+: 1784834974:0;git diff  charts/platform/Chart.yaml\
+
+: 1784834984:0;git diff charts/platform/test/values-prod.yaml\
+
+: 1784835010:0;git commit -m "[DEVOPS-XXX] :: Prod dashboard improved pt2"
+: 1784836221:0;git commit -m "[DEVOPS-XXX] :: Prod dashboard improved pt3"
+: 1784839467:0;git commit -m "[DEVOPS-XXX] :: Grafana alerts chores pt1"
+: 1784842424:0;git commit -m "[DEVOPS-XXX] :: Grafana alerts chores pt2"
+: 1784891983:0;git statusg
+: 1784892038:0;git commit -m "[DEVOPS-XXX] :: Grafana alerts added more for NATS and infra"
+: 1784897294:0;git commit -m "[DEVOPS-XXX] :: Long argo workflow alert set to 10 minutes"
+: 1784899069:0;git commit -m "[DEVOPS-XXX] :: New Istio alerts + Argo events pod monitor"
+: 1784904019:0;git commit -m "[DEVOPS-XXX] :: Infra laerts UID fix"
+: 1784904046:0;git commit -m "[DEVOPS-XXX] :: Istio alerts fixed"
+: 1784912093:0;git commit -m "[DEVOPS-XXX] :: DTS dashboards further improvements"
+: 1784927261:0;git commit -m "[DEVOPS-XXX] :: Added first Azure monitor alerts for storage availability"
+: 1784931590:0;git commit -m "[DEVOPS-XXX] :: Added first Azure KeyVault exporter"
+: 1784931646:0;tf apply --target='module.platform.module.kubernetes.azurerm_federated_identity_credential.keyvault_exporter' --target='module.platform.module.kubernetes.azurerm_role_assignment.aad_pod_identity["keyvault-exporter"]' --target='module.platform.module.kubernetes.azurerm_role_assignment.keyvault_exporter_aks_kv_reader' --target='module.platform.module.kubernetes.azurerm_role_assignment.keyvault_exporter_reader' --target='module.platform.module.kubernetes.azurerm_user_assigned_identity.keyvault_exporter'
+: 1784931756:0;git commit -m "[DEVOPS-XXX] :: Added Azure KeyVault exporter"
+: 1784931793:0;cd ../stage
+: 1784931829:0;git commit -m "[DEVOPS-XXX] :: Enabed Azure KeyVault exporter on stage cluster"
+: 1784938015:0;az logout
+: 1784938019:0;az login
+: 1784939632:0;tf plan --target=module.platform.module.kubernetes_resources.module.aks_sarna.kubernetes_config_map.cluster_config'
+: 1784988013:0;ku uncordon  aks-system-36316037-vmss00000a   
+: 1784988236:0;ku uncordon aks-system-30131082-vmss00000h 
+: 1785159195:0;tf plan --target='module.platform.module.kubernetes_resources.module.aks_sarna.kubernetes_config_map.cluster_config'
+: 1785172972:0;git commit -m "[DEVOPS-XXX] :: Keyvault exporter job name renamed"
+: 1785181817:0;git commit -m "[DEVOPS-XXX] :: Grafana :: Istion waypoint alert improved"
+: 1785185023:0;gut status
+: 1785185029:0;git add -a
+: 1785185035:0;git commit -m "[DEVOPS-XXX] :: Grafana :: Alerts grooming pt1"
+: 1785185481:0;git stateus
+: 1785185878:0;git commit -m "[DEVOPS-XXX] :: Grafana :: KeyVault exporter alret improved"
+: 1785190571:0;git commit -m "[DEVOPS-XXX] :: Grafana :: External-DNS alerts added"
+: 1785225832:0;cd github/dotfiles
+: 1785230648:0;cd ../helnm
+: 1785230658:0;git commit -m "[DEVOPS-XXX] :: Grafana :: High memory alert silented"
+: 1785231825:0;code .
+: 1785233467:0;git commit -m "[DEVOPS-XXX] :: Update"
+: 1785233889:0;git commit -m "[DEVOPS-XXX] :: Update p3"
+: 1785234723:0;git commit -m "[DEVOPS-XXX] :: Update p4"
+: 1785235647:0;git commit -m "[DEVOPS-XXX] :: Update p5"
+: 1785253019:0;git commit -m "[DEVOPS-XXX] :: Enabed Azure KeyVault exporter on prod cluster"
+: 1785255769:0;kux sarns-tage
+: 1785255965:0;git commit -m "[DEVOPS-XXX] :: Grafana :: Alerts for azure eventsbus + argo events"
+: 1785259658:0;git commit -m "[DEVOPS-XXX] :: Grafana :: DTS SQL Execution Timeouts changed severity to warning"
+: 1785272533:0;git commit -m "[DEVOPS-XXX] :: AKS :: adjsut node pools to the current state"
+: 1785336945:0;git commit -m "[DEVOPS-XXX] :: Long workflow alert changed to 20 minutes"
+: 1785364962:0;git diff charts/apps/templates/cron/templates/mr-processors-wf-template.yaml\
+
+: 1785364977:0;git diff  charts/apps/values.yaml\
+
+: 1785365684:0;git commit -m "[DEVOPS-218] :: MR and MR-BOD get pod disk sizeLimit"
+: 1785367075:0;git commit -m "[DEVOPS-XXX] :: Monitoring service dashboard added"
+: 1785368699:0;git commit -m "[DEVOPS-XXX] :: Monitoring service dashboard moved"
+: 1785368704:0;cd ../belm
+: 1785371047:0;git commit -m "[DEVOPS-XXX] :: Monitoring service dashboard changed pt2"
+: 1785372554:0;git commit -m "[DEVOPS-XXX] :: Monitoring service dashboard changed pt3"
+: 1785373201:0;git commit -m "[DEVOPS-XXX] :: Monitoring service dashboard changed colors"
+: 1785406402:0;git commit -m "[DEVOPS-XXX] :: Monitoring service dashboard improved"
+: 1785428564:0;git commit -m "[DEVOPS-XXX] :: Ignore dotnet-docker DL3066 in hadolint step"
+: 1785507111:0;ku get no
+: 1785707829:0;ku uncordon aks-system-30131082-vmss00000k
+: 1785707835:0;ku uncordon aks-system-30131082-vmss000000
+: 1785791215:0;git commit -m "[DEVOPS-XXX] :: Trafix connections codes added"
+: 1785793404:0;git commit -m "[DEVOPS-XXX] :: Alloy skips completed pods"
+: 1785850178:0;git commit -m "[DEVOPS-XXX] :: Grafana increase the ram"
+: 1785853731:0;cd ../gitops-connector
+: 1785853752:0;rm -rf gitops-connector
+: 1785853802:0;gh repo clone Sarna-Technologies/gitops-connector
+: 1785879781:0;git commit -m "[DEVOPS-XXX] :: STX-Stage BP CPU -> 3"
+: 1785880053:0;git commit -m "[DEVOPS-XXX] :: STX-Stage BP Memory -> 8Gi"
+: 1785920912:0;git commit -m "[DEVOPS-XXX] :: Perf warnings logs integration fixed"
+: 1785940989:0;git commit -m "[DEVOPS-XXX] :: STX-Stage BP/PMBP 2"
+: 1785967799:0;git commit -m "[DEVOPS-XXX] :: STX-Stage API/Business HUB resources changes - testing perfwarnings"
+: 1786017879:0;git commit -m "[DEVOPS-XXX] :: STX-Stage API/Business HUB revert"
+: 1786017984:0;git commit -m "[DEVOPS-XXX] :: STX-Stage API/Business HUB revert pt2"
+: 1786053325:0;git commit -m "[DEVOPS-XXX] :: Argo cleanup set to 3h"
+: 1786138022:0;git commit -m "[DEVOPS-XXX] :: NATS alerts improved"
+: 1786140481:0;git commit -m "[DEVOPS-XXX] :: CPU throttle alerts fixed"
+: 1786225410:0;ku uncordon aks-system-36316037-vmss000000
+: 1786226703:0;git commit -m "[DEVOPS-XXX] :: Alloy noise logs fixed"
+: 1786390893:0;C00§0
+: 1786399352:0;git commit -m "[DEVOPS-XXX] :: MR and BOD maximum time set to 2hrs"
+: 1786404955:0;git commit -m "[DEVOPS-XXX] :: Infra extended dashbaords update"
+: 1786441839:0;ping 10.12.168.211
+: 1786470275:0;git commit -m "[DEVOPS-219] :: Added additional NetMQ metrics"
+: 1786479369:0;git commit -m "[DEVOPS-219] :: Fixed RPCClientHandler"
+: 1786544028:0;git commit -m "[DEVOPS-XXX] :: Added NTP dashbaord"
+: 1786578566:0;tf init -upgrade
+: 1786578674:0;tf apply --target='module.platform.module.network.module.app_network.azurerm_network_security_rule.nsg_security_rule["AKSUserNodePoolA-AllowNtpOutbound"]' --target='module.platform.module.network.module.app_network.azurerm_network_security_rule.nsg_security_rule["AKSUserNodePoolB-AllowNtpOutbound"]'
+: 1786578998:0;git commit -m "[DEVOPS-XXX] :: NTP Exporter set to both node pools"
+: 1786614242:0;git commit -m "[DEVOPS-XXX] :: NTP Exporter set to user node pool only"
+: 1786638235:0;cd seven
+: 1786638238:0;cd ../../..
+: 1786696627:0;git commit -m "[INFRA-1682] :: Added a desired node for sduiapp cluster"
+: 1786741462:0;cd terraform
+: 1786804167:0;ku uncordon  aks-system-36316037-vmss00000a  
+: 1786804250:0;ku uncordon  aks-system-30131082-vmss00000h    
+: 1786979850:0;d BE
+: 1786979862:0;git  status
+: 1786979876:0;git checkout feature/nuget-upgrade\
+ 
+: 1786979915:0;git commit -m "[DEVOPS-XXX] :: Exec acceptor free space diag"
+: 1786999673:0;giy diff
+: 1786999721:0;git commit -m "[DEVOPS-XXX] :: NTP nsg rules and retention 5 years"
+: 1787000408:0;git commit -m "[DEVOPS-XXX] :: Testing the removal of obj and bin"
+: 1787011971:0;git commit -m "[DEVOPS-XXX] :: Pod eviction alert"
+: 1787013388:0;cd ../prod
+: 1787013570:0;tf apply --target='module.platform.module.kubernetes.azurerm_storage_container_immutability_policy.ntp_sync'
+: 1787013673:0;git commit -m "[DEVOPS-XXX] :: NTS sync added writes protection"
+: 1787092405:0;git commit -m "[DEVOPS-XXX] :: MR processor mempry limit set to 900Mi"
+: 1787095805:0;git commit -m "[DEVOPS-XXX] :: Tradier-Dev QP emory limit set to 6Gi"
+: 1787141954:0;flux reconcile helmrelease mimir -n cluster-config
+: 1787142898:0;ssh root@errors.sdui.de
+: 1787145461:0;ssh ovh-prod-vpn-worker-01
+: 1787165847:0;claude plugin list
+: 1787168288:0;in the last commit message remove everythong except this "    [DEVOPS-XXX] :: Enable Flux driftDetection for mimir and app-metrics\
+"
+: 1787168539:0;git commit -m "[DEVOPS-XXX] :: Enabled driftDetection for Mimir and AppMEtrics"
+: 1787180643:0;kubectl --context sarna-stage get validatingwebhookconfigurations pod-eviction-monitoring -o yaml | less\
+
+: 1787180696:0;kubectl --context sarna-stage get validatingwebhookconfigurations pod-eviction-monitoring -o yaml | cat | grep -i manager\
+
+: 1787181552:0;git commit -m "[DEVOPS-XXX] :: Fix FailurePolicy key in Mimir"
+: 1787182799:0;hr
+: 1787183486:0;git commit -m "[DEVOPS-XXX] :: Revert driftDetection for Mimir and AppMetrics"
+: 1787224066:0;git commit -m "[DEVOPS-XXX] :: Sync sarnaHelmAppsChart on stage and prod"
+: 1787241004:0;git commit -m "[DEVOPS-XXX] :: SQL alerts areback"
+: 1787250866:0;git commit -m "[DEVOPS-XXX] :: NTP drift alert message improved"
+: 1787254898:0;git commit -m "[DEVOPS-XXX] :: Alerts values improved"
+: 1787258491:0;git commit -m "[DEVOPS-XXX] :: QP-rt on Tradier-prod is set to 6000Mi"
+: 1787266000:0;git statua
+: 1787266030:0;git commit -m "[DEVOPS-XXX] :: QP memory added +500Mi on tradier dev/stage"
+: 1787324005:0;flux reconcile helmrelease tradier-stage-monitoring -n cluster-config --force\
+
+: 1787324121:0;helm get manifest tradier-stage-monitoring -n tradier-stage | kubectl apply -n tradier-stage -f -\
+
+: 1787327244:0;gut log
+: 1787350216:0;git commit -m "[DEVOPS-XXX] :: Attach CAT dashboard panel screenshots to NTP drift alerts"
+: 1787352995:0;git commit -m "[DEVOPS-XXX] :: Attach dashboard panel screenshot to Container Memory High alert"
+: 1787392951:0;kux sarnaprod
+: 1787556589:0;nslookup 137.74.127.175
+: 1787556597:0;dig 137.74.127.175
+: 1787564754:0;debian@141.95.103.209
+: 1787570025:0;ssh-adsd -L
+: 1787570041:0;ssh debian@141.95.103.209
+: 1787604757:0;azygit
+: 1787646876:0;kubectl exec -n vault-dev -it vault-dev-1 -- vault operator unseal
+: 1787650060:0;source ~/Downloads/openrc\ \(1\).sh
+: 1787650087:0;openstack
+: 1787650124:0;openstack ls loadbalancer
+: 1787650140:0;openstack lb ls
+: 1787650157:0;openstack blockstorage list
+: 1787650188:0;openstack loadbalancer list
+: 1787651351:0;:Q
+: 1787693988:0;npm run import:full\
+
+: 1787694208:0;npm run dev\
+
+: 1787696905:0;cd _sarna
+: 1787696907:0;cd heln
+: 1787736414:0;cd ovh-cost-manager
+: 1787736417:0;npm run dev
+: 1787738871:0;nslookup sdui-group.app
+: 1787754645:0;ssh     activeDeadlineSeconds: 7200\
+
+: 1787754782:0;ssh ovh-infra-github-runner-02\
+
+: 1787754998:0;ssh ovh-infra-github-runner-01\
+
+: 1787755009:0;ssh ovh-infra-github-runner-03\
+
+: 1787756606:0;git checkout -b fix/INFRA-XXXX-min-mode-for-timetable-deploy-de
+: 1787756653:0;git commit -m "[INFRA-XXX] :: Min mode for caching in timetable deploy DE"
+: 1787760024:0;git commit -m "[DEVOPS-XXX] :: BH on TradierProd memory to 450Mi"
+: 1787959137:0;git commit -m "[DEVOPS-XXX] :: Fix mimir rollout operator"
+: 1788201290:0;cd devops
+: 1788202016:0;tf apply --target='module.devops.module.container_registry.azurerm_container_registry_cache_rule.kedacore_keda_admission_webhooks_cache_rule[0]' --target='module.devops.module.container_registry.azurerm_container_registry_cache_rule.kedacore_keda_cache_rule[0]' --target='module.devops.module.container_registry.azurerm_container_registry_cache_rule.kedacore_keda_metrics_apiserver_cache_rule[0]'
+: 1788208874:0;kkux sarna-prod
+: 1788220510:0;:pods
+: 1788266893:0;git commit -m "[INFRA-1715] :: Added an OVH cost manager"
+: 1788267529:0;git commit -m "[INFRA-1715] :: OVH Cost manager update"
+: 1788303927:0;ps faux | grep kubectl
+: 1788303949:0;kill 90909
+: 1788303954:0;kill 90301
+: 1788303960:0;ps aux | grep kubectl
+: 1788358765:0;kuc 
+: 1788358778:0;cd ~/workspaces/_7education
+: 1788388989:0;\
+
+: 1788392351:0;git commit -m "[INFRA-1715] :: OVH Cost manager dns name"
+: 1788392476:0;git commit -m "[INFRA-1715] :: OVH Cost manager ingress entry"
+: 1788392531:0;env | grep OVH
+: 1788395003:0;git commit -m "[INFRA-1715] :: OVH Cost manager image changed"
+: 1788396933:0;git commit -m "[INFRA-1715] :: OVH Cost manager fixed data path"
+: 1788397480:0;git commit -m "[INFRA-1715] :: OVH Cost manager fixed CORS"
+: 1788398233:0;git commit -m "[INFRA-1715] :: Added dashy"
+: 1788398367:0;git commit -m "[INFRA-1715] :: Added aliases to dashy"
+: 1788426770:0;git commit -m "[INFRA-1715] :: Renamed org to seveneducation"
+: 1788428468:0;git satus
+: 1788428498:0;git commit -m "[INFRA-1715] :: OVH cost manager health check fixed"
+: 1788436084:0;cd ../_sarna/gitops
+: 1788436108:0;git commit -m "[DEVOPS-XXX] :: KEDA disabled on stage"
+: 1788437585:0;git commit -m "[DEVOPS-XXX] :: BH on tradier-prod scaled-up to 2 pods"
+: 1788439293:0;cd _7education/infra-k8s-platform
+: 1788439314:0;git commit -m "[INFRA-1715] :: Added services to dashy"
+: 1788446931:0;git sidd
+: 1788446959:0;git commit -m "[DEVOPS-XXX] :: Tradier-prod BP and BH memory added"
+: 1788446970:0;gut push
+: 1788447968:0;git commit -m "[DEVOPS-XXX] :: Tradier-prod API hub scaled up"
+: 1788453388:0;git commit -m "[DEVOPS-XXX] :: Tradier-stage monitoring memory increase 1200Mi"
+: 1788453442:0;ranger
+: 1788538415:0;kux sarna-stage sa
+: 1788538642:0;git pulkl
+: 1788551896:0;git pusj
+: 1788697503:0;kubectl --context sarna-prod -n stonex-prod delete svc fix-initiator-stx-trafix\
+
+: 1788697513:0;kubectl --context sarna-prod -n cluster-config patch helmrelease stonex-prod-fix-initiator-stx-trafix \\
+  --type=merge -p '{"spec":{"driftDetection":{"mode":"enabled"}}}'
+: 1788697538:0;kubectl --context sarna-prod -n cluster-config patch helmrelease stonex-prod-fix-initiator-stx-trafix \\
+  --type=merge -p '{"spec":{"driftDetection":{"mode":"warn"}}}'
+: 1788697545:0;kubectl --context sarna-prod -n tradier-prod delete svc fix-initiator-trdr-trafix\
+
+: 1788697555:0;kubectl --context sarna-prod -n cluster-config patch helmrelease tradier-prod-fix-initiator-trdr-trafix \\
+  --type=merge -p '{"spec":{"driftDetection":{"mode":"enabled"}}}'
+: 1788697574:0;kubectl --context sarna-prod -n cluster-config patch helmrelease tradier-prod-fix-initiator-trdr-trafix \\
+  --type=merge -p '{"spec":{"driftDetection":{"mode":"warn"}}}'
+: 1788714916:0;git commit -m "[DEVOPS-XXX] :: Platform sync stage -> prod"
+: 1788715078:0;git commit -m "[DEVOPS-XXX] :: Apps sync stage -> prod"
+: 1788910445:0;git commit -m "[INFRA-1715] :: Suspended coralogix agent"
+: 1788911740:0;code
+: 1788913472:0;git commit -m "[INFRA-1715] :: Alloy filtering enabled"
+: 1788913747:0;git commit -m "[INFRA-1715] :: Alloy filtering enabled pt2"
+: 1788913772:0;cd ...
+: 1788913779:0;claude
+: 1788915434:0;git dif
+: 1788915446:0;git commit -m "[INFRA-1715] :: Alloy filtering enabled pt3"
+: 1788964571:0;ku uncordon aks-system-30131082-vmss00000n 
+: 1788970779:0;cd stage
+: 1788974367:0;cd /Users/rustamgk/workspaces/_sarna/terraform/subscriptions/stage\
+terraform plan -target='module.platform.module.kubernetes_resources.module.aks_sarna.kubernetes_config_map.cluster_config'\
+
+: 1788974619:0;git commit -m "[DEVOPS-XXX] :: SF-2325: add per-tier beOmsHost for Tradier's OutboundHub webhook"
+: 1788981885:0;git commit -m "[INFRA-1743] :: Added a new node pool for sduiapp"
+: 1788986209:0;cd ~
+: 1788986255:0;git commit -m "[INFRA-1743] :: Adjusted preporod and prod node pool size"
+: 1788991049:0;cd _sarna/helm
+: 1788991333:0;git commit -m "[DEVOPS-XXX] :: Force firebaseMessagingSenderId through int64 in ux/ux-preview"
+: 1789086075:0;git commit -m "[DEVOPS-XXX] :: Fix Loki chunks cache"
+: 1789086858:0;git commit -m "[DEVOPS-XXX] :: Fix Grafana 13 startup failure - set a real renderer_token"
+: 1789149183:0;git logh
+: 1789150076:0;git commit -m "[DEVOPS-XXX] :: Platform chart sync stage -> prod 1.1.68"
+: 1789169336:0;cd subscriptions/stage
+: 1789169844:0;az aks nodepool scale --resource-group aks --cluster-name sarna-stage --name system --node-count 3\
+
+: 1789170726:0;git commit -m "[DEVOPS-XXX] :: BP CPU requests decreased"
+: 1789171589:0;git commit -m "[DEVOPS-XXX] :: Stage cluster requests decreased"
+: 1789342581:0;kux sarna-drop
+: 1789343266:0;kubectl --context sarna-stage -n cluster-config patch helmrelease stonex-dev-apps \\
+  --type=merge --subresource=status \\
+  --patch-file=/tmp/stonex_dev_apps_patch.json\
+
+: 1789343619:0;kubectl --context sarna-stage -n cluster-config patch helmrelease sarna-dev-apps \\
+  --type=merge --subresource=status \\
+  --patch-file=/tmp/sarna_dev_apps_patch.json\
+
+: 1789394491:0;git commit -m "[DEVOPS-XXX] :: TRDR-Dev monitoring memory increase"
+: 1789395780:0;git commit -m "[DEVOPS-XXX] :: TRDR-Dev monitoring memory increase pt2"
+: 1789397147:0;git commit -m "[DEVOPS-XXX] :: TRDR-Dev QP memory increase"
+: 1789401633:0;alzyg
+: 1789402246:0;gity add -A
+: 1789402263:0;git commit -m "[DEVOPS-XXX] :: Perf dashboards added"
+: 1789404716:0;git commit -m "[DEVOPS-XXX] :: Perf dashboards added pt2"
+: 1789405963:0;git commit -m "[DEVOPS-XXX] :: Perf dashboards refactoring"
+: 1789414767:0;git commit -m "[DEVOPS-XXX] :: Perf dashboards refactoring pt2"
+: 1789414969:0;git push --force-with-lease origin main\
+
+: 1789418200:0;git commit -m "[DEVOPS-XXX] :: Perf dashboards refactoring pt3"
+: 1789418891:0;git commit -m "[DEVOPS-XXX] :: Perf dashboards refactoring pt4"
+: 1789423768:0;git commit -m "[DEVOPS-XXX] :: Perf dashboards refactoring pt5"
+: 1789425964:0;which zsh
+: 1789425986:0;brew update
+: 1789426316:0;berw doctor
+: 1789426320:0;brew doctor
+: 1789426364:0;vim readme.md
+: 1789426452:0;cd scripts
+: 1789426463:0;./bootstrap
+: 1789426473:0;sh bootstrap.sh
+: 1789426623:0;omz update
+: 1789426701:0;ad
+: 1789429855:0;git commit -m "[DEVOPS-XXX] :: Perf dashboards refactoring pt6"
+: 1789430294:0;git commit -m "[DEVOPS-XXX] :: Perf dashboards refactoring pt7"
+: 1789468224:0;git commit -m "[INFRA-1785] :: Added a sanitized db in ifnra project"
+: 1789468238:0;git rebase origin master
+: 1789468729:0;it push
+: 1789477823:0;cd terraform/orgs/sdui/environments/sdui_group_iam
+: 1789484504:0;ssh-add ~/.ssh/ovh-sduiapp-db
+: 1789496703:0;git commit -m "[DEVOPS-XXX] :: KEDA disable on stage"
+: 1789551799:0;d ansible
+: 1789551801:0;cd ansible
+: 1789552318:0;ssh ovh-infra-github-runner-01
+: 1789555940:0;ping 162.19.181.193
+: 1789555976:0;ping 51.89.116.118
+: 1789556847:0;ssh ubuntu@54.37.76.30
+: 1789557362:0;gh repo clone sdui-hq/infra-ansible-DEPRECATED
+: 1789569127:0;git commit -m "[DEVOPS-XXX] :: Revert Grafana on prod"
+: 1789569345:0;git commit -m "[DEVOPS-XXX] :: Revert Grafana on prod pt2"
+: 1789569912:0;git commit -m "[DEVOPS-XXX] :: Loki fix on prod"
+: 1789576044:0;git commit -m "[DEVOPS-XXX] :: Grafana Proxy image update"
+: 1789577868:0;git commit -m "[DEVOPS-XXX] :: Grafana Proxy image update pt2"
+: 1789581880:0;git commit -m "[DEVOPS-XXX] :: Grafana Proxy image update pt3"
+: 1789582457:0;cd ../docker
+: 1789582652:0;git commit -m "[DEVOPS-XXX] :: Fix for Grafana Proxy plugins"
+: 1789583303:0;git commit -m "[DEVOPS-XXX] :: Rever virtual service changes "
+: 1789600080:0;ks9
+: 1789600204:0;git commit -m "[DEVOPS-XXX] :: Grafana fix -> prod"
+: 1789601743:0;git commit -m "[DEVOPS-XXX] :: Grafana dashboards changes + Goldilocks on stage"
+: 1789602011:0;git lohg
+: 1789603115:0;terraform apply -target='module.devops.module.container_registry.azurerm_container_registry_cache_rule.kubernetes_autoscaling_vpa_recommender_cache_rule'\
+
+: 1789603642:0;git commit -m "[DEVOPS-XXX] :: Helm chart chores"
+: 1789603726:0;git commit -m "[DEVOPS-XXX] :: Grafana api-hub perf dashboard fix for prod"
+: 1789604570:0;git commit -m "[DEVOPS-XXX] :: Grafana api-hub perf dashboard fix for prod pt2"
+: 1789675873:0;command tmux start-server && ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh && command tmux attach\
+
+: 1789675913:0;cd ~/.tmux/resurrect
+: 1789676009:0;~/.tmux/plugins/tmux-resurrect/scripts/restore.sh 
+: 1789676065:0;kill 56658
+: 1789676074:0;kill 56656
+: 1789676077:0;ps aux | grep tmux
+: 1789676188:0;command tmux ls\
+
+: 1789676336:0;cd infrastructure
+: 1789676354:0;cd terraform/orgs/sdui/environments/sdui_group_infrastructure
+: 1789677403:0;tf apply
+: 1789691939:0;git commit -m "[DEVOPS-XXX] :: QP on tradier-stage increased to 5900"
+: 1789723528:0;for ns in sarna-stage stonex-stage tradier-stage; do\
+  for name in $(kubectl --context sarna-stage -n $ns get scaledobject -o jsonpath='{.items[*].metadata.name}'); do\
+    echo "=== patching $ns/$name ==="\
+    kubectl --context sarna-stage -n $ns patch scaledobject "$name" --type=merge -p '{"metadata":{"finalizers":[]}}'\
+  done\
+done\
+
+: 1789725537:0;kk9s
+: 1789725581:0;git commit -m "[DEVOPS-XXX] :: KEDA back on stage"
+: 1789769403:0;git commit -m "[DEVOPS-XXX] :: Debounce NTP drift warning: chart bump"
+: 1789772892:0;git  push
+: 1789772978:0;git commit -m "[DEVOPS-XXX] :: Add Goldilocks VPA recommendation metrics and Grafana dashboard - chart bump"
+: 1789774748:0;git commit -m "[DEVOPS-XXX] :: Kube metrics fixed"
+: 1789995605:0;git commit -m "[DEVOPS-XXX] :: Add Dashy platform chart bump"\
+"
+: 1789995608:0;git commit -m "[DEVOPS-XXX] :: Add Dashy platform chart bump"
+: 1789996118:0;lux sarna-prod
+: 1790000839:0;kux sarna-stasge
+: 1790005450:0;ku create ns goldilocks
+: 1790005575:0;git commit -m "[DEVOPS-XXX] :: Add Dashy platform chart bump pt2"
+: 1790007440:0;brew upgrade
+: 1790008147:0;git commit -m "[DEVOPS-XXX] :: Bump sarnaHelmPlatformChart to 1.1.91"
+: 1790018286:0;git commit -m "[DEVOPS-XXX] :: Bump sarnaHelmPlatformChart to 1.1.93"
+: 1790019250:0;git commit -m "[DEVOPS-XXX] :: Deploy Dashy as a raw Deployment/Service"
+: 1790026567:0;cd subscriptions/devops
+: 1790031480:0;git fetch origin main
+: 1790031484:0;git rebase origin main
+: 1790073432:0;cd ../
+: 1790073491:0;git commit -m "[DEVOPS-XXX] :: Dashy minor changes"
+: 1790076072:0;cs gitops
+: 1790080219:0;§
+: 1790274183:0;git commit -m "[DEVOPS-XXX] :: AKS node pool maxcapacity changed"
+: 1790274992:0;git commit -m "SF-2816: don't count Alloy-replayed log lines in log-derived counters"
+: 1790289620:0;git commit -m "[DEVOPS-XXX] :: NATS upgrade to 2.14.7 on stage"
+: 1790290967:0;git commit -m "[DEVOPS-XXX] :: NATS revert to 2.14.6 on stage"
+: 1790326542:0;git commit -m "[INFRA-1785] :: Github multi runnder registration"
+: 1790326725:0;cd Infrastructure/ansible
+: 1790327569:0;vin ansible-vault-password
+: 1790328180:0;cp ../../../infra-ansible/ansible-vault-password ./ansible-vault-password\
+ansible-vault view secrets.enc --vault-password-file ansible-vault-password >/dev/null && echo OK\
+
+: 1790330677:0;zshconfig
+: 1790351378:0;gt pull
+: 1790355167:0;git commit -m "[DEVOPS-XXX] :: Monitoring service snapshots disabled"
+: 1790366995:0;rm -rf gitops
+: 1790367000:0;gh repo clone Sarna-Technologies/gitops
+: 1790367617:0;git commit -m "[DEVOPS-XXX] :: Revert of faield alert commit"
+: 1790377445:0;git commit -m "[DEVOPS-XXX] :: Added an alert if a pre-market order processor pod runs past 4 minutes (platform 1.1.110)"
+: 1790377524:0;git commit -m "[DEVOPS-XXX] :: Sync platform chart -> prod 1.1.100"
+: 1790611804:0;git pullk
+: 1790630707:0;cd ../UX
+: 1790631357:0;git lg
+: 1790759266:0;gitlog
+: 1790773059:0;gh repo clone 7education/pupil-monorepo
+: 1790780191:0;git commit -m "[DEVOPS-XXX] :: STX-prod monitoring service OOM mempry bump 3.4"
+: 1790846428:0;ssh infra-countly-mongodb-worker-01
+: 1790846660:0;ssh-agent -v
+: 1790846663:0;ssh-agent -L
+: 1790846665:0;ssh-agent -l
+: 1790846802:0;ssh-add -D
+: 1790885001:0;tmux attach -t main
+: 1790886592:0;brew install Azure/kubelogin/kubelogin\
+
+: 1790944717:0;git  chekcout master
+: 1790981425:0;git commit -m "[DEVOPS-XXX] :: Sync platform chart"
+: 1790981430:0;git commit -m "[DEVOPS-XXX] :: Grafana :: OOMKilled to the critical severity"
+: 1791224734:0;cd. .
+: 1791224742:0;cd infra-k8s-iam
+: 1791239896:0;git commit -m "[DEVOPS-XXX] :: Max added"
+: 1791365077:0;ssh debian@141.95.107.241
+: 1791366333:0;cd _7education/infra-k8s-iam
+: 1791456721:0;cd workspaces
+: 1791456725:0;cd sdui-monorepo
+: 1791456768:0;git reset --hard HEAD
+: 1791456797:0;rm -rf sdui-monorepo
+: 1791456809:0;gh repo clone 7education/sdui-monorepo
+: 1791489582:0;ssh ovh-prod-db-slave
+: 1791491801:0;cd sdui-monorepo/Infrastructure/ansible
+: 1791491815:0;touch ansible-vault-password
+: 1791491903:0;vim ansible-vault-password
+: 1791491938:0;ansible-playbook playbooks/mariadb.yml \\
+  -e @secrets.enc --vault-password-file ansible-vault-password \\
+  --limit prod-mariadb-slave --tags monitoring \\
+  --check --diff
+: 1791500141:0;ansible-playbook playbooks/mariadb.yml \\
+  -e @secrets.enc --vault-password-file ansible-vault-password \\
+  --limit prod-mariadb-slave --tags monitoring
+: 1791500159:0;ansible-playbook playbooks/mariadb.yml \\
+  -e @secrets.enc --vault-password-file ansible-vault-password \\
+  --limit prod-mariadb-master --tags monitoring
+: 1791501934:0;ansible-playbook playbooks/ch-legacy.yml \\
+  -e @secrets.enc --vault-password-file ansible-vault-password \\
+  --limit ch-dbmaster-01 --tags monitoring
+: 1791501960:0;ssh-add -L
+: 1791501983:0;ssh ch-dbmaster-01
+: 1791502339:0;ssh ovh-prod-db-master
+: 1791502966:0;cd ../gitps
+: 1791502968:0;d ../gitops
+: 1791503459:0;kkux sarna-stage
+: 1791505737:0;ccd helm
+: 1791505815:0;git commit --amend
+: 1791562221:0;git push --force-with-lease origin feature/DEVOPS-XXX-monitoring-inmemdb-rqlite-switch
+: 1791576539:0;git poull
+: 1791576544:0;git idff
+: 1791576568:0;git commit -m "[DEVOPS-XXX] :: Mimir upgrade on stage -> 6.2.1"
+: 1791925414:0;git git push
+: 1791972196:0;ssh ovh-prod-memcached-worker-01
+: 1791986432:0;cd _7education/sdui-monorepo
+: 1791987048:0;kux sdux
+: 1792020695:0;git commit -m "[DEVOPS-XXX] :: Istio zTunnel podmonitor test"
+: 1792081061:0;cd Downloads
+: 1792081068:0;caffeinate -i python3 -m http.server 8000
+: 1792081788:0;brew install rclone\
+
+: 1792081904:0;caffeinate -i rclone serve dlna ~/Pictures --name "MacBook"
+: 1792081951:0;sudo caffeinate -i rclone serve dlna /Users/rustamgk/Pictures --name "MacBook"
+: 1792082103:0;sudo caffeinate -i rclone serve dlna /Users/rustamgk/Downloads --name "MacBook"
+: 1792096994:0;cd ../be
+: 1792101941:0;git log --oneline HEAD..origin/feature/DEVOPS-XXX-monitoring-inmemdb-rqlite-switch\
+
+: 1792101961:0;git push --force-with-lease origin feature/DEVOPS-XXX-monitoring-inmemdb-rqlite-switch\
+
+: 1792108626:0;git commit -m "[DEVOPS-XXX] :: Remove financial-cron and checkout alerts from apps chart"
+: 1792141292:0;git commit -m "[DEVOPS-XXX] :: BP memory bump on STX-Dev"
+: 1792327286:0;kux sarna-stge
+: 1792327576:0;git commit -m "[DEVOPS-XXX] :: Istio version revert on stage to 1.31.1"
+: 1792361392:0;cd terraform/orgs/sdui/environments/sdui_app_prod
+: 1792361429:0;tf init
+: 1792366192:0;git commit -m "[DEVOPS-XXX] :: BP and QP-RT memory added"
+: 1792420290:0;git commit -m "[DEVOPS-XXX] :: BP on STX-Dev increased to 900Mi"
+: 1792497845:0;cd orgs/sdui/environments/sdui_group_dns
+: 1792498004:0;tf plan
+: 1792498787:0;cd cd ..
+: 1792499839:0;kuns
+: 1792512732:0;git statu
+: 1792520920:0;cd dotfiles
+: 1792525433:0;cd gitop
+: 1792525444:0;cd _7education/infra-k8s-sduiapp
+: 1792527432:0;kubectl delete receiver gitlab-flux-system -n flux-system
+: 1792569142:0;gh repo clone sdui-hq/sduiapp-vault-proxy
+: 1792575194:0;vim ~/.config/k9s/config.yml
+: 1792575356:0;git tatus
+: 1792576748:0;cd iam
+: 1792607742:0;git pul
+: 1792608569:0;ssh ch-bastion-02
+: 1792608586:0;ssh ch-fpm-queue-01
+: 1792612803:0;kux sduiapp-preprod
+: 1792615590:0;gitp ull
+: 1792616155:0;kux sduiapp-prod sd
+: 1792659623:0;ssh ch-broadcast-01
+: 1792661647:0;ssh 9s
+: 1792661710:0;nslookup pma.intranet-sdui.de
+: 1792662128:0;ssh debian@141.95.74.143
+: 1792663144:0;docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.CreatedAt}}'
+: 1792663267:0;docker image ls --digests phpmyadmin 
+: 1792671420:0;nslookup https://ch-pma.intranet-sdui.de
+: 1792671450:0;nslookup ch-pma.intranet-sdui.de
+: 1792671484:0;ssh ansible@91.246.47.227
+: 1792681916:0;git commit -m "[DEVOPS-XXX] :: BP and Api-Hub memory increase"
+: 1792682066:0;git commit -m "[DEVOPS-XXX] :: STX-Prod monitoring memory increase"
+: 1792683818:0;ssh debian@91.246.47.227
+: 1792683835:0;ssh ch-lb-01
+: 1792693595:0;git commit -m "[DEVOPS-XXX] :: Tradier-stage Api-Hub memory increase"
+: 1792710402:0;git pusgh
+: 1792712325:0;git commit -m "[DEVOPS-XXX] :: ADjsut node pool max size"
+: 1792713109:0;git commit -m "[DEVOPS-XXX] :: Loki update on sage"
+: 1793097872:0;ssh ch-fpm-01
+: 1793148326:0;kux sduiapp-prod sdui
+: 1793230896:0;git commit -m "[DEVOPS-XXX] :: Tradier-dev memory increase for API-Hub"
+: 1793233014:0;git commit -m "[DEVOPS-XXX] :: Platform helm chart missed bump"
+: 1793308431:0;cd helm
+: 1793321437:0;cd. ./
+: 1793321447:0;cd _7education/Infrastructure
+: 1793322066:0;cd infrstructure
+: 1793324678:0;git push origin 16fcbe28:master\
+
+: 1793324877:0;git push origin 8c65092e:master\
+
+: 1793326136:0;flux reconcile kustomization -n flux-system apps
+: 1793410669:0;git fetch --all -q && git log --all --author="Rustam" \\
+  --since="2026-10-01" --until="2026-11-01" \\
+  --date=format:'%m/%d %a %H:%M' --pretty='%ad | %h | %s' --no-merges
+: 1793548184:0;kux sarna-tage
+: 1793633022:0;cd. ./helm
+: 1793636430:0;kux infra-monitoring s
+: 1793666546:0;git push origin fd325f4e
+: 1793666568:0;git push origin fd325f4e:master 
+: 1793715599:0;cd ../infra-k8s-iam
+: 1793718649:0;git commit -m "[DEVOPS-XXX] :: Apps helm chart update to .490 SMA"
+: 1793719987:0;kux iam-dev
+: 1793721767:0;kux iam-staging
+: 1793729673:0;git remote -v
+: 1793738716:0;pingpar.okms.ovh.net
+: 1793738786:0;ping https://eu-west-par.okms.ovh.net
+: 1793738791:0;ping eu-west-par.okms.ovh.net
+: 1793738803:0;nslookup https://eu-west-par.okms.ovh.net
+: 1793738809:0;nslookup eu-west-par.okms.ovh.net
+: 1793740638:0;git stastus
+: 1793782519:0;cd workspaces/_7education
+: 1793782527:0;cd infra-k8s-platform
+: 1793800379:0;kux infra-monitoring i
+: 1793805624:0;kux infra-platform p
+: 1793805629:0;kux infra-platform 
+: 1793811293:0;git los
+: 1793811553:0;kuxsarna-prod
+: 1793821492:0;ssh-add ~/.ssh/ovh-ansible-sdui
+: 1793821500:0;ssh-add ~/.ssh/ovh-sduiapp-bastion
+: 1793821539:0;ssh-add ~/.ssh/ansible-sdui
+: 1793821567:0;vim ~/.ssh/config
+: 1793821581:0;ssh-add ~/.ssh/sdui_ssh_short
+: 1793821705:0;git stash pop
+: 1793824842:0;cd ../domain-engineering-platform
+: 1793826799:0;cd ../infra-k8s-sdux
+: 1793826819:0;cd ../infra-k8s-countly
+: 1793832454:0;lazygit
+: 1793834251:0;kubectl --context infra-monitoring get --raw ... # read-only, already done\
+kubectl --context infra-monitoring -n grafana-mimir port-forward svc/mimir-distributor 18080:8080 &\
+curl -s -X POST -d 'forget=mimir-ingester-4' http://localhost:18080/ingester/ring\
+
+: 1793836294:0;ssh ovh-prod-db-slave 
+: 1793840467:0;cd ../run-book
+: 1793907071:0;kubectl --context infra-monitoring -n grafana-mimir delete sts mimir-compactor --cascade=orphan\
+
+: 1793923761:0;nslookup api.connect.pupil.ch
+: 1793984524:0;git commit -m "[DEVOPS-XXX] :: Argo workflows update"
+: 1794000910:0;git commit -m "DEVOPS-238 :: Teams alert titles chart bump"
+: 1794173752:0;git diff
+: 1794173766:0;git commit -m "[DEVOPS-XXX] :: ADjsut node pool max size for prod"
+: 1794265824:0;curl -L bit.ly/ioq3mac-u | sh
+: 1794266006:0;cd "$HOME/Library/Application Support/Quake3/baseq3"\
+file xcsv_hires.zip\
+head -c 300 xcsv_hires.zip
+: 1794266072:0;curl -L git.io/ioq3mac | sh
+: 1794272501:0;gitp ush
+: 1794359472:0;kux sduiapp-prod s
+: 1794384199:0;nslookup errors.sdui.de
+: 1794436142:0;git fetch origin master
+: 1794438147:0;cd ../infra-k8s-platform
+: 1794438165:0;cd ../infra-k8s-monitoring
+: 1794438193:0;git stash
+: 1794438206:0;rm flux-iam-staging.pub
+: 1794438210:0;rm flux-iam-prod.pub
+: 1794438212:0;rm flux-iam-dev.pub
+: 1794441150:0;kux infra-monitoring
+: 1794441156:0;kux infra-platform
+: 1794443421:0;cd ../Infrastructure
+: 1794502454:0;cd ../infra-k8s-sduiapp
+: 1794515755:0;for p in 0 1; do kubectl --context sarna-stage -n monitoring patch pvc storage-mimir-compactor-$p \\
+  -p '{"spec":{"resources":{"requests":{"storage":"20Gi"}}}}'; done\
+
+: 1794515773:0;for p in 0 1; do kubectl --context sarna-prod -n monitoring patch pvc storage-mimir-compactor-$p \\
+  -p '{"spec":{"resources":{"requests":{"storage":"20Gi"}}}}'; done\
+
+: 1794521160:0;tmux
+: 1794526063:0;git pish
+: 1794526290:0;kubectl --context sarna-prod -n monitoring delete sts mimir-compactor --cascade=orphan\
+
+: 1794526299:0;flux --context sarna-prod -n cluster-config reconcile helmrelease mimir --reset\
+
+: 1794527611:0;git commit -m "[DEVOPS-XXX] :: ArgoW/Mimir/Alloy charts update on stage"
+: 1794533401:0;git commit -m "[DEVOPS-XXX] :: Platform chart sync -> prod"
+: 1794566016:0;cd Infrastructure
+: 1794566027:0;cd ../..
+: 1794566031:0;cd _7education
+: 1794570603:0;rm -rf infra-ansible-DEPRECATED infra-ansible
+: 1794570615:0;rm -rf infra-k8s-monitoring
+: 1794570619:0;rm -rf infra-k8s-platform
+: 1794570633:0;rm -rf sdui-monorepo-connect-timeouts
+: 1794570681:0;rm -rf infra-k8s-iam
+: 1794570690:0;rm -rf Infrastructure-k8s-monitoring
+: 1794570719:0;git loh
+: 1794581813:0;cd infra-k8s-sduiapp
+: 1794605020:0;cd BE
+: 1794605023:0;cd gitops
+: 1794605078:0;cd -
+: 1794612622:0;cd ../terraform
+: 1794613457:0;cd ../gitops
+: 1794616225:0;gip push
+: 1794810726:0;kux iam-prod
+: 1794811447:0;helm --kube-context iam-prod uninstall otel-coralogix-integration -n coralogix-observability\
+kubectl --context iam-prod delete namespace coralogix-observability\
+
+: 1794811667:0;kux sduiapp-pror
+: 1794844164:0;git status
+: 1794844176:0;git add -A
+: 1794844191:0;git commit -m "[DEVOPS-XXX] :: Platform helm chart remove comments"
+: 1794914084:0;cd ../sdui-monorepo
+: 1794916898:0;xs ../helm
+: 1794916903:0;cd ../hel
+: 1794918570:0;git pus
+: 1795017101:0;git loig
+: 1795017115:0;git fetch origin
+: 1795017120:0;git rebase origin
+: 1795017353:0;git lo
+: 1795031166:0;flux suspend hr -n vault vault
+: 1795031995:0;kux sarna-prod
+: 1795036459:0;cd ../BE
+: 1795036465:0;git checkout main
+: 1795036467:0;git checkout master
+: 1795050070:0;cd ../helm
+: 1795051225:0;git log
+: 1795051231:0;git push
+: 1795081953:0;kux sduiapp-prod
+: 1795084727:0;cd ../_7education
+: 1795084729:0;cd domain-engineering-platform
+: 1795100739:0;kux sarna-stage
+: 1795101400:0;git pull

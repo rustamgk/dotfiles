@@ -17,8 +17,13 @@ zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
 export PATH="$HOME/.local/bin:/usr/local/bin:/usr/local/sbin:$DOTNET_ROOT:$DOTNET_ROOT/tools:$PYENV_ROOT/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:$HOME/.cargo/bin:$HOME/.pulumi/bin:$PATH"
 
 # ---- WSL2-specific additions ----
-if grep -qi microsoft /proc/version 2>/dev/null; then
-  export PATH="$PATH:/mnt/c/Users/$(cmd.exe /c echo %USERNAME% 2>/dev/null | tr -d '\r')/AppData/Local/Programs/Microsoft VS Code/bin"
+# Only shell out to cmd.exe when `code` isn't already reachable via the
+# Windows PATH WSL appends by default: spawning cmd.exe costs ~100-300ms per
+# shell and prints a "UNC paths are not supported" warning from Linux dirs.
+if grep -qi microsoft /proc/version 2>/dev/null && ! command -v code >/dev/null 2>&1; then
+  _win_user="$(cd /mnt/c 2>/dev/null && cmd.exe /c echo %USERNAME% 2>/dev/null | tr -d '\r')"
+  [[ -n "$_win_user" ]] && export PATH="$PATH:/mnt/c/Users/$_win_user/AppData/Local/Programs/Microsoft VS Code/bin"
+  unset _win_user
 fi
 
 # ---- Homebrew (macOS: Apple Silicon or Intel, or no-sudo ~/.homebrew) / Linuxbrew (Linux) ----
@@ -37,6 +42,7 @@ fi
 # ---- Oh My Zsh Plugins ----
 # NOTE: 'pyenv' plugin removed - causes issues with modern pyenv, manual init below instead
 plugins=(
+  ssh
   aws
   azure
   github

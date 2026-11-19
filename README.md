@@ -30,6 +30,27 @@ cd ~/github/dotfiles && make sync
 git add configs/ && git commit -m "sync: update configs from $(hostname)"
 ```
 
+### Windows (WSL2 Ubuntu)
+
+Run everything **inside the Ubuntu shell**, and clone into `~` (not `/mnt/c`):
+
+```bash
+sudo apt-get update && sudo apt-get install -y git curl
+git clone https://github.com/rustamgk/dotfiles.git ~/github/dotfiles
+cd ~/github/dotfiles && ./scripts/bootstrap.sh
+```
+
+On the Windows side, install the JetBrainsMono Nerd Font and import
+`themes/windows-terminal/ayu-mirage.json` into Windows Terminal (fonts installed
+inside WSL aren't used by Windows Terminal).
+
+### Shell history
+
+`./scripts/history-export.sh` writes a deduplicated copy of `~/.zsh_history` to
+`history/zsh_history`, dropping any command that looks like it holds a secret.
+`install.sh` merges that file into `~/.zsh_history` once per dump version (the
+existing file is backed up first). Review the dump before committing; this repo is public.
+
 ---
 
 ## 📦 What Gets Installed by bootstrap.sh

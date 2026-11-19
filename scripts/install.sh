@@ -82,7 +82,11 @@ link_file() {
     else
       echo -e "${YELLOW}File exists:${NC} $dst"
       echo -n "  Overwrite? [y/N/b(ackup)] "
-      read -r response
+      # Read from the terminal, not stdin: under `curl ... | bash` stdin is the
+      # script itself, and `read` would swallow the next line of bootstrap.sh.
+      # No tty at all (CI/docker) -> treat as "skip".
+      response=""
+      read -r response < /dev/tty 2>/dev/null || true
       case "$response" in
         [yY])
           rm -rf "$dst"
@@ -266,6 +270,35 @@ EOF
   fi
 else
   log_skip "~/.zshrc.local already exists"
+fi
+
+# ============================================================================
+# ZSH history - merge the sanitized dump from the repo (see history-export.sh)
+# ============================================================================
+echo -e "\n${BLUE}--- ZSH history ---${NC}"
+HIST_DUMP="$DOTFILES_DIR/history/zsh_history"
+HIST_FILE="$HOME/.zsh_history"
+HIST_MARK="$HOME/.zsh_history.dotfiles-imported"
+if [[ -f "$HIST_DUMP" ]]; then
+  dump_sum="$(cksum < "$HIST_DUMP")"
+  if [[ "$(cat "$HIST_MARK" 2>/dev/null)" == "$dump_sum" ]]; then
+    log_skip "history dump already imported"
+  elif [[ "$DRY_RUN" == "true" ]]; then
+    log_dry "Would merge $HIST_DUMP into $HIST_FILE"
+  else
+    # Dump (older entries) first, then this machine's own history, so local
+    # commands stay the most recent in Ctrl-R.
+    tmp_hist="$(mktemp)"
+    cat "$HIST_DUMP" > "$tmp_hist"
+    [[ -f "$HIST_FILE" ]] && cat "$HIST_FILE" >> "$tmp_hist"
+    [[ -f "$HIST_FILE" ]] && cp "$HIST_FILE" "$HIST_FILE.bak.$(date +%Y%m%d_%H%M%S)"
+    mv "$tmp_hist" "$HIST_FILE"
+    chmod 600 "$HIST_FILE"
+    echo "$dump_sum" > "$HIST_MARK"
+    log_success "Merged $(grep -c '^: [0-9]' "$HIST_DUMP") history entries into $HIST_FILE"
+  fi
+else
+  log_skip "no history dump at $HIST_DUMP"
 fi
 
 # ============================================================================

@@ -220,6 +220,12 @@ if [[ "$IS_LINUX" == "true" ]]; then
   log_info "Installing apt packages..."
   $SUDO apt-get install -y "${APT_PACKAGES[@]}" 2>&1 | grep -E "^(Setting up|E:|W:)" || true
   log_success "Apt packages installed"
+
+  # Debian/Ubuntu ship these under different binary names
+  mkdir -p "$HOME/.local/bin"
+  has fdfind && ! has fd  && ln -sf "$(command -v fdfind)" "$HOME/.local/bin/fd"
+  has batcat && ! has bat && ln -sf "$(command -v batcat)" "$HOME/.local/bin/bat"
+  true
 fi
 
 # ============================================================================
