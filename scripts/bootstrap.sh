@@ -114,6 +114,8 @@ fi
 
 # ---- Brew packages shared between macOS Homebrew and Linuxbrew ----
 COMMON_BREW_PACKAGES=(
+  Azure/kubelogin/kubelogin   # exec auth for AKS contexts (sarna-stage/prod)
+  krew                        # kubectl plugins (oidc-login, see below)
   k9s
   kubectx
   lazygit
@@ -516,6 +518,17 @@ if [[ "$IS_LINUX" == "true" ]]; then
       cargo install "$tool" 2>&1 | tail -2 || log_warn "Failed: $tool"
     fi
   done
+fi
+
+# ============================================================================
+# 13b. kubectl oidc-login plugin (used by the "oidc" kubeconfig user)
+# ============================================================================
+if has kubectl && has kubectl-krew; then
+  export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+  if ! has kubectl-oidc_login; then
+    log_info "krew: installing oidc-login..."
+    kubectl krew install oidc-login 2>&1 | tail -1 || log_warn "Failed: krew oidc-login"
+  fi
 fi
 
 # ============================================================================
