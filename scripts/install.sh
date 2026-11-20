@@ -304,6 +304,20 @@ else
 fi
 
 # ============================================================================
+# zoxide ranking - re-add dirs from history/zoxide.txt (see zoxide-sync.sh)
+# ============================================================================
+echo -e "\n${BLUE}--- zoxide ---${NC}"
+if [[ -f "$DOTFILES_DIR/history/zoxide.txt" ]] && command -v zoxide >/dev/null 2>&1; then
+  if [[ "$DRY_RUN" == "true" ]]; then
+    log_dry "Would import zoxide dirs from history/zoxide.txt"
+  else
+    bash "$DOTFILES_DIR/scripts/zoxide-sync.sh" import || true
+  fi
+else
+  log_skip "zoxide import (no dump or zoxide not installed)"
+fi
+
+# ============================================================================
 # Done
 # ============================================================================
 echo ""
