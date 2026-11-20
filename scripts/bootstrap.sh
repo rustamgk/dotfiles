@@ -47,6 +47,20 @@ log_section() { echo -e "\n${CYAN}===== $* =====${NC}"; }
 # ---- Check if command exists ----
 has() { command -v "$1" &>/dev/null; }
 
+# Run an install command quietly: show its last line on success, and on
+# failure warn with the given label plus the tail of the output so the
+# reason is visible (a plain `| tail -1` would drop the error message).
+quiet_install() {
+  local label="$1"; shift
+  local out
+  if out=$("$@" 2>&1); then
+    printf '%s\n' "$out" | tail -1
+  else
+    log_warn "Failed: $label"
+    printf '%s\n' "$out" | tail -15 | sed 's/^/    /'
+  fi
+}
+
 # ---- Run with sudo if needed ----
 SUDO=""
 [[ $EUID -ne 0 ]] && SUDO="sudo"
@@ -311,7 +325,7 @@ if [[ "$IS_MACOS" == "true" ]]; then
       log_info "brew: $formula_name already installed"
     else
       log_info "brew: installing $formula_name..."
-      brew install "$pkg" 2>&1 | tail -1 || log_warn "Failed to install: $pkg"
+      quiet_install "$pkg" brew install "$pkg"
     fi
   done
   log_success "macOS brew packages installed"
@@ -329,7 +343,7 @@ if [[ "$IS_LINUX" == "true" ]]; then
       log_info "brew: $formula already installed"
     else
       log_info "brew: installing $formula..."
-      brew install "$pkg" 2>&1 | tail -1 || log_warn "Failed: $pkg"
+      quiet_install "$pkg" brew install "$pkg"
     fi
   done
   log_success "Linuxbrew packages installed"
@@ -527,7 +541,7 @@ if has kubectl && has kubectl-krew; then
   export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
   if ! has kubectl-oidc_login; then
     log_info "krew: installing oidc-login..."
-    kubectl krew install oidc-login 2>&1 | tail -1 || log_warn "Failed: krew oidc-login"
+    quiet_install "krew oidc-login" kubectl krew install oidc-login
   fi
 fi
 
