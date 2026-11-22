@@ -1,6 +1,6 @@
 # Makefile for Rustam's Development Environment
 
-.PHONY: help build run connect stop restart logs status clean bootstrap install sync
+.PHONY: help build run connect stop restart logs status clean bootstrap install sync claude-export claude-import claude-pull
 
 # Default target
 help:
@@ -10,6 +10,11 @@ help:
 	@echo "  make bootstrap  - Bootstrap full environment: macOS / Ubuntu / WSL2 (run once on new machine)"
 	@echo "  make install    - Link dotfiles configs to \$$HOME (idempotent)"
 	@echo "  make sync       - Sync current configs from \$$HOME into this repo"
+	@echo ""
+	@echo "Claude Code sessions + memory (gpg-encrypted in secrets/):"
+	@echo "  make claude-export            - Fresh encrypted snapshot of ~/.claude into secrets/"
+	@echo "  make claude-import            - Restore snapshot into ~/.claude (paths remapped to \$$HOME)"
+	@echo "  make claude-pull HOST=u@host  - Copy sessions straight from another machine over ssh"
 	@echo ""
 	@echo "Docker environment:"
 	@echo "  make build     - Build the Docker image"
@@ -43,6 +48,17 @@ sync:
 	@cp -v ~/.config/starship.toml configs/starship.toml
 	@cp -rv ~/.config/nvim/. configs/nvim/ 2>/dev/null || true
 	@echo "Done! Review changes with: git diff configs/"
+
+# Claude Code sessions + memory (see scripts/claude-sync.sh)
+claude-export:
+	@./scripts/claude-sync.sh export
+
+claude-import:
+	@./scripts/claude-sync.sh import
+
+claude-pull:
+	@test -n "$(HOST)" || { echo "Usage: make claude-pull HOST=user@host"; exit 1; }
+	@./scripts/claude-sync.sh pull "$(HOST)"
 
 # ---- Docker Environment ----
 

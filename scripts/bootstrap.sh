@@ -241,6 +241,7 @@ if [[ "$IS_LINUX" == "true" ]]; then
     curl wget net-tools dnsutils
     htop btop
     jq yq
+    rsync gnupg xz-utils        # secrets/*.gpg sync (kube-sync.sh, claude-sync.sh)
     cowsay fortune-mod lolcat
     python3 python3-pip python3-venv python3-dev
     ansible
@@ -301,6 +302,8 @@ if [[ "$IS_MACOS" == "true" ]]; then
     wget htop btop
     # Data tools
     jq yq
+    # secrets/*.gpg sync (kube-sync.sh, claude-sync.sh)
+    gnupg xz
     # Fun stuff
     cowsay fortune lolcat
     # Trash CLI (macOS-native)
@@ -721,6 +724,21 @@ if [[ -d "$HOME/.tmux/plugins/tpm" ]]; then
   "$HOME/.tmux/plugins/tpm/scripts/install_plugins.sh" 2>&1 \
     || log_warn "TPM install may need a live tmux session — run prefix+I inside tmux"
   log_success "Tmux plugins installed"
+fi
+
+# ============================================================================
+# 22. Claude Code sessions + memory (optional, encrypted snapshot)
+# ============================================================================
+# Never automatic: needs the passphrase. Also available any time as
+# `make claude-import`, or `make claude-pull HOST=user@mac` straight over ssh.
+if compgen -G "$DOTFILES_DIR/secrets/claude.part*.gpg" >/dev/null && { : </dev/tty; } 2>/dev/null; then
+  log_section "Claude Code sessions"
+  read -rp "Restore Claude sessions + memory from the encrypted snapshot? [y/N] " ans </dev/tty || ans=""
+  if [[ "$ans" == [yY]* ]]; then
+    bash "$DOTFILES_DIR/scripts/claude-sync.sh" import || log_warn "Claude import failed — retry with: make claude-import"
+  else
+    log_info "Skipped. Later: cd $DOTFILES_DIR && make claude-import"
+  fi
 fi
 
 # ============================================================================

@@ -51,6 +51,26 @@ inside WSL aren't used by Windows Terminal).
 `install.sh` merges that file into `~/.zsh_history` once per dump version (the
 existing file is backed up first). Review the dump before committing; this repo is public.
 
+### Claude Code sessions + memory
+
+Sessions (`claude --resume`), per-project memory, skills, settings, prompt history,
+and the `projects`/`mcpServers` parts of `~/.claude.json` travel as a passphrase-encrypted
+(gpg AES256), xz-compressed snapshot split into `secrets/claude.part*.gpg` (<50 MB each).
+
+```bash
+make claude-export                    # on the source machine: fresh snapshot, then commit + push secrets/
+make claude-import                    # on the target: restore (bootstrap.sh also offers this)
+make claude-pull HOST=rustamgk@mac    # or skip the repo and copy straight over ssh
+```
+
+Claude keys sessions by absolute repo path, so import rewrites the source `$HOME`
+(`/Users/rustamgk`) to the local one (`/home/rustamgk`) in folder names and file contents.
+Keep repos at the same path under `$HOME`, inside the Linux filesystem on WSL (not `/mnt/c`),
+and start `claude` from the repo root. Import only merges: files newer locally win, and
+anything replaced goes to `~/.claude-sync-backups/<timestamp>/`. Not synced: the login
+(run `/login`), plugins (reinstall with `/plugin`, the list is in `settings.json`), caches.
+Each export adds a full ~55 MB blob to git history, so snapshot when it's worth it.
+
 ---
 
 ## 📦 What Gets Installed by bootstrap.sh
