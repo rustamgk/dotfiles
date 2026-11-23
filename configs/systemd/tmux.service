@@ -1,0 +1,24 @@
+# Starts a detached tmux server at login so tmux-continuum can auto-restore.
+# Replaces the unit tmux-continuum generates (@continuum-boot 'on'); continuum
+# only writes its own unit when none exists, so this one is kept.
+#
+# Difference from continuum's unit: its ExecStop runs resurrect's save.sh
+# unconditionally. When the server has already exited (last session closed,
+# kill-server, WSL shutting down) systemd still runs ExecStop, save.sh writes
+# an EMPTY save, and `last` is pointed at it. The next restore then has
+# nothing to recreate and kills session 0 -> tmux exits. Only save while a
+# server is actually running.
+[Unit]
+Description=tmux default session (detached)
+Documentation=man:tmux(1)
+
+[Service]
+Type=forking
+Environment=DISPLAY=:0
+ExecStart=/usr/bin/tmux new-session -d
+ExecStop=/bin/sh -c '/usr/bin/tmux has-session 2>/dev/null || exit 0; %h/.tmux/plugins/tmux-resurrect/scripts/save.sh quiet; /usr/bin/tmux kill-server'
+KillMode=control-group
+RestartSec=2
+
+[Install]
+WantedBy=default.target

@@ -153,6 +153,13 @@ echo -e "${BLUE}--- Shell ---${NC}"
 link_file "$CONFIGS_DIR/.zshrc"           "$HOME/.zshrc"
 link_file "$CONFIGS_DIR/.tmux.conf"       "$HOME/.tmux.conf"
 link_file "$CONFIGS_DIR/.tmux.base.conf"  "$HOME/.tmux.base.conf"
+mkdir -p "$HOME/.tmux"
+link_file "$CONFIGS_DIR/tmux/resurrect-guard.sh" "$HOME/.tmux/resurrect-guard.sh"
+if [[ "$(uname -s)" == "Linux" ]] && command -v systemctl &>/dev/null; then
+  mkdir -p "$HOME/.config/systemd/user"
+  link_file "$CONFIGS_DIR/systemd/tmux.service" "$HOME/.config/systemd/user/tmux.service"
+  [[ "$DRY_RUN" == "true" ]] || systemctl --user daemon-reload 2>/dev/null || true
+fi
 
 # ============================================================================
 # Git config
